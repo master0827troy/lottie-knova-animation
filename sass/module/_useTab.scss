@@ -1,0 +1,238 @@
+.tab {
+}
+.tab-sp {
+  display: none;
+}
+.tab-menu {
+  text-align: center;
+}
+.tab-menu__content {
+  padding: 8px;
+  border-radius: 100px;
+  display: inline-flex;
+  position: relative;
+}
+.tab-menu__content.--use-orange {
+  background-color: #ffebe1;
+}
+.tab-menu__background {
+  position: absolute;
+  left: 8px; /* 親要素のpaddingと同じ */
+  top: 8px; /* 親要素のpaddingと同じ */
+  height: calc(100% - 16px); /* padding分を引く */
+  border-radius: 100px;
+  transition: all 0.3s ease;
+}
+.tab-menu__background.--use-orange {
+  background: linear-gradient(90deg, #f38fbb 0%, #ff8f5b 100%);
+}
+.tab-menu__item {
+  padding: 8px 36px;
+  border-radius: 100px;
+  border: none;
+  background: none;
+  position: relative;
+  z-index: 1;
+  color: #666; /* 非アクティブ時の文字色 */
+  transition: color 0.3s ease, background 0.3s ease;
+}
+.tab-menu__item.--use-orange {
+  color: var(--color-orange);
+}
+.tab-menu__item--active {
+  color: #fff !important;
+}
+.tab-menu__item:focus {
+  outline: none;
+}
+.tab-panel {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+  margin-top: 80px;
+}
+.tab-panel--active {
+  opacity: 1;
+  visibility: visible;
+}
+.panel-layout {
+  display: flex;
+  align-items: center;
+  gap: 80px;
+}
+.panel-layout__visual {
+  position: relative;
+  width: 26.66%;
+}
+.panel-images {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 273 / 593;
+}
+.panel-images__item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* 画像のトリミング方法 */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+}
+.panel-images__item--active {
+  opacity: 1;
+  visibility: visible;
+}
+.panel-layout__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative; /* 背景用の基準位置 */
+}
+.panel-layout__background {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 140px; /* コンテンツボックスの高さに合わせて調整 */
+  background-color: #fff;
+  border-radius: 16px;
+  box-shadow: 0px 0px 30px 0px #0000001a;
+  transition: transform 0.3s ease;
+  z-index: 0;
+}
+.content-box {
+  width: 100%;
+  text-align: left;
+  padding: 32px;
+  border-radius: 16px;
+  border: none;
+  position: relative;
+  z-index: 1;
+  background: none;
+}
+.content-box:focus {
+  outline: none;
+}
+/* box-shadowは背景要素に移動したため削除 */
+.content-box--active {
+}
+.content-box__title {
+  font-size: 26px;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+.content-box__text {
+  margin-top: 16px;
+  transition: color 0.2s ease;
+}
+
+// topの背景色が変わったとき
+.use.is-background .content-box__title {
+  color: #ffebe1;
+}
+.use.is-background .content-box__text {
+  color: #fff;
+}
+// 背景色が変更され、カラーオレンジが割り振られているとき
+.is-background .content-box--active .content-box__title.--color-orange {
+  color: var(--color-orange);
+}
+.is-background .content-box--active .content-box__text {
+  color: #282828;
+}
+@media screen and (max-width: 769px) {
+  .tab {
+    display: none;
+  }
+  .tab-sp {
+    display: block;
+  }
+  .tab-menu {
+  }
+  .tab-menu__content {
+    padding: 4px 8px;
+  }
+  .tab-menu__content.--use-orange {
+  }
+  .tab-menu__background {
+    top: 4px;
+    height: calc(100% - 8px);
+  }
+  .tab-menu__background.--use-orange {
+  }
+  .tab-menu__item {
+    padding: 4px 19px;
+  }
+  .tab-menu__item.--use-orange {
+  }
+  .tab-menu__item--active {
+  }
+  .tab-menu__item:focus {
+  }
+  .tab-panel {
+    margin-top: 32px;
+  }
+  .tab-panel--active {
+  }
+  .panel-sp-item:not(:first-child) {
+    margin-top: 42px;
+  }
+  .panel-layout {
+    flex-direction: column;
+    gap: 40px;
+  }
+  .panel-layout__visual {
+    width: 100%;
+  }
+  .panel-images {
+    width: 165px;
+    margin-inline: auto;
+  }
+  .panel-images__item {
+    position: static;
+    opacity: 1;
+    visibility: visible;
+    height: 100%;
+  }
+  .panel-images__item--active {
+  }
+  .panel-layout__content {
+    margin-top: 24px;
+  }
+  .panel-layout__background {
+    display: none;
+  }
+  .content-box {
+    padding: 0;
+  }
+  .content-box:focus {
+  }
+  /* box-shadowは背景要素に移動したため削除 */
+  .content-box--active {
+  }
+  .content-box__title {
+    font-size: 18px;
+    color: #ffebe1;
+  }
+  .content-box__text {
+    font-size: 14px;
+  }
+
+  // topの背景色が変わったとき
+  .use.is-background .content-box__title {
+  }
+  .use.is-background .content-box__text {
+  }
+  // 背景色が変更され、カラーオレンジが割り振られているとき
+  .is-background .content-box--active .content-box__title.--color-orange {
+    color: #ffebe1;
+  }
+  .is-background .content-box--active .content-box__text {
+    color: #fff;
+  }
+}
+@media (hover: hover) and (pointer: fine) {
+}

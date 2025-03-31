@@ -1,0 +1,97 @@
+.mainvisual__catch__lottie-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+}
+
+.mainvisual__catch__lottie-down {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+}
+
+.shape-size {
+    width: 64px;
+    height: 64px;
+}
+
+/* block1 */
+
+#block1-shape1 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10000;
+}
+#block1-shape2 {
+    position: absolute;
+    top: 50%;
+    left: 10%;
+}
+#block1-shape3 {
+    position: absolute;
+    bottom: 50%;
+    left: 60%;
+}
+#block2-shape1 {
+    position: absolute;
+    top: 10%;
+    left: 5%;
+}
+#block3-shape1 {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(100%, 0%);
+    z-index: 10;
+}
+#block4-shape1 {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    z-index: 10;
+}
+#block5-shape1 {
+    position: absolute;
+    bottom: 10%;
+    left: 10%;
+    transform: translate(0, 50%);
+    z-index: 10;
+}
+#block5-shape2 {
+    position: absolute;
+    top: 70%;
+    left: 0;
+    z-index: 10;
+}
+#block5-shape3 {
+    position: absolute;
+    bottom: 0;
+    left: 20%;
+    transform: translateX(50%);
+    z-index: 10;
+}
+#block7-shape1 {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-150%, -100%);
+    z-index: 10;
+}
+#block7-shape2 {
+    position: absolute;
+    bottom: 0;
+    right: 30%;
+    z-index: 10;
+}
+#block7-shape3 {
+    position: absolute;
+    bottom: 25%;
+    right: 25%;
+    transform: translate(-50%,100%);
+    z-index: 10;
+}

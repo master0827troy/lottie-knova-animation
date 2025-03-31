@@ -1,0 +1,661 @@
+.mainvisual {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - var(--header-height));
+}
+.mainvisual__container {
+  height: 100%;
+  padding: clamp(16px, 2.5vh, 24px);
+  margin: 0 auto;
+}
+.mainvisual__grid {
+  display: grid;
+  grid-template-columns: 27.3fr 18.7fr 7.5fr 18.7fr 27.3fr;
+  grid-template-rows: 23fr 12.1fr 23fr 21.7fr 23fr;
+  gap: clamp(4px, 1vh, 8px);
+  height: 100%;
+  width: 100%;
+}
+.mainvisual__catch {
+  position: relative;
+  grid-column: 2/5;
+  grid-row: 3/4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  overflow: hidden;
+}
+.mainvisual__catch-text {
+  font-size: 38px;
+  line-height: 1.48;
+  font-weight: 700;
+  font-feature-settings: "palt";
+  background: linear-gradient(90deg, #f38fbb 0%, #ff8f5b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.mainvisual__block {
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+}
+
+.mainvisual__block--1 {
+  grid-column: 1/2;
+  grid-row: 1/2;
+  background: linear-gradient(180deg, #f2f2f2 0%, #dfdfdf 100%);
+}
+.mainvisual__block--2 {
+  grid-column: 2/4;
+  grid-row: 1/3;
+  background: linear-gradient(180deg, #f7d974 0%, #e5ba20 100%);
+}
+.mainvisual__block--3 {
+  grid-column: 4/5;
+  grid-row: 1/3;
+  background: linear-gradient(180deg, #ffebe2 0%, #edcebf 100%);
+}
+.mainvisual__block--4 {
+  grid-column: 5/6;
+  grid-row: 1/5;
+  background: linear-gradient(180deg, #ff8f5b 0%, #da6129 100%);
+}
+.mainvisual__block--5 {
+  grid-column: 1/2;
+  grid-row: 2/6;
+  background: linear-gradient(180deg, #f38fbb 0%, #f662a3 100%);
+}
+.mainvisual__block--6 {
+  grid-column: 2/3;
+  grid-row: 4/6;
+  background: linear-gradient(180deg, #f5ffea 0%, #d0dfc0 100%);
+}
+.mainvisual__block--7 {
+  grid-column: 3/5;
+  grid-row: 4/6;
+  background: linear-gradient(180deg, #8bd9cc 0%, #54baa9 100%);
+}
+.mainvisual__block--8 {
+  grid-column: 5/6;
+  grid-row: 5/6;
+  background: #f38fbb;
+  padding: 20px 34px;
+}
+.mainvisual__image {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+}
+
+.concept {
+  // padding-top: 222px;
+  // padding-bottom: 222px;
+  position: relative;
+  height: calc(100vh - var(--header-height));
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  margin-bottom: 700px;
+}
+.concept__container {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.concept__visual {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0;
+  width: 47.82%;
+  height: 100%;
+}
+.concept__visual-inner {
+  width: 72.25%;
+  height: 100%;
+  max-width: 530px;
+  margin: 0 auto;
+  z-index: 1;
+  position: relative;
+  margin-right: 13.8%;
+}
+.concept__phone-container {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.concept__image {
+  position: absolute;
+  visibility: hidden; /* GSAPでアニメーション時に表示 */
+}
+/* スマートフォンと人物の配置 */
+.concept__image--phone {
+  width: 100%;
+  position: relative;
+  display: block;
+  margin: 0 auto 6%;
+}
+.concept__image--person {
+  width: 54.4%;
+  bottom: 0;
+  left: 58%;
+  transform: translateX(-50%);
+  z-index: 2;
+  max-width: none;
+}
+/* 化粧品アイテムの配置 */
+.concept__image--item-1 {
+  width: 50px;
+  top: 28%;
+  left: 8.1%;
+  z-index: 3;
+  animation: float 6s ease-in-out infinite;
+}
+.concept__image--item-2 {
+  width: 61px;
+  bottom: 7%;
+  left: 12.45%;
+  z-index: 3;
+  animation: float 7s ease-in-out infinite 0.5s;
+}
+.concept__image--item-3 {
+  width: 107px;
+  top: 14%;
+  right: -8.36%;
+  z-index: 3;
+  animation: float 5s ease-in-out infinite 1s;
+}
+.concept__image--item-4 {
+  width: 66px;
+  top: 50%;
+  right: -2.23%;
+  z-index: 3;
+  animation: float 6.5s ease-in-out infinite 1.5s;
+}
+.concept__image--item-5 {
+  width: 81px;
+  bottom: 13%;
+  right: 2%;
+  z-index: 3;
+  animation: float 5.5s ease-in-out infinite 2s;
+}
+/* より繊細な動きのバージョン */
+@keyframes float {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-10px) rotate(1deg);
+  }
+  75% {
+    transform: translateY(5px) rotate(-1deg);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+}
+.concept__content {
+  width: 53.22%;
+  margin-left: auto;
+}
+.section-text {
+  margin-top: 24px;
+}
+.section-text__paragraph:not(:first-child) {
+  margin-top: 1.5em;
+}
+.point {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  background-color: #fff;
+}
+.point__container {
+  display: flex;
+}
+.point__visual {
+  width: 50%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-yellow);
+}
+.point-shape-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.point-shape-cell {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.point-shape {
+  pointer-events: none;
+  will-change: transform, opacity;
+  width: 100%;
+  height: 100%;
+}
+.point__images {
+  width: 36.11%;
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 273 / 593;
+}
+.point__image-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+.point__image-box {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+}
+.point__image-box:first-child {
+  opacity: 1;
+}
+.point__image {
+}
+.point__content {
+  width: 50%;
+  padding: 0 6.944%;
+}
+.point__items {
+  padding: 120px 0;
+}
+.point__item {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.point__item + .point__item {
+  margin-top: 40vh;
+}
+.point__number {
+  font-size: 16px;
+  font-family: var(--font-en);
+  font-weight: 400;
+}
+.point__title {
+  font-size: 32px;
+  font-weight: 700;
+  margin-top: 16px;
+  font-weight: 500;
+}
+.point__text {
+  margin-top: 24px;
+}
+.use {
+  padding-top: 160px;
+  padding-bottom: 210px;
+  --pseudo-opacity: 0;
+  background-color: #fff;
+}
+.use::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, #f38fbb 0%, #ff8f5b 100%);
+  opacity: var(--pseudo-opacity); /* カスタムプロパティを使用 */
+  z-index: 1;
+  pointer-events: none;
+}
+.use.is-background {
+  position: relative;
+  overflow: hidden;
+}
+/* Background grid container */
+.background-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  display: flex;
+  flex-wrap: wrap;
+  overflow: hidden;
+}
+
+.use__container {
+  position: relative;
+  z-index: 1;
+}
+.use__tab {
+  margin-top: 32px;
+}
+.information {
+  background-color: #fff;
+  padding: 192px 0;
+}
+.information__download {
+  margin-top: 48px;
+}
+.information__content {
+  flex: 1;
+  margin-right: 56px;
+}
+.information__figure {
+  width: 40.7%;
+}
+.faq {
+  background-color: var(--color-blue);
+  padding-top: 184px;
+  padding-bottom: 188px;
+}
+.section-head {
+  width: 35.4%;
+}
+.section-title__en--faq {
+  color: #dcf2fe;
+}
+.faq__button {
+  margin-top: 32px;
+}
+.faq__content {
+}
+.news {
+  padding-top: 160px;
+  padding-bottom: 160px;
+  min-height: calc(100vh - var(--header-height));
+  display: flex;
+  align-items: center;
+}
+.news__container {
+  width: 56.4%;
+  margin-left: auto;
+  position: relative;
+}
+.news__container::before {
+  content: "";
+  position: absolute;
+  top: -40px;
+  left: -40px;
+  right: -40px;
+  bottom: -40px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 20px;
+  z-index: -1;
+  box-shadow: 0 0 50px 20px rgba(255, 255, 255, 0.8),
+    0 0 100px 40px rgba(255, 255, 255, 0.6),
+    0 0 150px 60px rgba(255, 255, 255, 0.4),
+    0 0 200px 80px rgba(255, 255, 255, 0.2);
+}
+.new__head {
+  display: flex;
+  align-items: flex-end;
+}
+.news__button {
+  margin-left: auto;
+}
+.button.button-white {
+}
+.news__article {
+  margin-top: 55px;
+}
+@media screen and (max-width: 769px) {
+  .mainvisual {
+    height: auto;
+  }
+  .mainvisual__container {
+    padding: 8px 16px;
+  }
+  .mainvisual__grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 147px 84px 120px 84px 147px 141px;
+    gap: 8px;
+  }
+  .mainvisual__catch {
+    grid-column: 1 / 3;
+    grid-row: 3 / 4;
+  }
+  .mainvisual__catch-text {
+  }
+  .catch-shapes {
+  }
+  .catch-shapes--top {
+  }
+  .catch-shapes--bottom {
+  }
+  .mainvisualcatch-text {
+  }
+  .mainvisual__catch {
+  }
+  .mainvisual__block {
+  }
+  .mainvisual__block--1 {
+    display: none;
+  }
+  .mainvisual__block--2 {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+  }
+  .mainvisual__block--3 {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+  }
+  .mainvisual__block--4 {
+    grid-column: 2 / 3;
+    grid-row: 4 / 6;
+  }
+  .mainvisual__block--5 {
+    grid-column: 1 / 2;
+    grid-row: 1 / 3;
+  }
+  .mainvisual__block--6 {
+    grid-column: 1 / 2;
+    grid-row: 4 / 5;
+  }
+  .mainvisual__block--7 {
+    grid-column: 1 / 2;
+    grid-row: 5 / 6;
+  }
+  .mainvisual__block--8 {
+    grid-column: 1 / 3;
+    grid-row: 6 / 7;
+  }
+  .mainvisual__image {
+  }
+
+  .concept {
+  }
+  .concept__container {
+  }
+
+  .concept__visual {
+  }
+  .concept__visual-inner {
+  }
+  .concept__phone-container {
+  }
+  .concept__image {
+  }
+  /* スマートフォンと人物の配置 */
+  .concept__image--phone {
+  }
+  .concept__image--person {
+  }
+  /* 化粧品アイテムの配置 */
+  .concept__image--item-1 {
+  }
+  .concept__image--item-2 {
+  }
+  .concept__image--item-3 {
+  }
+  .concept__image--item-4 {
+  }
+  .concept__image--item-5 {
+  }
+  /* より繊細な動きのバージョン */
+  @keyframes float {
+    0% {
+    }
+    25% {
+    }
+    75% {
+    }
+    100% {
+    }
+  }
+  .concept__content {
+  }
+  .section-text {
+  }
+  .section-text__paragraph:not(:first-child) {
+  }
+  .point {
+  }
+  .point__container {
+  }
+  .point__visual {
+  }
+  .point-shape-grid {
+  }
+
+  .point-shape-cell {
+  }
+
+  .point-shape {
+  }
+  .point__images {
+  }
+  .point__image-container {
+  }
+  .point__image-box {
+  }
+  .point__image-box:first-child {
+  }
+  .point__image {
+  }
+  .point__content {
+  }
+  .point__items {
+  }
+  .point__item {
+  }
+  .point__item + .point__item {
+  }
+  .point__number {
+  }
+  .point__title {
+  }
+  .point__text {
+  }
+  .use {
+    padding: 64px 0;
+  }
+  .use::before {
+  }
+  .use.is-background {
+  }
+  /* Background grid container */
+  .background-grid {
+  }
+
+  .use__container {
+  }
+  .use__tab {
+    margin-top: 24px;
+  }
+  .information {
+    padding: 160px 0 183px;
+  }
+  .information .section-title {
+    order: 0;
+  }
+  .information .section-text {
+    order: 1;
+  }
+  .information__download {
+    margin-top: 32px;
+    order: 3;
+  }
+  .information__content {
+    display: contents;
+  }
+  .information__figure {
+    width: 100%;
+    order: 2;
+    margin-top: 32px;
+  }
+  .faq {
+    padding: 96px 0;
+  }
+  .section-head {
+    width: 100%;
+    display: contents;
+  }
+  .faq .section-title {
+    order: 0;
+  }
+  .faq .accordion {
+    order: 1;
+  }
+  .section-title__en--faq {
+  }
+  .faq__button {
+    order: 2;
+    text-align: center;
+  }
+  .faq__content {
+  }
+  .news {
+    padding: 64px 0;
+  }
+  .news__container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .news__container::before {
+  }
+  .new__head {
+    display: contents;
+  }
+  .news .section-title {
+    order: 0;
+  }
+  .news__button {
+    order: 2;
+    margin-top: 32px;
+    text-align: center;
+    margin-right: auto;
+  }
+  .news__button-size {
+  }
+  .button.button-white {
+  }
+  .news__article {
+    order: 1;
+  }
+}
+@media (hover: hover) and (pointer: fine) {
+}

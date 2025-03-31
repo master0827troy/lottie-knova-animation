@@ -1,0 +1,232 @@
+.button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 24px;
+  width: 200px;
+  height: 44px;
+  background-color: #fff;
+  border-radius: 100px;
+  transition: all 0.4s ease;
+  border: 1px solid #fff;
+}
+
+/* スモールサイズ */
+.button--xextra-small {
+  width: 128px;
+  height: 44px;
+}
+.button--extra-small {
+  width: 132px;
+  height: 44px;
+}
+.button--small {
+  width: 144px;
+  height: 40px;
+  font-size: 14px;
+  padding: 0 16px;
+}
+.button--middle {
+  width: 158px;
+  height: 40px;
+  font-size: 14px;
+  padding: 0 16px;
+}
+/* ラージサイズ */
+.button--large {
+  width: 320px;
+}
+
+/* セカンダリースタイル */
+.button--secondary {
+  background-color: var(--color-secondary);
+  color: #fff;
+  box-shadow: none; // クリック時
+  box-shadow: 0px 0px 20px 0px #00000026;
+}
+.button--blue {
+  border-color: var(--color-blue);
+}
+.button--orange {
+  border-color: var(--color-orange);
+  background-color: var(--color-orange);
+  color: #fff;
+}
+
+.button__text {
+  position: relative;
+  z-index: 2;
+  white-space: nowrap;
+  transform: 0.4s color ease;
+}
+.button__text--blue {
+  color: var(--color-blue);
+}
+
+.button__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  right: 24px;
+  transition: transform 0.3s ease;
+  z-index: 2;
+}
+
+/* アイコンサイズの調整 */
+.button--small .button__icon {
+  width: 18px;
+  height: 18px;
+  right: 16px;
+}
+
+.button__icon-hover {
+  display: none;
+}
+
+/* アウトラインスタイル */
+.button--outline {
+  background-color: transparent;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  box-shadow: none;
+  width: 224px; /* 1サイズのみ */
+  height: 44px;
+}
+.button--outline .button__icon {
+}
+
+.button-gradient {
+  background: linear-gradient(90deg, #8bd9cc 0%, #b5fd62 100%);
+  position: relative;
+  transition: all 1s ease-out;
+}
+.button-gradient__text {
+  position: relative;
+}
+.button-gradient::before {
+  background: linear-gradient(270deg, #8bd9cc 0%, #b5fd62 100%);
+  content: "";
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  transition: all 0.4s ease-out;
+  width: 100%;
+  border-radius: 100px;
+}
+
+.button-gradient--pink {
+  background: linear-gradient(90deg, #f38fbb 0%, #ff8f5b 100%);
+  color: #fff;
+  position: relative;
+  transition: all 1s ease-out;
+}
+.button-gradient--pink::before {
+  background: linear-gradient(270deg, #f38fbb 0%, #ff8f5b 100%);
+  content: "";
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  transition: all 0.4s ease-out;
+  width: 100%;
+  border-radius: 100px;
+}
+
+@media screen and (max-width: 768px) {
+  .button {
+  }
+  .button--small {
+  }
+  .button--large {
+  }
+  .button--secondary {
+  }
+
+  .button__text {
+  }
+  .button__icon {
+  }
+  .button--small .button__icon {
+    width: 16px;
+    height: 16px;
+    right: 8px;
+  }
+  .button--reverse .button__icon-hover {
+  }
+
+  .button--outline {
+  }
+  .button--outline .button__icon {
+  }
+}
+
+/* ホバー効果はマウス操作が可能なデバイスでのみ有効 */
+@media (hover: hover) and (pointer: fine) {
+  /* すべてのボタンでホバー時にopacity:1を維持 */
+  .button:hover {
+    opacity: 1;
+  }
+
+  .button.button--blue:hover {
+    background-color: var(--color-blue);
+    border-color: #fff;
+  }
+  .button.button--orange:hover {
+    background-color: #fff;
+    border-color: var(--color-orange);
+    color: var(--color-orange);
+  }
+  /* 色反転ボタンのホバー - プライマリー */
+  .button--reverse:not(.button--secondary):hover {
+    background-color: #fff;
+    color: var(--color-primary);
+  }
+
+  .button--secondary:hover {
+    background-color: #fff;
+    color: var(--color-secondary);
+  }
+
+  .button:hover .button__icon-default {
+    display: none;
+  }
+
+  .button:hover .button__icon-hover {
+    display: block;
+  }
+  .button--outline:hover {
+    background-color: var(--color-primary);
+    color: #fff;
+  }
+  /* アウトラインスタイル */
+  .button--outline.button--reverse:hover {
+    background-color: var(--color-primary);
+    color: #fff;
+  }
+  .button--outline.button--reverse:hover .button__icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .button:hover .button__text--blue {
+    color: #fff;
+  }
+
+  .button-gradient:hover {
+    opacity: 1;
+  }
+  .button-gradient:hover::before {
+    opacity: 0;
+  }
+  .button-gradient--pink:hover {
+    opacity: 1;
+  }
+  .button-gradient--pink:hover::before {
+    opacity: 0;
+  }
+}

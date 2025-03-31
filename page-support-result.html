@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <title>WABE</title>
+    <meta name="description" content="" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans+JP:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="header">
+      <div class="header__inner">
+        <!-- ロゴ -->
+        <div class="header__logo-container">
+          <a href="/" class="header__logo">
+            <img src="assets/img/logo.svg" alt="WABE" width="139" height="42" />
+          </a>
+          <a href="" class="header__logo-support">サポート</a>
+        </div>
+
+        <!-- 配信者ボタン -->
+        <div class="header__button header__button--support">
+          <div class="header__button-support-size">
+            <a
+              href="#"
+              class="button button-gradient button-gradient--pink button--external"
+              ><span class="button-gradient__text">サービスページへ</span
+              ><img
+                src="assets/img/icon__external.svg"
+                alt=""
+                class="button__icon"
+            /></a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="page-content page-content--support">
+        <div class="container">
+          <div class="support-category__header">
+            <div class="breadcrumbs">
+              <span
+                ><span
+                  ><a class="breadcrumbs__link" href="">WABEサポート</a></span
+                ><span class="breadcrumbs__separator">&gt;</span
+                ><span class="breadcrumbs__current">検索結果</span></span
+              >
+            </div>
+            <div class="search__head">
+              <form
+                class="search__form search__form--category"
+                action="/search"
+                method="get"
+              >
+                <button
+                  type="submit"
+                  class="search__icon"
+                  aria-label="検索する"
+                >
+                  <img src="assets/img/icon__search.svg" alt="検索する" />
+                </button>
+                <input
+                  type="text"
+                  name="query"
+                  class="search__input"
+                  placeholder="サポートを検索"
+                />
+              </form>
+            </div>
+          </div>
+
+          <!-- サーチリザルトのコンテンツ ここから -->
+          <div class="search-result">
+            <header class="search-result__header">
+              <h1 class="search-result__title">
+                <span class="search-result__title-accent">アカウント</span
+                >の検索結果
+                <span class="search-result__count">00件</span>
+              </h1>
+              <!-- ソート選択ドロップダウン -->
+              <div class="search-result__icon sort-selector">
+                <div class="sort-selector__button">
+                  <img
+                    src="assets/img/icon__sort.svg"
+                    alt="ソート"
+                    class="sort-selector__icon sort-selector__icon--default"
+                  />
+                  <img
+                    src="assets/img/icon__sort--white.svg"
+                    alt="ソート"
+                    class="sort-selector__icon sort-selector__icon--hover"
+                  />
+                </div>
+                <div class="sort-selector__dropdown">
+                  <ul class="sort-selector__list">
+                    <li class="sort-selector__item">
+                      <a
+                        href="#"
+                        class="sort-selector__link sort-selector__link--active"
+                        >よく読まれている順</a
+                      >
+                    </li>
+                    <li class="sort-selector__item">
+                      <a href="#" class="sort-selector__link">記事の新しい順</a>
+                    </li>
+                    <li class="sort-selector__item">
+                      <a href="#" class="sort-selector__link">記事の古い順</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </header>
+
+            <div class="search-result__items">
+              <!-- 検索結果アイテム -->
+              <article class="result-item">
+                <h2 class="result-item__heading">
+                  <a href="" class="result-item__heading-link"
+                    >ユニゾンのIT人材事業は「社会を飛躍」させる。業界トップシェアを目指す次なる挑戦とはユニゾンのIT人材事業は「社会を飛躍」させる。業界トップシェアを目指す次なる挑戦とは</a
+                  >
+                </h2>
+
+                <div class="result-item__meta">
+                  <div class="result-item__category">
+                    <a href="#" class="result-item__category-link"
+                      >アカウント</a
+                    >
+                    <span class="result-item__category-separator">&gt;</span>
+                    <a href="#" class="result-item__category-link"
+                      >カテゴリー名カテゴリー名</a
+                    >
+                  </div>
+                  <time class="result-item__date" datetime="2024-05-28T23:16:00"
+                    >2024年5月28日 23:16</time
+                  >
+                </div>
+
+                <p class="result-item__text">
+                  テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
+                </p>
+              </article>
+
+              <!-- 検索結果アイテム (複製) -->
+              <article class="result-item">
+                <h2 class="result-item__heading">
+                  <a href="" class="result-item__heading-link"
+                    >見出しが入ります。見出しが入ります。</a
+                  >
+                </h2>
+
+                <div class="result-item__meta">
+                  <div class="result-item__category">
+                    <a href="#" class="result-item__category-link"
+                      >アカウント</a
+                    >
+                    <span class="result-item__category-separator">&gt;</span>
+                    <a href="#" class="result-item__category-link"
+                      >カテゴリー名カテゴリー名</a
+                    >
+                  </div>
+                  <time class="result-item__date" datetime="2024-05-28T23:16:00"
+                    >2024年5月28日 23:16</time
+                  >
+                </div>
+
+                <p class="result-item__text">
+                  テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
+                </p>
+              </article>
+            </div>
+            <div class="pagination">
+              <div class="wp-pagenavi-wrapper">
+                <div class="wp-pagenavi" role="navigation">
+                  <a
+                    class="previouspostslink"
+                    rel="prev"
+                    aria-label="前のページ"
+                    href="https://dev.kulogi.com/case/page/3/"
+                    ><span></span></a
+                  ><span class="extend">...</span
+                  ><a
+                    class="page smaller"
+                    title="ページ 2"
+                    href="https://dev.kulogi.com/case/page/2/"
+                    >2</a
+                  ><a
+                    class="page smaller"
+                    title="ページ 3"
+                    href="https://dev.kulogi.com/case/page/3/"
+                    >3</a
+                  ><span aria-current="page" class="current">4</span
+                  ><a
+                    class="page larger"
+                    title="ページ 5"
+                    href="https://dev.kulogi.com/case/page/5/"
+                    >5</a
+                  ><a
+                    class="page larger"
+                    title="ページ 6"
+                    href="https://dev.kulogi.com/case/page/6/"
+                    >6</a
+                  ><span class="extend">...</span
+                  ><a
+                    class="nextpostslink"
+                    rel="next"
+                    aria-label="次のページ"
+                    href="https://dev.kulogi.com/case/page/5/"
+                    ><span></span
+                  ></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- サーチリザルトのコンテンツ ここまで -->
+
+          <div class="search__footer">
+            <form
+              class="search__form search__form--category"
+              action="/search"
+              method="get"
+            >
+              <button type="submit" class="search__icon" aria-label="検索する">
+                <img src="assets/img/icon__search.svg" alt="検索する" />
+              </button>
+              <input
+                type="text"
+                name="query"
+                class="search__input"
+                placeholder="サポートを検索"
+              />
+            </form>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer footer--support">
+      <div class="container">
+        <p class="footer__copyright">Copyright ©WABE. All Rights Reserved.</p>
+      </div>
+    </footer>
+
+    <script src="https://unpkg.com/konva@9/konva.min.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
+      integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"
+      integrity="sha512-onMTRKJBKz8M1TnqqDuGBlowlH0ohFzMXYRNebz+yOcc5TQr/zAKsthzhuv0hiyUKEiQEQXEynnXCvNTOk50dg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="assets/js/script.js"></script>
+    <!-- <script src="assets/js/pointsection-animation.js"></script> -->
+    <!-- MVCatchの幾何学Slider -->
+    <script src="assets/js/catch-slider.js"></script>
+    <!-- MV左右の幾何学模様 -->
+    <script src="assets/js/mainvisual-shapes.js"></script>
+
+    <!-- <script src="assets/js/catch-shapes.js"></script> -->
+
+    <!-- conceptセクションの幾何学模様 -->
+    <script src="assets/js/conceptSection-animation.js"></script>
+
+    <!-- useセクションの幾何学模様 -->
+    <script src="assets/js/use-konva-canvas.js"></script>
+  </body>
+</html>

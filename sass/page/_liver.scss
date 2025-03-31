@@ -1,0 +1,333 @@
+.liver-mainvisual {
+}
+.liver-mainvisual__container {
+  display: flex;
+  align-items: center;
+  width: 67.7%;
+  margin-inline: auto;
+  background-color: pink;
+}
+// 左カラム
+.liver-mainvisual__content {
+  flex: 1;
+}
+.liver-mainvisual__badges {
+  display: flex;
+  gap: 8px;
+}
+.liver-mainvisual__badge {
+  border-radius: 50%;
+  width: 112px;
+  height: 112px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.liver-mainvisual__badge.liver-mainvisual__badge--fee {
+  background-color: var(--color-primary);
+  color: var(--color-primary);
+}
+.liver-mainvisual__badge.liver-mainvisual__badge--delivery {
+  background-color: var(--color-blue);
+  color: var(--color-blue);
+}
+.liver-mainvisual__badge-text {
+  display: inline-block;
+  background-color: #fff;
+  padding: 2px 10px;
+  border-radius: 34px;
+  font-size: 18px;
+  font-weight: 700;
+}
+.liver-mainvisual__badge-value {
+  color: #fff;
+  font-size: 32px;
+  line-height: 1;
+  font-weight: 700;
+  margin-top: 10px;
+}
+.liver-mainvisual__message {
+  margin-top: 16px;
+}
+.liver-mainvisual__heading {
+  font-size: 48px;
+  line-height: 1.5;
+}
+.liver-mainvisual__apps {
+  margin-top: 48px;
+}
+// 右側カラム
+.liver-mainvisual__image-container {
+  position: relative;
+  width: 47%;
+}
+.liver-mainvisual__phone-container {
+  height: 100%;
+}
+.liver-mainvisual__image {
+  position: absolute;
+  // visibility: hidden; /* GSAPでアニメーション時に表示 */
+}
+/* スマートフォンと人物の配置 */
+.liver-mainvisual__image--phone {
+  position: relative;
+}
+/* 化粧品アイテムの配置 */
+.liver-mainvisual__image--item-1 {
+  width: 50px;
+  top: 28%;
+  left: 8.1%;
+  z-index: 3;
+  animation: float 6s ease-in-out infinite;
+}
+#animation-container {
+  width: 300px;
+  height: 300px;
+  margin: 0 auto;
+}
+.liver-mainvisual__image--item-2 {
+  width: 61px;
+  bottom: 7%;
+  left: 12.45%;
+  z-index: 3;
+  animation: float 7s ease-in-out infinite 0.5s;
+}
+.liver-mainvisual__image--item-3 {
+  width: 107px;
+  top: 14%;
+  right: -8.36%;
+  z-index: 3;
+  animation: float 5s ease-in-out infinite 1s;
+}
+.liver-mainvisual__image--item-4 {
+  width: 66px;
+  top: 50%;
+  right: -2.23%;
+  z-index: 3;
+  animation: float 6.5s ease-in-out infinite 1.5s;
+}
+.liver-mainvisual__image--item-5 {
+  width: 81px;
+  bottom: 13%;
+  right: 2%;
+  z-index: 3;
+  animation: float 5.5s ease-in-out infinite 2s;
+}
+// POINT
+.liver-point {
+  background-color: #f3fff6;
+  padding: 160px 0;
+}
+.liver-point__features {
+  margin-top: 32px;
+}
+.liver-point__feature {
+  width: 597px;
+  max-width: 90%;
+  background-color: #fff;
+  border-radius: 24px;
+  padding: 32px;
+  display: flex;
+  align-items: center;
+  gap: 48px;
+}
+.liver-point__feature:nth-of-type(2) {
+  margin-left: auto;
+  margin-top: -102px;
+}
+.liver-point__feature:nth-of-type(3) {
+  margin-top: -102px;
+}
+.liver-point__image-container {
+  width: 31%;
+}
+.liver-point__image {
+}
+.liver-point__description {
+  flex: 1;
+}
+.liver-point__heading {
+  font-size: 20px;
+  line-height: 1.5;
+  color: var(--color-blue);
+  font-weight: 700;
+}
+.liver-point__text {
+  margin-top: 24px;
+}
+
+// PASSION
+.liver-passion {
+  padding: 160px 0;
+}
+.liver-passion__content {
+  display: flex;
+  gap: 80px;
+}
+.liver-passion__intro {
+  width: 34%;
+}
+.liver-passion__image-container {
+  margin-top: 80px;
+}
+.liver-passion__image {
+}
+.liver-passion__message {
+  flex: 1;
+}
+.liver-passion__heading {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--color-blue);
+  line-height: 1.346;
+}
+.liver-passion__text-container {
+  margin-top: 24px;
+}
+.liver-passion__text {
+}
+.liver-passion__text-container .liver-passion__text:not(:first-child) {
+  margin-top: 1.5em;
+}
+.liver-passion__signature-block {
+  margin-top: 48px;
+}
+.liver-passion__signature {
+}
+.liver-passion__signature-image {
+}
+.liver-passion__company {
+  margin-top: 24px;
+  font-size: 14px;
+}
+.liver-passion__company-name {
+}
+.liver-passion__company-position {
+}
+@media (max-width: 768px) {
+  .liver-mainvisual {
+    width: 87.7%;
+    margin-inline: auto;
+  }
+  .liver-mainvisual__container {
+    flex-direction: column;
+    width: 100%;
+  }
+  // 左カラム
+  .liver-mainvisual__content {
+  }
+  .liver-mainvisual__badges {
+    justify-content: center;
+  }
+  .liver-mainvisual__badge {
+    width: 80px;
+    height: 80px;
+  }
+  .liver-mainvisual__badge.liver-mainvisual__badge--fee {
+  }
+  .liver-mainvisual__badge.liver-mainvisual__badge--delivery {
+  }
+  .liver-mainvisual__badge-text {
+    font-size: 12px;
+    padding: 0 10px;
+  }
+  .liver-mainvisual__badge-value {
+    font-size: 22px;
+    margin-top: 6px;
+  }
+  .liver-mainvisual__message {
+    margin-top: 8px;
+    text-align: center;
+  }
+  .liver-mainvisual__heading {
+    font-size: 32px;
+  }
+  .liver-mainvisual__apps {
+    margin-top: 24px;
+  }
+  // 右側カラム
+  .liver-mainvisual__image-container {
+    margin-top: 34px;
+    width: 88.9%;
+    margin-left: auto;
+  }
+  .liver-mainvisual__phone-container {
+  }
+  .liver-mainvisual__image {
+  }
+  /* スマートフォンと人物の配置 */
+  .liver-mainvisual__image--phone {
+  }
+  /* 化粧品アイテムの配置 */
+  .liver-mainvisual__image--item-1 {
+    width: 18px;
+  }
+  .liver-mainvisual__image--item-2 {
+    width: 38px;
+  }
+  .liver-mainvisual__image--item-3 {
+    width: 67px;
+  }
+  .liver-mainvisual__image--item-4 {
+    width: 42px;
+  }
+  .liver-mainvisual__image--item-5 {
+    width: 39px;
+  }
+  // POINT
+  .liver-point {
+  }
+  .liver-point__features {
+  }
+  .liver-point__feature {
+  }
+  .liver-point__feature:nth-of-type(2) {
+  }
+  .liver-point__feature:nth-of-type(3) {
+  }
+  .liver-point__image-container {
+  }
+  .liver-point__image {
+  }
+  .liver-point__description {
+  }
+  .liver-point__heading {
+  }
+  .liver-point__text {
+  }
+
+  // PASSION
+  .liver-passion {
+  }
+  .liver-passion__content {
+  }
+  .liver-passion__intro {
+  }
+  .liver-passion__image-container {
+  }
+  .liver-passion__image {
+  }
+  .liver-passion__message {
+  }
+  .liver-passion__heading {
+  }
+  .liver-passion__text-container {
+  }
+  .liver-passion__text {
+  }
+  .liver-passion__text-container .liver-passion__text:not(:first-child) {
+  }
+  .liver-passion__signature-block {
+  }
+  .liver-passion__signature {
+  }
+  .liver-passion__signature-image {
+  }
+  .liver-passion__company {
+  }
+  .liver-passion__company-name {
+  }
+  .liver-passion__company-position {
+  }
+}

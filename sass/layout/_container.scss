@@ -1,0 +1,33 @@
+.page-content--support {
+  padding-bottom: 48px;
+}
+.container {
+  width: 100%;
+  max-width: 1054px;
+  padding: 0 15px;
+  margin: 0 auto;
+}
+.section-layout {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+.section-layout--align-center {
+  align-items: center;
+}
+@media screen and (max-width: 769px) {
+  .page-content--support {
+  }
+  .container {
+    padding: 0;
+    width: 87.7%;
+  }
+  .section-layout {
+    flex-direction: column;
+    height: auto;
+  }
+  .section-layout--align-center {
+  }
+}
+@media (hover: hover) and (pointer: fine) {
+}

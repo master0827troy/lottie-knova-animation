@@ -1,0 +1,133 @@
+.page__content--terms > *:first-child {
+  margin-top: 0;
+}
+.page__content--terms > *:last-child {
+  margin-bottom: 0;
+}
+/* 見出しのスタイル */
+.page__content--terms h2 {
+  font-size: 26px;
+  font-weight: 700;
+  margin: 3rem 0 1rem;
+}
+/* 段落のスタイル */
+.page__content--terms p {
+  margin-bottom: 1.5rem;
+}
+/* リストのスタイル */
+.page__content--terms ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.page__content--terms ol ol {
+  margin-top: 0.5em;
+}
+.page__content--terms ol > li {
+  position: relative;
+}
+/* 丸数字リストのスタイル */
+.page__content--terms ol[type="①"] {
+  padding-left: 2rem;
+  counter-reset: circle-counter;
+  list-style-type: none;
+}
+
+.page__content--terms ol[type="①"] > li {
+  counter-increment: circle-counter;
+  position: relative;
+}
+/* 丸の背景用の疑似要素 */
+.page__content--terms ol[type="①"] > li::before {
+  content: "";
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #000;
+  border-radius: 50%;
+  position: absolute;
+  left: -1.8rem;
+  top: 8px;
+}
+
+/* 数字用の疑似要素 */
+.page__content--terms ol[type="①"] > li::after {
+  content: counter(circle-counter);
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  text-align: center;
+  position: absolute;
+  left: -1.8rem;
+  top: 6px;
+  font-size: 11px;
+  z-index: 1;
+}
+/* 括弧付き数字リストのスタイル */
+.page__content--terms ol[type="(1)"] {
+  padding-left: 2rem;
+  counter-reset: paren-counter;
+  list-style-type: none;
+}
+.page__content--terms ol[type="(1)"] > li {
+  counter-increment: paren-counter;
+  position: relative;
+}
+.page__content--terms ol[type="(1)"] > li::before {
+  content: "(" counter(paren-counter) ")";
+  position: absolute;
+  left: -2rem;
+  top: 0;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  /* 見出しのスタイル */
+  .page__content--terms h2 {
+    font-size: 16px;
+    margin: 1.5em 0 1em;
+  }
+  /* 段落のスタイル */
+  .page__content--terms p {
+    font-size: 14px;
+  }
+  /* リストのスタイル */
+  .page__content--terms ol {
+    font-size: 14px;
+  }
+  .page__content--terms ol ol {
+  }
+  .page__content--terms ol > li {
+  }
+  /* 丸数字リストのスタイル */
+  .page__content--terms ol[type="①"] {
+    padding-left: 1.5em;
+  }
+
+  .page__content--terms ol[type="①"] > li {
+  }
+  /* 丸の背景用の疑似要素 */
+  .page__content--terms ol[type="①"] > li::before {
+    width: 14px;
+    height: 14px;
+    left: -1.4em;
+    top: 6px;
+  }
+
+  /* 数字用の疑似要素 */
+  .page__content--terms ol[type="①"] > li::after {
+    width: 14px;
+    height: 14px;
+    left: -1.2rem;
+    top: 3px;
+    font-size: 10px;
+  }
+  /* 括弧付き数字リストのスタイル */
+  .page__content--terms ol[type="(1)"] {
+    padding-left: 1.5em;
+  }
+  .page__content--terms ol[type="(1)"] > li {
+  }
+  .page__content--terms ol[type="(1)"] > li::before {
+    left: -1.4em;
+  }
+}

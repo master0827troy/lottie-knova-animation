@@ -1,0 +1,184 @@
+/* メインの構造用スタイル */
+.mainvisual__catch-shapes {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+/* top用のスタイル */
+.mainvisual__catch-shapes--top {
+  position: absolute;
+  left: 0;
+  top: -64px; /* 上部に配置 */
+  width: 100%;
+  height: 128px; /* 2段分の高さ */
+  pointer-events: none;
+  overflow: visible;
+}
+
+/* bottom用のスタイル */
+.mainvisual__catch-shapes--bottom {
+  position: absolute;
+  left: 0;
+  bottom: -64px; /* 下部に配置 */
+  width: 100%;
+  height: 128px; /* 2段分の高さ */
+  pointer-events: none;
+  overflow: visible;
+}
+
+/* 各行の配置 */
+.mainvisual__catch-shapes-row {
+  position: absolute;
+  width: 100%;
+  height: 64px;
+}
+
+/* top用の行配置 */
+.mainvisual__catch-shapes--top .mainvisual__catch-shapes-row--1 {
+  top: 64px;
+  // background-color: blue;
+}
+
+.mainvisual__catch-shapes--top .mainvisual__catch-shapes-row--2 {
+  top: 0px;
+}
+
+/* bottom用の行配置 */
+.mainvisual__catch-shapes--bottom .mainvisual__catch-shapes-row--1 {
+  bottom: 64px;
+  // background-color: pink;
+}
+
+.mainvisual__catch-shapes--bottom .mainvisual__catch-shapes-row--2 {
+  bottom: 0;
+}
+
+/* Swiperの基本スタイル */
+.mainvisual__catch-shapes .swiper {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.mainvisual__catch-shapes .swiper-slide {
+  width: 64px !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mainvisual__catch-shapes .shape-image {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+}
+
+.mainvisual__catch-shapes .swiper-wrapper {
+  transition-timing-function: linear !important;
+}
+
+/* 水平方向の入れ替えアニメーション */
+@keyframes swapLeft {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-16px);
+  }
+  50% {
+    transform: translateX(-32px);
+  }
+  75% {
+    transform: translateX(-16px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes swapRight {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(16px);
+  }
+  50% {
+    transform: translateX(32px);
+  }
+  75% {
+    transform: translateX(16px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* 垂直方向の移動アニメーション */
+@keyframes moveUpFixed {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-64px);
+  }
+}
+
+@keyframes moveDownFixed {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(64px);
+  }
+}
+
+@keyframes resetFromUp {
+  0% {
+    transform: translateY(-64px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes resetFromDown {
+  0% {
+    transform: translateY(64px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* アニメーション用クラス */
+.mainvisual__catch-shapes .swap-left {
+  animation: swapLeft 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mainvisual__catch-shapes .swap-right {
+  animation: swapRight 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide-up-fixed {
+  animation: moveUpFixed 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(-64px);
+}
+
+.slide-down-fixed {
+  animation: moveDownFixed 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(64px);
+}
+
+.slide-reset-from-up {
+  animation: resetFromUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(0);
+}
+
+.slide-reset-from-down {
+  animation: resetFromDown 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(0);
+}

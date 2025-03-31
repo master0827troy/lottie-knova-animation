@@ -1,0 +1,54 @@
+/* 情報テーブルのスタイル */
+.info-table__row {
+  display: flex;
+  border-bottom: 1px solid #cecece;
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+.info-table__row:first-child {
+  padding-top: 0;
+}
+.info-table__row:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+.info-table__header {
+  width: 150px;
+}
+.info-table__data {
+  flex: 1;
+}
+.info-table__item {
+  display: flex;
+}
+.info-table__position {
+  width: 7em;
+  flex-shrink: 0;
+}
+.info-table__name {
+  flex: 1;
+}
+@media (max-width: 768px) {
+  .info-table__row {
+    flex-direction: column;
+    gap: 8px;
+    font-size: 14px;
+  }
+  .info-table__row:first-child {
+  }
+  .info-table__row:last-child {
+    padding-bottom: 16px;
+    border-bottom: 1px solid #cecece;
+  }
+  .info-table__header {
+    width: 100%;
+  }
+  .info-table__data {
+  }
+  .info-table__item {
+  }
+  .info-table__position {
+  }
+  .info-table__name {
+  }
+}

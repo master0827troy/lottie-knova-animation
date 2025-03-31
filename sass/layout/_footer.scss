@@ -1,0 +1,205 @@
+.footer {
+  padding: 32px 48px;
+  background-color: #fff;
+}
+
+.footer__inner {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+/* 1段目：メインナビゲーション */
+.footer__main {
+  display: flex;
+  align-items: center;
+}
+.footer__logo {
+  display: block;
+  flex-shrink: 0;
+}
+.footer__logo img {
+  width: 139px;
+  height: 42px;
+  vertical-align: bottom;
+}
+.footer__nav {
+  margin-left: auto;
+}
+.footer__button {
+  margin-left: 36px;
+  display: flex;
+  gap: 8px;
+}
+/* 2段目：ダウンロードとSNS */
+.footer__secondary {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 26px;
+}
+.footer__download {
+}
+.footer__social {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.footer__social-text {
+  font-size: 12px;
+  line-height: 1;
+  font-family: var(--font-en);
+  display: flex;
+  align-items: center;
+}
+.footer__social-links {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.footer__social-link {
+  display: flex;
+  align-items: center;
+  transition: opacity 0.3s;
+}
+.footer__social-link img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+/* 3段目：サブナビゲーション */
+.footer__sub {
+  margin-top: 80px;
+}
+.footer__sub-list {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  flex-wrap: wrap;
+}
+.footer__sub-item {
+  position: relative;
+}
+.footer__sub-item:not(:first-child)::before {
+  position: absolute;
+  content: "";
+  left: 0;
+  top: 5px;
+  width: 1px;
+  height: 16px;
+  background-color: #000;
+}
+.footer__sub-link {
+  font-size: 14px;
+  transition: opacity 0.3s;
+  padding: 0 24px;
+  display: block;
+}
+/* 4段目：コピーライト */
+.footer__copyright {
+  margin-top: 48px;
+  text-align: center;
+  font-size: 14px;
+  font-family: var(--font-en);
+}
+
+// supportページ専用
+.footer--support {
+}
+.footer--support .footer__copyright {
+  border-top: 1px solid #d7d7d7;
+  padding-top: 32px;
+  margin-top: 0;
+}
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .footer {
+    padding: 48px 0 24px;
+  }
+  .footer__inner {
+    width: 87.7%;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  /* 1段目：メインナビゲーション */
+  .footer__main {
+    display: contents;
+  }
+  .footer__logo {
+    order: 0;
+    width: 50%;
+  }
+  .footer__logo--sp-full {
+    text-align: center;
+    width: 100%;
+  }
+  .footer__nav {
+    margin: 0;
+    order: 3;
+    width: 100%;
+    margin-top: 48px;
+  }
+  .footer__button {
+    order: 1;
+    width: 50%;
+    margin-left: 0;
+    text-align: right;
+  }
+  .footer__button--sp-full {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 24px;
+  }
+  .nav-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    text-align: left;
+    gap: 24px 8px;
+  }
+
+  /* 2段目：ダウンロードとSNS */
+  .footer__secondary {
+    display: contents;
+  }
+  .footer__download {
+    order: 2;
+    flex-direction: column;
+    margin-top: 20px;
+    width: 100%;
+  }
+  .footer__social {
+    justify-content: center;
+    order: 5;
+    margin-top: 32px;
+    width: 100%;
+  }
+  .footer__social-text {
+  }
+  /* 3段目：サブナビゲーション */
+  .footer__sub {
+    order: 4;
+    width: 100%;
+    margin-top: 32px;
+  }
+  .footer__sub-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .footer__sub-item {
+  }
+  .footer__sub-item:not(:first-child)::before {
+    content: none;
+  }
+  .footer__sub-link {
+    padding: 0;
+    font-size: 12px;
+  }
+  /* 4段目：コピーライト */
+  .footer__copyright {
+    order: 6;
+    margin-top: 32px;
+    width: 100%;
+  }
+}
+@media (hover: hover) and (pointer: fine) {
+}

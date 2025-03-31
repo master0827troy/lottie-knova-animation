@@ -1,0 +1,170 @@
+/* WP-PageNavi カスタマイズ - 共通スタイル */
+.pagination {
+  margin-top: 48px;
+}
+.wp-pagenavi {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ページ番号 */
+.wp-pagenavi a,
+.wp-pagenavi span.current,
+.wp-pagenavi span.extend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  line-height: 1.2;
+  font-family: var(--font-en);
+  transition: background-color 0.3s ease, color 0.3s ease,
+    border-color 0.3s ease;
+  text-decoration: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* 通常のページ番号 */
+.wp-pagenavi a.page {
+  background-color: var(--color-primary);
+  color: #fff;
+  border: 1px solid var(--color-primary);
+}
+
+/* 現在のページ */
+.wp-pagenavi span.current {
+  background-color: #fff;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+}
+
+/* 前へ・次へリンク */
+.wp-pagenavi a.previouspostslink,
+.wp-pagenavi a.nextpostslink {
+  background-color: var(--color-primary);
+  color: #fff;
+  position: relative;
+  border: 1px solid var(--color-primary);
+}
+
+/* 前へ・次への矢印 */
+.wp-pagenavi a.previouspostslink::before,
+.wp-pagenavi a.nextpostslink::before {
+  content: "";
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-style: solid;
+  border-width: 2px 0 0 2px;
+  border-radius: 2px;
+  border-color: #fff;
+  transition: border-color 0.3s ease;
+}
+
+.wp-pagenavi a.previouspostslink::before {
+  transform: rotate(-45deg) translate(2px, 1px);
+}
+
+.wp-pagenavi a.nextpostslink::before {
+  transform: rotate(135deg) translate(1px, 2px);
+}
+
+/* 省略記号 */
+.wp-pagenavi span.extend {
+  font-weight: 700;
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  line-height: 1;
+  margin-bottom: 10px;
+  width: fit-content;
+}
+
+/* ニュースページ固有のスタイル */
+.page--news .pagination {
+  margin-top: 80px;
+}
+.page--news .wp-pagenavi {
+  justify-content: flex-end;
+}
+
+.page--news .pagination .wp-pagenavi a.page {
+  background-color: transparent;
+  color: var(--color-blue);
+  border: 1px solid transparent;
+}
+
+.page--news .pagination .wp-pagenavi span.current {
+  background-color: #fff;
+  color: var(--color-blue);
+  border: 1px solid var(--color-blue);
+}
+
+.page--news .pagination .wp-pagenavi a.previouspostslink,
+.page--news .pagination .wp-pagenavi a.nextpostslink {
+  background-color: transparent;
+  color: var(--color-blue);
+  border: 1px solid transparent;
+}
+
+.page--news .pagination .wp-pagenavi a.previouspostslink::before,
+.page--news .pagination .wp-pagenavi a.nextpostslink::before {
+  border-color: var(--color-blue);
+}
+
+.page--news .pagination .wp-pagenavi span.extend {
+  color: var(--color-blue);
+}
+
+/* タブレット・スマートフォン向けスタイル */
+@media screen and (max-width: 768px) {
+  .pagination {
+    margin-top: 32px;
+  }
+
+  /* ニュースページ固有のスタイル */
+  .page--news .pagination {
+    margin-top: 48px;
+  }
+  .page--news .wp-pagenavi {
+    justify-content: center;
+  }
+}
+
+/* ホバー効果 - マウスデバイスのみに適用 */
+@media (hover: hover) and (pointer: fine) {
+  /* デフォルトのホバー */
+  .wp-pagenavi a:hover {
+    opacity: 1;
+    background-color: #fff;
+    color: var(--color-primary);
+  }
+
+  .wp-pagenavi a:hover.previouspostslink::before,
+  .wp-pagenavi a:hover.nextpostslink::before {
+    border-color: var(--color-primary);
+  }
+
+  /* ニュースページのホバー */
+  .page--news .pagination .wp-pagenavi a.page:hover {
+    background-color: var(--color-blue);
+    color: #fff;
+    border-color: var(--color-blue);
+  }
+
+  .page--news .pagination .wp-pagenavi a.previouspostslink:hover,
+  .page--news .pagination .wp-pagenavi a.nextpostslink:hover {
+    background-color: var(--color-blue);
+    color: #fff;
+    border-color: var(--color-blue);
+  }
+
+  .page--news .pagination .wp-pagenavi a.previouspostslink:hover::before,
+  .page--news .pagination .wp-pagenavi a.nextpostslink:hover::before {
+    border-color: #fff;
+  }
+}

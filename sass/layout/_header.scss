@@ -1,0 +1,219 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  background-color: #fff;
+}
+.header__inner {
+  display: flex;
+  align-items: center;
+  padding: 13px 24px;
+}
+.header__logo-container {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.header__logo {
+  width: 139px;
+}
+.header__logo img {
+}
+.header__logo-support {
+  font-size: 20px;
+  line-height: 1.5;
+  font-weight: 500;
+}
+/* PCナビゲーション */
+.header__nav {
+  margin-left: auto;
+}
+.nav-list {
+  display: flex;
+  gap: 36px;
+}
+.nav-list__item {
+  line-height: 1.2;
+}
+.nav-list__link {
+  font-size: 14px;
+  color: #282828;
+  transition: opacity 0.3s;
+  font-family: var(--font-en);
+}
+.header__button {
+  margin-left: 36px;
+  display: flex;
+  gap: 8px;
+}
+.header__button--support {
+  margin-left: auto;
+}
+.header__button-size {
+  width: 144px;
+  height: 40px;
+}
+.header__button-support-size {
+  width: 199px;
+  height: 44px;
+}
+/* ハンバーガーメニュー */
+.hamburger {
+  display: none;
+}
+
+/* SPナビゲーション */
+.sp-nav {
+  display: none;
+}
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  /* body固定 */
+  body.is-menu-open {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* ハンバーガーメニュー開閉状態 */
+  .hamburger.is-menu-open .hamburger__line {
+    /* ハンバーガーアイコンを×に変更 */
+  }
+
+  .sp-nav.is-menu-open {
+    visibility: visible;
+    opacity: 1;
+  }
+  .header {
+  }
+  .header__inner {
+    padding: 8px 16px;
+  }
+  .header__logo {
+    position: relative;
+    z-index: 105;
+    width: 105px;
+  }
+  .header__logo img {
+  }
+  .header__logo-support {
+    font-size: 14px;
+  }
+  /* PCナビゲーション */
+  .header__nav {
+    display: none;
+  }
+  .nav-list {
+  }
+  .nav-list__item {
+  }
+  .nav-list__link {
+  }
+  .header__button {
+    display: none;
+  }
+  .header__button--support {
+  }
+  .header__button-size {
+  }
+  .header__button-support-size {
+  }
+  /* ハンバーガーメニュー */
+  /* ハンバーガーメニュー */
+  .hamburger {
+    display: block;
+    width: 40px;
+    height: 40px;
+    position: relative;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 101;
+    margin-left: auto;
+    background-color: #bababa;
+    border-radius: 50%;
+  }
+  .hamburger__line {
+    position: absolute;
+    left: 11px;
+    width: 18px;
+    height: 2px;
+    background-color: #fff;
+    border-radius: 1px;
+    transition: width 0.3s ease, transform 0.3s ease, top 0.3s ease,
+      left 0.3s ease;
+    transform-origin: center center;
+  }
+  .hamburger__line:nth-child(1) {
+    top: 11px;
+  }
+  .hamburger__line:nth-child(2) {
+    top: 19px;
+    transition: opacity 0.3s ease;
+  }
+  .hamburger__line:nth-child(3) {
+    bottom: 11px;
+  }
+  /* ハンバーガーメニュー開放時 */
+  .hamburger[aria-expanded="true"] .hamburger__line:nth-child(1) {
+    top: 19px;
+    left: 8px;
+    width: 24px;
+    transform-origin: center;
+    transform: rotate(45deg);
+  }
+  .hamburger[aria-expanded="true"] .hamburger__line:nth-child(2) {
+    opacity: 0;
+  }
+  .hamburger[aria-expanded="true"] .hamburger__line:nth-child(3) {
+    top: 19px;
+    bottom: auto;
+    left: 8px;
+    width: 24px;
+    transform-origin: center;
+    transform: rotate(-45deg);
+  }
+  /* SPナビゲーション */
+  .sp-nav {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: #fff;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+    overflow-y: auto;
+  }
+  .sp-nav[aria-hidden="false"] {
+    opacity: 1;
+    visibility: visible;
+  }
+  .sp-nav__inner {
+    padding: 92px 30px 40px;
+  }
+  .sp-nav__list {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+  }
+  .sp-nav__link {
+    font-size: 20px;
+  }
+  .sp-nav__buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .sp-nav__buttons .button {
+    width: 158px;
+    height: 40px;
+  }
+}
+@media (hover: hover) and (pointer: fine) {
+}

@@ -1,0 +1,23 @@
+.breadcrumbs {
+  padding-right: 24px;
+}
+
+.breadcrumbs__link {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.breadcrumbs__separator {
+  margin: 0 0.5em;
+}
+
+.breadcrumbs__current {
+  font-size: 14px;
+}
+
+@media screen and (max-width: 768px) {
+  .breadcrumbs {
+    display: none;
+  }
+}

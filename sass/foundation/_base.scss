@@ -1,0 +1,67 @@
+:root {
+  --font-ja__default: "Noto Sans JP", serif;
+  --font-en: "Inter", "Noto Sans JP", serif;
+  --color-primary: #f38fbb;
+  --color-yellow: #f7d974;
+  --color-blue: #8bd9cc;
+  --color-green: #b5fd62;
+  --color-orange: #ff8f5b;
+  --header-height: 68px;
+}
+html {
+  overflow: auto;
+}
+body {
+  position: relative;
+  overflow: clip;
+  line-height: 1.75;
+  font-weight: 400;
+  color: #000;
+  font-family: var(--font-ja__default);
+}
+main {
+  margin-top: var(--header-height);
+}
+a {
+  display: inline-block;
+  color: inherit;
+  word-break: break-all;
+}
+a:hover,
+a:focus {
+  opacity: 0.7;
+}
+img {
+  width: 100%;
+  object-fit: cover;
+}
+.sp {
+  display: none;
+}
+// .fade-in {
+//   opacity: 0;
+//   transform: translateY(20px);
+//   transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+// }
+
+// .fade-in.is-active {
+//   opacity: 1;
+//   transform: translateY(0);
+// }
+@media screen and (max-width: 769px) {
+  :root {
+    --header-height: 56px;
+  }
+  .pc {
+    display: none;
+  }
+  .sp {
+    display: block;
+  }
+  .inner {
+    width: 87%;
+    padding: 0;
+  }
+}
+@media (hover: hover) and (pointer: fine) {
+}

@@ -1,0 +1,50 @@
+.section-title {
+}
+.section-title__en {
+  font-size: 18px;
+  line-height: 1.2;
+  font-family: var(--font-en);
+  font-weight: 400;
+  transition: color 0.4s ease;
+}
+.section-title__ja {
+  font-size: 32px;
+  line-height: 1.75;
+  font-weight: 500;
+  margin-top: 16px;
+  transition: color 0.4s ease;
+}
+.section-title__ja.--small {
+  font-size: 26px;
+}
+
+// TopPage-useSectionの背景色変更後
+.use.is-background .section-title__en {
+  color: #fff;
+}
+.use.is-background .section-title__ja {
+  color: #fff;
+}
+
+@media screen and (max-width: 769px) {
+  .section-title {
+  }
+  .section-title__en {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  .section-title__ja {
+    font-size: 24px;
+  }
+  .section-title__ja.--small {
+    font-size: 24px;
+  }
+
+  // TopPage-useSectionの背景色変更後
+  .use.is-background .section-title__en {
+  }
+  .use.is-background .section-title__ja {
+  }
+}
+@media (hover: hover) and (pointer: fine) {
+}
