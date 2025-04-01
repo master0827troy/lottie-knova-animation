@@ -106,40 +106,64 @@ function renderLottieGridBottom2() {
 
 renderLottieGridBottom2();
 
-function getRandomLottieFilesCenter(num) {
-  let shuffled = [];
-  for (let i = 1; i < 46; i++) {
-    const urlID = Math.floor(Math.random() * lottieFiles.length);
-    shuffled.push(lottieFiles[urlID]);
-  }
+// function getRandomLottieFilesCenter(num) {
+//   let shuffled = [];
+//   for (let i = 1; i < 46; i++) {
+//     const urlID = Math.floor(Math.random() * lottieFiles.length);
+//     shuffled.push(lottieFiles[urlID]);
+//   }
 
-  return shuffled.slice(0, num);
-}
+//   return shuffled.slice(0, num);
+// }
 
-function renderLottieGridCenter() {
-  const gridContainer = document.getElementById("mainvisual_shapes_center");
-  gridContainer.innerHTML = ""; // Clear previous animations
-  const selectedFiles = getRandomLottieFilesCenter(45);
+// function renderLottieGridCenter() {
+//   const gridContainer = document.getElementById("mainvisual_shapes_center");
+//   gridContainer.innerHTML = ""; // Clear previous animations
+//   const selectedFiles = getRandomLottieFilesCenter(45);
 
-  selectedFiles.forEach((url, index) => {
-    const player = document.createElement("dotlottie-player");
-    player.src = url;
-    player.loop = true;
-    player.autoplay = true;
-    player.speed = 1;
-    (index > 14 && index < 30)
-      ? (player.style.opacity = 0)
-      : (player.style.opacity = 100);
-    player.background = "transparent";
-    gridContainer.appendChild(player);
-  });
-}
+//   selectedFiles.forEach((url, index) => {
+//     const player = document.createElement("dotlottie-player");
+//     player.src = url;
+//     player.loop = true;
+//     player.autoplay = true;
+//     player.speed = 1;
+//     (index > 14 && index < 30)
+//       ? (player.style.opacity = 0)
+//       : (player.style.opacity = 100);
+//     player.background = "transparent";
+//     gridContainer.appendChild(player);
+//   });
+// }
 
-renderLottieGridCenter();
+// renderLottieGridCenter();
 
 // ---------------------------
 
-stage.find('Layer').forEach(layer => layer.destroy());
+// Grid Size
+const cols = 15;
+const rows = 3;
+// Lottie Animation URLs
 
-const layer = new Konva.Layer();
-stage.add(layer);
+let lottieObjects = [];
+
+// Create Grid of Animations
+function getRandomLottie() {
+  return lottieFiles[Math.floor(Math.random() * lottieFiles.length)];
+}
+
+function createLottieGrid() {
+  const container = document.getElementById("mainvisual_shapes_center");
+
+  for (let i = 0; i < 45; i++) {
+    const player = document.createElement("dotlottie-player");
+    i > 14 && i < 30
+      ? (player.style.opacity = 0)
+      : (player.style.opacity = 100);
+    player.src = getRandomLottie();
+    player.loop = true;
+    player.autoplay = true;
+    container.appendChild(player);
+  }
+}
+createLottieGrid();
+
