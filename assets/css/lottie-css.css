@@ -16,14 +16,14 @@
   position: absolute;
 }
 
-.grid-container-center {
-  display: grid;
-  grid-template-columns: repeat(15, 64px); /* 5 columns */
-  position: absolute;
-}
-
 #mainvisual_shapes_top {
   top: 0;
+}
+
+.grid-container-center {
+  display: grid;
+  grid-template-columns: repeat(20, 64px); /* 5 columns */
+  position: absolute;
 }
 
 #mainvisual_shapes_bottom1 {
@@ -37,3 +37,11 @@
 }
 
 /* ------------------------ */
+
+#mainvisual_shapes_center-top {
+  top: 0;
+}
+
+#mainvisual_shapes_center-bottom {
+  bottom: 0;
+}

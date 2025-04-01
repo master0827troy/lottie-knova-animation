@@ -62,8 +62,6 @@ function renderLottieGrid() {
   });
 }
 
-renderLottieGrid();
-
 function renderLottieGridBottom1() {
   const gridContainer = document.getElementById("mainvisual_shapes_bottom1");
   gridContainer.innerHTML = ""; // Clear previous animations
@@ -82,8 +80,6 @@ function renderLottieGridBottom1() {
     gridContainer.appendChild(player);
   });
 }
-
-renderLottieGridBottom1();
 
 function renderLottieGridBottom2() {
   const gridContainer = document.getElementById("mainvisual_shapes_bottom2");
@@ -104,44 +100,17 @@ function renderLottieGridBottom2() {
   });
 }
 
+renderLottieGrid();
+renderLottieGridBottom1();
 renderLottieGridBottom2();
-
-// function getRandomLottieFilesCenter(num) {
-//   let shuffled = [];
-//   for (let i = 1; i < 46; i++) {
-//     const urlID = Math.floor(Math.random() * lottieFiles.length);
-//     shuffled.push(lottieFiles[urlID]);
-//   }
-
-//   return shuffled.slice(0, num);
-// }
-
-// function renderLottieGridCenter() {
-//   const gridContainer = document.getElementById("mainvisual_shapes_center");
-//   gridContainer.innerHTML = ""; // Clear previous animations
-//   const selectedFiles = getRandomLottieFilesCenter(45);
-
-//   selectedFiles.forEach((url, index) => {
-//     const player = document.createElement("dotlottie-player");
-//     player.src = url;
-//     player.loop = true;
-//     player.autoplay = true;
-//     player.speed = 1;
-//     (index > 14 && index < 30)
-//       ? (player.style.opacity = 0)
-//       : (player.style.opacity = 100);
-//     player.background = "transparent";
-//     gridContainer.appendChild(player);
-//   });
-// }
-
-// renderLottieGridCenter();
+setInterval(() => {
+  renderLottieGrid();
+  renderLottieGridBottom1();
+  renderLottieGridBottom2();
+}, 3000);
 
 // ---------------------------
 
-// Grid Size
-const cols = 15;
-const rows = 3;
 // Lottie Animation URLs
 
 let lottieObjects = [];
@@ -151,19 +120,59 @@ function getRandomLottie() {
   return lottieFiles[Math.floor(Math.random() * lottieFiles.length)];
 }
 
-function createLottieGrid() {
-  const container = document.getElementById("mainvisual_shapes_center");
-
-  for (let i = 0; i < 45; i++) {
+function createLottieGrid(k) {
+  let container = document.getElementById("mainvisual_shapes_center-top");
+  if(k){container = document.getElementById("mainvisual_shapes_center-bottom");}
+  for (let i = 0; i < 20; i++) {
     const player = document.createElement("dotlottie-player");
-    i > 14 && i < 30
-      ? (player.style.opacity = 0)
-      : (player.style.opacity = 100);
     player.src = getRandomLottie();
     player.loop = true;
     player.autoplay = true;
     container.appendChild(player);
   }
 }
-createLottieGrid();
 
+createLottieGrid(0);
+createLottieGrid(1);
+
+const lottieContainer = document.getElementById("mainvisual_shapes_center-top");
+const lottieClone = lottieContainer.cloneNode(true);
+lottieClone.style.position = "absolute";
+lottieClone.style.left = `${lottieContainer.offsetWidth}px`; // Place it right after the first set
+document.getElementById("mainvisual_shapes_center-top").appendChild(lottieClone);
+
+let posX = 0;
+let speed = 2;
+
+function slideAnimation() {
+  posX += speed;
+  if (posX >= 300) {
+    posX = 0;
+  }
+  lottieContainer.style.transform = `translateX(${posX}px)`;
+}
+setInterval(() => {
+  slideAnimation();
+}, 100);
+
+slideAnimation();
+
+const lottieContainerDown = document.getElementById("mainvisual_shapes_center-bottom");
+const lottieCloneDown = lottieContainerDown.cloneNode(true);
+lottieCloneDown.style.position = "absolute";
+lottieCloneDown.style.left = `${lottieContainerDown.offsetWidth}px`; // Place it right after the first set
+document.getElementById("mainvisual_shapes_center-bottom").appendChild(lottieCloneDown);
+let posXDown = 0;
+function slideAnimationDown () {  
+  posXDown -= speed;
+  if(posXDown <= -300) {
+    posXDown = 0;
+  }
+  lottieContainerDown.style.transform = `translateX(${posXDown}px)`;
+}
+
+setInterval(() => {
+  slideAnimationDown();
+}, 100);
+
+slideAnimationDown();
