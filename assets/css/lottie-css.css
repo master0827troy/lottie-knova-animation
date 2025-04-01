@@ -40,8 +40,24 @@
 
 #mainvisual_shapes_center-top {
   top: 0;
+  left: 0;
+  animation: center-top 5s;
+  animation-timing-function: linear;
 }
 
 #mainvisual_shapes_center-bottom {
   bottom: 0;
+  right: 0;
+  animation: center-bottom 5s;
+  animation-timing-function: linear;
 }
+
+@keyframes center-bottom {
+  from {right: 0px;}
+  to {right: -300px;}
+}
+
+@keyframes center-top {
+  from {left: 0px;}
+  to {left: -300px;}
+} 

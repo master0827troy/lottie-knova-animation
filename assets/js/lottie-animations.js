@@ -175,50 +175,50 @@ function createLottieGrid(k) {
 createLottieGrid(0);
 createLottieGrid(1);
 
-const lottieContainer = document.getElementById("mainvisual_shapes_center-top");
-const lottieClone = lottieContainer.cloneNode(true);
-lottieClone.style.position = "absolute";
-lottieClone.style.left = `${lottieContainer.offsetWidth}px`; // Place it right after the first set
-document
-  .getElementById("mainvisual_shapes_center-top")
-  .appendChild(lottieClone);
+// const lottieContainer = document.getElementById("mainvisual_shapes_center-top");
+// const lottieClone = lottieContainer.cloneNode(true);
+// lottieClone.style.position = "absolute";
+// lottieClone.style.left = `${lottieContainer.offsetWidth}px`; // Place it right after the first set
+// document
+//   .getElementById("mainvisual_shapes_center-top")
+//   .appendChild(lottieClone);
 
-let posX = 0;
-let speed = 2;
+// let posX = 0;
+// let speed = 2;
 
-function slideAnimation() {
-  posX += speed;
-  if (posX >= 300) {
-    posX = 0;
-  }
-  lottieContainer.style.transform = `translateX(${posX}px)`;
-}
-setInterval(() => {
-  slideAnimation();
-}, 100);
+// function slideAnimation() {
+//   posX += speed;
+//   if (posX >= 300) {
+//     posX = 0;
+//   }
+//   lottieContainer.style.transform = `translateX(${posX}px)`;
+// }
+// setInterval(() => {
+//   slideAnimation();
+// }, 100);
 
-slideAnimation();
+// slideAnimation();
 
-const lottieContainerDown = document.getElementById(
-  "mainvisual_shapes_center-bottom"
-);
-const lottieCloneDown = lottieContainerDown.cloneNode(true);
-lottieCloneDown.style.position = "absolute";
-lottieCloneDown.style.left = `${lottieContainerDown.offsetWidth}px`; // Place it right after the first set
-document
-  .getElementById("mainvisual_shapes_center-bottom")
-  .appendChild(lottieCloneDown);
-let posXDown = 0;
-function slideAnimationDown() {
-  posXDown -= speed;
-  if (posXDown <= -300) {
-    posXDown = 0;
-  }
-  lottieContainerDown.style.transform = `translateX(${posXDown}px)`;
-}
+// const lottieContainerDown = document.getElementById(
+//   "mainvisual_shapes_center-bottom"
+// );
+// const lottieCloneDown = lottieContainerDown.cloneNode(true);
+// lottieCloneDown.style.position = "absolute";
+// lottieCloneDown.style.left = `${lottieContainerDown.offsetWidth}px`; // Place it right after the first set
+// document
+//   .getElementById("mainvisual_shapes_center-bottom")
+//   .appendChild(lottieCloneDown);
+// let posXDown = 0;
+// function slideAnimationDown() {
+//   posXDown -= speed;
+//   if (posXDown <= -300) {
+//     posXDown = 0;
+//   }
+//   lottieContainerDown.style.transform = `translateX(${posXDown}px)`;
+// }
 
-setInterval(() => {
-  slideAnimationDown();
-}, 100);
+// setInterval(() => {
+//   slideAnimationDown();
+// }, 100);
 
-slideAnimationDown();
+// slideAnimationDown();
