@@ -4,9 +4,21 @@
   position: absolute;
 }
 
-.grid-container-bottom {
+.grid-container-bottom1 {
   display: grid;
   grid-template-columns: repeat(6, 87px); /* 5 columns */
+  position: absolute;
+}
+
+.grid-container-bottom2 {
+  display: grid;
+  grid-template-columns: repeat(6, 87px); /* 5 columns */
+  position: absolute;
+}
+
+.grid-container-center {
+  display: grid;
+  grid-template-columns: repeat(15, 64px); /* 5 columns */
   position: absolute;
 }
 
@@ -14,7 +26,14 @@
   top: 0;
 }
 
-#mainvisual_shapes_bottom {
+#mainvisual_shapes_bottom1 {
   bottom: 25%;
   right: 0;
 }
+
+#mainvisual_shapes_bottom2 {
+  bottom: 0;
+  left: 0;
+}
+
+/* ------------------------ */
