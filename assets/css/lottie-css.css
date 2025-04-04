@@ -1,18 +1,25 @@
+:root {
+  /* 基本グリッド単位: 最大64px、それ以下は4.23vw */
+  --grid-unit: min(64px, 4.23vw);
+  /* 各エリア用の変数（各セクションで上書き可能） */
+  --grid-cols: 3;
+  --grid-rows: 3;
+}
 .grid-container-top {
   display: grid;
-  grid-template-columns: repeat(8, 87px); /* 5 columns */
+  grid-template-columns: repeat(8, min(64px, 4.23vw)); /* 5 columns */
   position: absolute;
 }
 
 .grid-container-bottom1 {
   display: grid;
-  grid-template-columns: repeat(6, 87px); /* 5 columns */
+  grid-template-columns: repeat(6, min(64px, 4.23vw)); /* 5 columns */
   position: absolute;
 }
 
 .grid-container-bottom2 {
   display: grid;
-  grid-template-columns: repeat(6, 87px); /* 5 columns */
+  grid-template-columns: repeat(6, min(64px, 4.23vw)); /* 5 columns */
   position: absolute;
 }
 
@@ -22,7 +29,7 @@
 
 .grid-container-center {
   display: grid;
-  grid-template-columns: repeat(20, 64px); /* 5 columns */
+  grid-template-columns: repeat(30, min(64px, 4.23vw)); /* 5 columns */
   position: absolute;
 }
 
@@ -41,23 +48,31 @@
 #mainvisual_shapes_center-top {
   top: 0;
   left: 0;
-  animation: center-top 5s;
-  animation-timing-function: linear;
+  will-change: transform;
+  animation: center-top 20s linear infinite;
 }
 
 #mainvisual_shapes_center-bottom {
   bottom: 0;
   right: 0;
-  animation: center-bottom 5s;
-  animation-timing-function: linear;
+  will-change: transform;
+  animation: center-bottom 20s linear infinite;
 }
 
 @keyframes center-bottom {
-  from {right: 0px;}
-  to {right: -300px;}
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(50%);
+  }
 }
 
 @keyframes center-top {
-  from {left: 0px;}
-  to {left: -300px;}
-} 
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}

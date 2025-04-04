@@ -11,6 +11,22 @@
 html {
   overflow: auto;
 }
+/* スクロール無効化のためのCSS */
+html.noscroll {
+  overflow: hidden;
+}
+
+/* メニューアニメーションのタイミングを調整（必要に応じて） */
+.sp-nav {
+  transition-delay: 0.01s; /* アニメーション開始を少し遅らせる */
+}
+
+/* リフロー処理のパフォーマンス改善 */
+.hamburger,
+.sp-nav,
+body.is-menu-open {
+  will-change: transform; /* GPUアクセラレーションを促進 */
+}
 body {
   position: relative;
   overflow: clip;
@@ -48,7 +64,7 @@ img {
 //   opacity: 1;
 //   transform: translateY(0);
 // }
-@media screen and (max-width: 769px) {
+@media screen and (max-width: 768px) {
   :root {
     --header-height: 56px;
   }

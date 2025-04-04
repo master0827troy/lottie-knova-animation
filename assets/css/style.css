@@ -597,6 +597,23 @@ html {
   overflow: auto;
 }
 
+/* スクロール無効化のためのCSS */
+html.noscroll {
+  overflow: hidden;
+}
+
+/* メニューアニメーションのタイミングを調整（必要に応じて） */
+.sp-nav {
+  transition-delay: 0.01s; /* アニメーション開始を少し遅らせる */
+}
+
+/* リフロー処理のパフォーマンス改善 */
+.hamburger,
+.sp-nav,
+body.is-menu-open {
+  will-change: transform; /* GPUアクセラレーションを促進 */
+}
+
 body {
   position: relative;
   overflow: clip;
@@ -631,7 +648,7 @@ img {
   display: none;
 }
 
-@media screen and (max-width: 769px) {
+@media screen and (max-width: 768px) {
   :root {
     --header-height: 56px;
   }
@@ -815,7 +832,6 @@ img {
   .header__button {
     display: none;
   }
-  /* ハンバーガーメニュー */
   /* ハンバーガーメニュー */
   .hamburger {
     display: block;
@@ -1141,7 +1157,7 @@ img {
   align-items: center;
 }
 
-@media screen and (max-width: 769px) {
+@media screen and (max-width: 768px) {
   .container {
     padding: 0;
     width: 87.7%;
@@ -1298,6 +1314,10 @@ img {
   background-color: #ffebe1;
 }
 
+.tab-menu__content.--use-blue {
+  background-color: #fff;
+}
+
 .tab-menu__background {
   position: absolute;
   left: 8px; /* 親要素のpaddingと同じ */
@@ -1309,6 +1329,10 @@ img {
 
 .tab-menu__background.--use-orange {
   background: linear-gradient(90deg, #f38fbb 0%, #ff8f5b 100%);
+}
+
+.tab-menu__background.--use-blue {
+  background: linear-gradient(90deg, #8bd9cc 0%, #b5fd62 100%);
 }
 
 .tab-menu__item {
@@ -1326,12 +1350,16 @@ img {
   color: var(--color-orange);
 }
 
-.tab-menu__item--active {
-  color: #fff !important;
+.tab-menu__item.--use-blue {
+  color: var(--color-blue);
 }
 
-.tab-menu__item:focus {
-  outline: none;
+.tab-menu__item.--use-orange.tab-menu__item--active {
+  color: #fff;
+}
+
+.tab-menu__item.--use-blue.tab-menu__item--active {
+  color: inherit;
 }
 
 .tab-panel {
@@ -1424,6 +1452,10 @@ img {
   transition: color 0.2s ease;
 }
 
+.content-box__title.--color-blue {
+  color: var(--color-blue);
+}
+
 .content-box__text {
   margin-top: 16px;
   transition: color 0.2s ease;
@@ -1441,11 +1473,15 @@ img {
   color: var(--color-orange);
 }
 
+.is-background .content-box--active .content-box__title.--color-blue {
+  color: var(--color-blue);
+}
+
 .is-background .content-box--active .content-box__text {
   color: #282828;
 }
 
-@media screen and (max-width: 769px) {
+@media screen and (max-width: 768px) {
   .tab {
     display: none;
   }
@@ -1537,10 +1573,10 @@ img {
   color: #fff;
 }
 
-@media screen and (max-width: 769px) {
+@media screen and (max-width: 768px) {
   .section-title__en {
     font-size: 14px;
-    line-height: 1.4;
+    line-height: 1.2;
   }
   .section-title__ja {
     font-size: 24px;
@@ -1588,9 +1624,19 @@ img {
   padding: 0 16px;
 }
 
+.button--middlelarge {
+  width: 200px;
+  height: 44px;
+}
+
 /* ラージサイズ */
 .button--large {
   width: 320px;
+}
+
+.button--liver-contact {
+  width: 208px;
+  height: 60px;
 }
 
 /* セカンダリースタイル */
@@ -1889,7 +1935,7 @@ img {
   margin-top: -2px;
 }
 
-@media screen and (max-width: 769px) {
+@media screen and (max-width: 768px) {
   .accordion {
     margin-top: 32px;
   }
@@ -2033,7 +2079,7 @@ img {
   transition: border-color 0.4s ease;
 }
 
-@media screen and (max-width: 769px) {
+@media screen and (max-width: 768px) {
   .articles {
     background-color: #fff;
   }
@@ -2188,7 +2234,7 @@ img {
 .download__texts {
   display: grid;
   gap: 8px;
-  text-align: center;
+  justify-items: center;
   margin-bottom: 10px;
 }
 
@@ -2199,6 +2245,7 @@ img {
   border-radius: 40px;
   font-size: 12px;
   line-height: 2;
+  padding: 0 16px;
 }
 
 .download__text {
@@ -2226,12 +2273,15 @@ img {
   align-items: flex-start;
 }
 
-@media screen and (max-width: 769px) {
+@media screen and (max-width: 768px) {
   .footer__download .download {
     align-items: center;
   }
   .download__note {
     font-size: 12px;
+  }
+  .liver-mainvisual__apps .download__link {
+    width: 120px;
   }
 }
 /* WP-PageNavi カスタマイズ - 共通スタイル */
@@ -2423,22 +2473,371 @@ img {
     display: none;
   }
 }
+/* ==========================
+   Lottie Grid System - Core
+   ========================== */
+:root {
+  /* 基本グリッド単位: 最大64px、それ以下は4.23vw */
+  --grid-unit: min(64px, 4.23vw);
+  /* 各エリア用の変数（各セクションで上書き可能） */
+  --grid-cols: 3;
+  --grid-rows: 3;
+}
+
+/* 基本レイアウト構造 */
+.lottie-grid {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* 背景用の基本スタイル（固定位置） */
+.lottie-grid--fixed {
+  position: fixed;
+  top: var(--header-height, 0);
+  left: 0;
+  width: 100%;
+  height: calc(100% - var(--header-height, 0));
+  z-index: -10;
+}
+
+/* グリッドエリア共通スタイル */
+.lottie-grid__area {
+  position: absolute;
+  width: calc(var(--grid-cols) * var(--grid-unit));
+  height: calc(var(--grid-rows) * var(--grid-unit));
+  display: grid;
+  grid-template-columns: repeat(var(--grid-cols), 1fr);
+  grid-template-rows: repeat(var(--grid-rows), 1fr);
+}
+
+/* 各アイテム共通スタイル */
+.lottie__item {
+  aspect-ratio: 1/1;
+  width: var(--grid-unit);
+}
+
+/* ==========================
+     グリッドエリアの位置バリエーション
+     ========================== */
+/* 左上配置 */
+.lottie-grid__area--left-top {
+  top: 0;
+  left: 0;
+}
+
+/* 右上配置 */
+.lottie-grid__area--right-top {
+  top: 0;
+  right: 0;
+}
+
+/* 右下配置 */
+.lottie-grid__area--right-bottom {
+  bottom: 0;
+  right: 0;
+}
+
+/* 左下配置 */
+.lottie-grid__area--left-bottom {
+  bottom: 0;
+  left: 0;
+}
+
+/* ==========================
+     モバイル対応
+     ========================== */
+@media (max-width: 768px) {
+  :root {
+    --grid-unit: min(32px, 8.2vw);
+  }
+}
+/* ==========================
+     プリセット設定 - 背景用グリッド
+     ========================== */
+/* 背景用の左上エリア */
+.preset-bg-left-top {
+  --grid-cols: 12;
+  --grid-rows: 2;
+}
+
+/* 背景用の右上エリア */
+.preset-bg-right-top {
+  --grid-cols: 2;
+  --grid-rows: 8;
+}
+
+/* 背景用の右下エリア */
+.preset-bg-right-bottom {
+  --grid-cols: 18;
+  --grid-rows: 2;
+}
+
+/* 背景用の左下エリア */
+.preset-bg-left-bottom {
+  --grid-cols: 2;
+  --grid-rows: 8;
+}
+
+/* ==========================
+     プリセット設定 - ポイント用グリッド
+     ========================== */
+/* ポイント用の左上エリア */
+.preset-point-left-top {
+  --grid-cols: 3;
+  --grid-rows: 3;
+}
+
+/* ポイント用の右上エリア */
+.preset-point-right-top {
+  --grid-cols: 5;
+  --grid-rows: 10;
+}
+
+/* ポイント用の右下エリア */
+.preset-point-right-bottom {
+  --grid-cols: 8;
+  --grid-rows: 4;
+}
+
+/* ポイント用の左下エリア */
+.preset-point-left-bottom {
+  --grid-cols: 3;
+  --grid-rows: 10;
+}
+
+/* モバイル用プリセット上書き */
+@media (max-width: 768px) {
+  .preset-point-left-top {
+    --grid-cols: 1;
+    --grid-rows: 6;
+  }
+  .preset-point-right-top {
+    --grid-cols: 3;
+    --grid-rows: 4;
+  }
+  .preset-point-right-bottom {
+    --grid-cols: 2;
+    --grid-rows: 4;
+  }
+  .preset-point-left-bottom {
+    --grid-cols: 3;
+    --grid-rows: 20;
+  }
+}
+/* ==========================
+     補助ユーティリティクラス - 位置指定
+     ========================== */
+/* グリッド位置指定クラス生成 */
+.grid-col-1 {
+  grid-column: 1;
+}
+
+.grid-col-2 {
+  grid-column: 2;
+}
+
+.grid-col-3 {
+  grid-column: 3;
+}
+
+.grid-col-4 {
+  grid-column: 4;
+}
+
+.grid-col-5 {
+  grid-column: 5;
+}
+
+.grid-col-6 {
+  grid-column: 6;
+}
+
+.grid-col-8 {
+  grid-column: 8;
+}
+
+.grid-col-9 {
+  grid-column: 9;
+}
+
+.grid-col-10 {
+  grid-column: 10;
+}
+
+.grid-col-12 {
+  grid-column: 12;
+}
+
+.grid-col-15 {
+  grid-column: 15;
+}
+
+.grid-col-16 {
+  grid-column: 16;
+}
+
+.grid-col-18 {
+  grid-column: 18;
+}
+
+.grid-row-1 {
+  grid-row: 1;
+}
+
+.grid-row-2 {
+  grid-row: 2;
+}
+
+.grid-row-3 {
+  grid-row: 3;
+}
+
+.grid-row-4 {
+  grid-row: 4;
+}
+
+.grid-row-5 {
+  grid-row: 5;
+}
+
+.grid-row-6 {
+  grid-row: 6;
+}
+
+.grid-row-7 {
+  grid-row: 7;
+}
+
+.grid-row-8 {
+  grid-row: 8;
+}
+
+.grid-row-11 {
+  grid-row: 11;
+}
+
+.grid-row-12 {
+  grid-row: 12;
+}
+
+.grid-row-20 {
+  grid-row: 20;
+}
+
+/* === CSS === */
+.fixed-button {
+  position: fixed;
+  bottom: clamp(16px, 2.5vh, 24px);
+  right: clamp(16px, 2.5vh, 24px);
+  z-index: 100;
+  width: 305px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease, visibility 0.5s;
+}
+
+.fixed-button__image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.fixed-button__links {
+  position: absolute;
+  bottom: 16px;
+  left: 0;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+.fixed-button__link {
+  display: block;
+  width: 100%;
+  height: 40px;
+  position: relative;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+
+.fixed-button__close {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #fff;
+  border: 1px solid var(--color-primary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s ease;
+}
+
+.fixed-button__close::before,
+.fixed-button__close::after {
+  content: "";
+  position: absolute;
+  width: 13px;
+  height: 2px;
+  background-color: var(--color-primary);
+}
+
+.fixed-button__close::before {
+  transform: rotate(45deg);
+}
+
+.fixed-button__close::after {
+  transform: rotate(-45deg);
+}
+
+@media (max-width: 768px) {
+  /* === CSS === */
+  .fixed-button {
+    max-width: 400px;
+    width: calc(100% - 32px);
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .fixed-button__link {
+    height: auto;
+  }
+}
+@media (hover: hover) and (pointer: fine) {
+  .fixed-button__close:hover {
+    transform: scale(1.1);
+  }
+}
 .mainvisual {
   position: relative;
   width: 100%;
-  height: calc(100vh - var(--header-height));
 }
 
 .mainvisual__container {
   height: 100%;
   padding: clamp(16px, 2.5vh, 24px);
   margin: 0 auto;
+  aspect-ratio: 1464/866;
+  width: 100%;
 }
 
 .mainvisual__grid {
   display: grid;
   grid-template-columns: 27.3fr 18.7fr 7.5fr 18.7fr 27.3fr;
-  grid-template-rows: 23fr 12.1fr 23fr 21.7fr 23fr;
+  grid-template-rows: 23fr 12.1fr minmax(200px, 23fr) 21.7fr 23fr;
   gap: clamp(4px, 1vh, 8px);
   height: 100%;
   width: 100%;
@@ -2518,7 +2917,9 @@ img {
   grid-column: 5/6;
   grid-row: 5/6;
   background: #f38fbb;
-  padding: 20px 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .mainvisual__image {
@@ -2529,6 +2930,26 @@ img {
      object-fit: contain;
   -o-object-position: center bottom;
      object-position: center bottom;
+}
+
+.mainvisual__block--4 .mainvisual__image {
+  height: auto;
+  top: 10%;
+}
+
+.mainvisual__block--8 .mainvisual__image {
+  -o-object-position: center center;
+     object-position: center center;
+}
+
+.mainvisual__ambassador {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+}
+
+.mainvisual__ambassador-text {
+  width: 38px;
 }
 
 .concept {
@@ -2595,6 +3016,7 @@ img {
   transform: translateX(-50%);
   z-index: 2;
   max-width: none;
+  visibility: visible;
 }
 
 /* 化粧品アイテムの配置 */
@@ -2664,6 +3086,10 @@ img {
 
 .section-text__paragraph:not(:first-child) {
   margin-top: 1.5em;
+}
+
+.concept__download {
+  margin-top: 32px;
 }
 
 .point {
@@ -2777,10 +3203,13 @@ img {
 }
 
 .use {
+  position: relative;
   padding-top: 160px;
   padding-bottom: 210px;
   --pseudo-opacity: 0;
   background-color: #fff;
+  overflow: hidden;
+  z-index: 0;
 }
 
 .use::before {
@@ -2812,6 +3241,7 @@ img {
   display: flex;
   flex-wrap: wrap;
   overflow: hidden;
+  opacity: var(--pseudo-opacity);
 }
 
 .use__container {
@@ -2899,21 +3329,25 @@ img {
   margin-top: 55px;
 }
 
-@media screen and (max-width: 769px) {
-  .mainvisual {
-    height: auto;
-  }
+@media screen and (max-width: 768px) {
   .mainvisual__container {
     padding: 8px 16px;
+    aspect-ratio: 358/764;
   }
   .mainvisual__grid {
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 147px 84px 120px 84px 147px 141px;
+    grid-template-rows: 2.44fr 1.39fr 1.99fr 1.39fr 2.44fr 2.34fr;
     gap: 8px;
   }
   .mainvisual__catch {
     grid-column: 1/3;
     grid-row: 3/4;
+  }
+  .mainvisual__catch-text {
+    font-size: 28px;
+  }
+  .mainvisual__block {
+    border-radius: 8px;
   }
   .mainvisual__block--1 {
     display: none;
@@ -2946,10 +3380,52 @@ img {
     grid-column: 1/3;
     grid-row: 6/7;
   }
+  .mainvisual__block--4 .mainvisual__image {
+    height: auto;
+    top: inherit;
+    bottom: 0;
+  }
+  .mainvisual__ambassador {
+    top: 11px;
+    left: 11px;
+  }
+  .mainvisual__ambassador-text {
+    width: 41px;
+  }
+  .concept {
+    height: auto;
+    padding: 24px 0 0;
+  }
+  .concept__container {
+    flex-direction: column;
+  }
+  .concept__visual {
+    position: static;
+    width: 100%;
+    order: 2;
+  }
   /* スマートフォンと人物の配置 */
   /* 化粧品アイテムの配置 */
   /* より繊細な動きのバージョン */
   @keyframes float {}
+  .concept__content {
+    order: 1;
+    width: 100%;
+  }
+  .section-text {
+    font-size: 14px;
+    margin-top: 16px;
+  }
+  .concept__download {
+    margin-top: 24px;
+  }
+  .point__container {
+    flex-direction: column;
+  }
+  .point__visual {
+    width: 100%;
+    height: 50%;
+  }
   .use {
     padding: 64px 0;
   }
@@ -3017,6 +3493,157 @@ img {
   }
   .news__article {
     order: 1;
+    margin-top: 40px;
+  }
+}
+/* 共通スタイル */
+.point {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  background-color: #fff;
+}
+
+/* PCレイアウト */
+.point__container--pc {
+  display: flex;
+}
+
+.point__visual {
+  width: 50%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-yellow);
+}
+
+.point__images {
+  width: 36.11%;
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 273/593;
+}
+
+.point__image-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* PC用の画像ボックス */
+.point__container--pc .point__image-box {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.point__container--pc .point__image-box:first-child {
+  opacity: 1;
+}
+
+.point__image {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+.point__container--pc .point__content {
+  width: 50%;
+  padding: 0 6.944%;
+}
+
+.point__container--pc .point__items {
+  padding: 120px 0;
+}
+
+.point__container--pc .point__item {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.point__container--pc .point__item + .point__item {
+  margin-top: 40vh;
+}
+
+/* SP用のレイアウト */
+.point__container--sp {
+  display: none;
+}
+
+.point__container--sp .point__item {
+  padding: 60px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.point__container--sp .point__item-content {
+  order: 2;
+}
+
+.point__container--sp .point__image-box {
+  order: 1;
+  width: 100%;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+}
+
+/* 共通のテキストスタイル */
+.point__number {
+  font-size: 16px;
+  font-family: var(--font-en);
+  font-weight: 400;
+}
+
+.point__number.--color-yellow {
+  color: var(--color-yellow);
+}
+
+.point__title {
+  font-size: 32px;
+  font-weight: 700;
+  margin-top: 16px;
+  font-weight: 500;
+}
+
+.point__text {
+  margin-top: 24px;
+  line-height: 1.8;
+}
+
+/* メディアクエリ - スマホレイアウト */
+@media screen and (max-width: 768px) {
+  .point__container--pc {
+    display: none;
+  }
+  .point__container--sp {
+    display: block;
+    padding: 0 5%;
+  }
+  .point__title {
+    font-size: 24px;
+    line-height: 1.5;
+  }
+  .point__text {
+    font-size: 14px;
+  }
+  .point__container--sp .point__item + .point__item {
+    margin-top: 80px;
+  }
+  /* スマホでの画像表示 */
+  .point__container--sp .point__image-box {
+    border-radius: 16px;
+    overflow: hidden;
   }
 }
 .single-head {
@@ -3676,16 +4303,75 @@ div.wpcf7-mail-sent-ok {
     width: 240px;
   }
 }
+.liver-top {
+  position: relative;
+}
+
+.liver-background {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: -5;
+  transition: background-color 0.8s, -webkit-backdrop-filter 0.8s;
+  transition: background-color 0.8s, backdrop-filter 0.8s;
+  transition: background-color 0.8s, backdrop-filter 0.8s, -webkit-backdrop-filter 0.8s;
+}
+
+.lottie-item {
+  width: 100%;
+  height: 100%;
+  justify-self: center;
+  align-self: center;
+  aspect-ratio: 1/1;
+}
+
+.liver-top main {
+  margin-top: 0;
+}
+
+.liver-mainvisual {
+  position: relative;
+  padding-top: var(--header-height);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
 .liver-mainvisual__container {
   display: flex;
   align-items: center;
   width: 67.7%;
+  height: 100%;
   margin-inline: auto;
-  background-color: pink;
 }
 
 .liver-mainvisual__content {
   flex: 1;
+  position: relative;
+  height: 100%;
+}
+
+.liver__scroll-first,
+.liver__scroll-second {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  transform: translateY(-50%);
+}
+
+.liver__scroll-first {
+  margin-left: 40px;
+}
+
+/* secondはデフォルト非表示 */
+.liver__scroll-second {
+  visibility: hidden;
+  opacity: 0;
 }
 
 .liver-mainvisual__badges {
@@ -3699,8 +4385,9 @@ div.wpcf7-mail-sent-ok {
   height: 112px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: space-between;
+  padding: 13px 0 30px;
 }
 
 .liver-mainvisual__badge.liver-mainvisual__badge--fee {
@@ -3716,7 +4403,7 @@ div.wpcf7-mail-sent-ok {
 .liver-mainvisual__badge-text {
   display: inline-block;
   background-color: #fff;
-  padding: 2px 10px;
+  padding: 0px 10px;
   border-radius: 34px;
   font-size: 18px;
   font-weight: 700;
@@ -3741,15 +4428,48 @@ div.wpcf7-mail-sent-ok {
 
 .liver-mainvisual__apps {
   margin-top: 48px;
+  margin-bottom: 12%;
+}
+
+.liver-concept__content {
+  width: 84.3%;
+  margin-right: 11%;
+  margin-bottom: 12%;
+}
+
+.liver-concept__title {
+  font-size: 24px;
+}
+
+.liver-concept__text {
+  margin-top: 24px;
+}
+
+.concept-person {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+
+.liver-concept__item {
+  position: absolute;
+  z-index: 3;
 }
 
 .liver-mainvisual__image-container {
   position: relative;
   width: 47%;
+  height: 100%;
 }
 
 .liver-mainvisual__phone-container {
   height: 100%;
+  display: flex;
 }
 
 .liver-mainvisual__image {
@@ -3759,35 +4479,42 @@ div.wpcf7-mail-sent-ok {
 /* スマートフォンと人物の配置 */
 .liver-mainvisual__image--phone {
   position: relative;
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+
+.liver-mainvisual__image--person {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  -o-object-fit: contain;
+     object-fit: contain;
+  z-index: 2;
 }
 
 /* 化粧品アイテムの配置 */
 .liver-mainvisual__image--item-1 {
   width: 50px;
-  top: 28%;
-  left: 8.1%;
+  top: 35%;
+  left: -10%;
   z-index: 3;
   animation: float 6s ease-in-out infinite;
 }
 
-#animation-container {
-  width: 300px;
-  height: 300px;
-  margin: 0 auto;
-}
-
 .liver-mainvisual__image--item-2 {
   width: 61px;
-  bottom: 7%;
-  left: 12.45%;
+  bottom: 28.5%;
+  left: 1.45%;
   z-index: 3;
   animation: float 7s ease-in-out infinite 0.5s;
 }
 
 .liver-mainvisual__image--item-3 {
   width: 107px;
-  top: 14%;
-  right: -8.36%;
+  top: 31%;
+  right: -6%;
   z-index: 3;
   animation: float 5s ease-in-out infinite 1s;
 }
@@ -3795,21 +4522,52 @@ div.wpcf7-mail-sent-ok {
 .liver-mainvisual__image--item-4 {
   width: 66px;
   top: 50%;
-  right: -2.23%;
+  right: 0%;
   z-index: 3;
   animation: float 6.5s ease-in-out infinite 1.5s;
 }
 
 .liver-mainvisual__image--item-5 {
-  width: 81px;
-  bottom: 13%;
-  right: 2%;
+  width: 61px;
+  bottom: 20%;
+  right: 25%;
   z-index: 3;
   animation: float 5.5s ease-in-out infinite 2s;
 }
 
+.liver-concept__item-6 {
+  width: 129px;
+  top: 27%;
+  left: 0%;
+  z-index: 1;
+  animation: float 7s ease-in-out infinite 0.5s;
+}
+
+.liver-concept__item-7 {
+  width: 115px;
+  bottom: 25%;
+  left: -2.55%;
+  animation: float 5s ease-in-out infinite 1s;
+}
+
+.liver-concept__item-8 {
+  width: 97px;
+  top: 40%;
+  right: -3%;
+  animation: float 5.5s ease-in-out infinite 2s;
+}
+
+.liver-concept__item-9 {
+  width: 156px;
+  bottom: 19%;
+  right: 5.77%;
+  animation: float 6.5s ease-in-out infinite 1.5s;
+}
+
+/* エクセル表に基づく位置指定 (行/列) */
+/* 1行目 */
 .liver-point {
-  background-color: #f3fff6;
+  position: relative;
   padding: 160px 0;
 }
 
@@ -3834,7 +4592,8 @@ div.wpcf7-mail-sent-ok {
 }
 
 .liver-point__feature:nth-of-type(3) {
-  margin-top: -102px;
+  margin-top: -74px;
+  margin-left: 130px;
 }
 
 .liver-point__image-container {
@@ -3901,14 +4660,98 @@ div.wpcf7-mail-sent-ok {
   font-size: 14px;
 }
 
-@media (max-width: 768px) {
-  .liver-mainvisual {
-    width: 87.7%;
-    margin-inline: auto;
-  }
+.liver-use {
+  padding-top: 160px;
+  padding-bottom: 160px;
+}
+
+.liver-use__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.liver-faq {
+  padding: 160px 0;
+}
+
+.liver-news {
+  padding: 160px 0;
+}
+
+.liver-news__button {
+  margin-top: 32px;
+}
+
+.liver-news__article {
+  flex: 1;
+  margin-top: 20px;
+}
+
+.liver-contact {
+  background-color: rgb(79, 202, 181);
+  position: relative; /* 位置の基準点 */
+}
+
+.liver-contact__inner {
+  padding: 42px 0;
+  text-align: center;
+  position: relative;
+  z-index: 0;
+}
+
+.liver-contact__title {
+  font-size: 59px;
+  font-weight: 700;
+  font-family: var(--font-en);
+  color: #fff;
+  line-height: 1.2;
+}
+
+.liver-contact__text {
+  color: #fff;
+  font-weight: 500;
+  margin-top: 24px;
+}
+
+.liver-contact__action {
+  margin-top: 24px;
+}
+
+.liver-contact__overlay-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  transition: background-color 0.3s;
+}
+
+.liver-contact__overlay-link:hover {
+  background-color: rgba(0, 0, 0, 0.05); /* ホバー時に薄い色を重ねる */
+}
+
+@media screen and (max-width: 768px) {
   .liver-mainvisual__container {
+    position: relative;
+    width: 87.7%;
     flex-direction: column;
+    padding-top: 76px;
+    padding-bottom: 32px;
+  }
+  .liver-mainvisual__content {
+    padding-left: 0;
+    margin-bottom: 0;
     width: 100%;
+  }
+  .liver__scroll-first,
+  .liver__scroll-second {
+    top: 0;
+    transform: none;
+  }
+  .liver__scroll-first {
+    margin-left: 0;
   }
   .liver-mainvisual__badges {
     justify-content: center;
@@ -3934,19 +4777,40 @@ div.wpcf7-mail-sent-ok {
   }
   .liver-mainvisual__apps {
     margin-top: 24px;
+    margin-bottom: 0;
+  }
+  .liver-mainvisual__apps .download {
+    align-items: center;
+  }
+  .liver-concept__content {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 100%;
+  }
+  .liver-concept__title {
+    font-size: 18px;
+  }
+  .liver-concept__text {
+    margin-top: 16px;
+    font-size: 14px;
   }
   .liver-mainvisual__image-container {
     margin-top: 34px;
     width: 88.9%;
     margin-left: auto;
+    height: auto;
   }
   /* スマートフォンと人物の配置 */
   /* 化粧品アイテムの配置 */
   .liver-mainvisual__image--item-1 {
-    width: 18px;
+    width: 23px;
+    top: 30%;
+    left: -10%;
   }
   .liver-mainvisual__image--item-2 {
     width: 38px;
+    bottom: 18%;
+    left: -3.55%;
   }
   .liver-mainvisual__image--item-3 {
     width: 67px;
@@ -3956,6 +4820,121 @@ div.wpcf7-mail-sent-ok {
   }
   .liver-mainvisual__image--item-5 {
     width: 39px;
+  }
+  .lottie-grid {
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(20, 1fr);
+  }
+  .lottie-item {
+    width: 40px;
+    height: 40px;
+  }
+  .liver-point {
+    padding: 64px 0;
+  }
+  .liver-point__features {
+    gap: 24px;
+    display: grid;
+  }
+  .liver-point__feature {
+    width: 100%;
+    max-width: 400px;
+    padding: 16px;
+    gap: 16px;
+    flex-direction: column;
+    margin-inline: auto;
+  }
+  .liver-point__feature:nth-of-type(2) {
+    margin-top: 0;
+  }
+  .liver-point__feature:nth-of-type(3) {
+    margin-top: 0;
+    margin-left: auto;
+  }
+  .liver-point__image-container {
+    width: 164px;
+  }
+  .liver-point__heading {
+    font-size: 18px;
+  }
+  .liver-point__text {
+    margin-top: 16px;
+    font-size: 14px;
+  }
+  .liver-passion {
+    padding: 64px 0;
+  }
+  .liver-passion__content {
+    flex-direction: column;
+    gap: 40px;
+  }
+  .liver-passion__intro {
+    width: 100%;
+  }
+  .liver-passion__image-container {
+    margin-top: 32px;
+  }
+  .liver-passion__heading {
+    font-size: 18px;
+    line-height: 1.55;
+  }
+  .liver-passion__text-container {
+    margin-top: 16px;
+  }
+  .liver-passion__text {
+    font-size: 14px;
+  }
+  .liver-passion__signature-block {
+    margin-top: 32px;
+  }
+  .liver-use {
+    padding: 64px 0;
+  }
+  .liver-use__head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .liver-use__head .tab-menu {
+    display: none;
+  }
+  .liver-faq {
+    padding: 64px 0;
+  }
+  .liver-news {
+    padding: 64px 0;
+  }
+  .liver-news__button {
+    order: 2;
+    margin-top: 32px;
+    text-align: center;
+    margin-right: auto;
+    margin-left: auto;
+  }
+  .liver-news__article {
+    order: 1;
+    margin-top: 40px;
+  }
+  /* 全体を覆うリンクをSPでは非表示 */
+  .liver-contact__overlay-link {
+    display: none;
+  }
+  /* SPでのタイトルサイズ調整 */
+  .liver-contact__title {
+    font-size: 40px;
+  }
+  /* SPでの余白調整 */
+  .liver-contact__inner {
+    padding: 120px 0;
+  }
+  .liver-contact__title {
+    font-size: 48px;
+  }
+  .liver-contact__text {
+    margin-top: 16px;
+    font-size: 14px;
+  }
+  .liver-contact__action {
+    margin-top: 20px;
   }
 }
 /* メインの構造用スタイル */

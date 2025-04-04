@@ -99,38 +99,42 @@ function renderLottieGridBottom2() {
   });
 }
 
-function renderLottieGridDraw() {  
+function renderLottieGridDraw() {
   const gridContainer = document.getElementById("mainvisual_shapes_top");
   const dotlottieItems = gridContainer.getElementsByTagName("dotlottie-player");
-  for(let i = 0; i < dotlottieItems.length; i++) {
+  for (let i = 0; i < dotlottieItems.length; i++) {
     i % Math.floor(Math.random() * 10) == 0
-        ? (dotlottieItems[i].style.opacity = 100)
-        : (dotlottieItems[i].style.opacity = 0);
-    if(i > 21) {dotlottieItems[i].style.opacity = 0;}
-    if ((i + 1) % 8 == 0) {dotlottieItems[i].style.opacity = 0;}
-  };
+      ? (dotlottieItems[i].style.opacity = 100)
+      : (dotlottieItems[i].style.opacity = 0);
+    if (i > 21) {
+      dotlottieItems[i].style.opacity = 0;
+    }
+    if ((i + 1) % 8 == 0) {
+      dotlottieItems[i].style.opacity = 0;
+    }
+  }
 }
 
 function renderLottieGridBottomDraw1() {
   const gridContainer = document.getElementById("mainvisual_shapes_bottom1");
   const dotlottieItems = gridContainer.getElementsByTagName("dotlottie-player");
-  console.log(dotlottieItems);
-  
-  for(let i = 0; i < dotlottieItems.length; i++) {
+  // console.log(dotlottieItems);
+
+  for (let i = 0; i < dotlottieItems.length; i++) {
     i % Math.floor(Math.random() * 10) == 0
-        ? (dotlottieItems[i].style.opacity = 100)
-        : (dotlottieItems[i].style.opacity = 0);
-  };
+      ? (dotlottieItems[i].style.opacity = 100)
+      : (dotlottieItems[i].style.opacity = 0);
+  }
 }
 
 function renderLottieGridBottomDraw2() {
   const gridContainer = document.getElementById("mainvisual_shapes_bottom2");
   const dotlottieItems = gridContainer.getElementsByTagName("dotlottie-player");
-  for(let i = 0; i < dotlottieItems.length; i++) {
+  for (let i = 0; i < dotlottieItems.length; i++) {
     i % Math.floor(Math.random() * 10) == 0
-        ? (dotlottieItems[i].style.opacity = 100)
-        : (dotlottieItems[i].style.opacity = 0);
-  };
+      ? (dotlottieItems[i].style.opacity = 100)
+      : (dotlottieItems[i].style.opacity = 0);
+  }
 }
 
 renderLottieGrid();
@@ -163,7 +167,7 @@ function createLottieGrid(k) {
   if (k) {
     container = document.getElementById("mainvisual_shapes_center-bottom");
   }
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < 30; i++) {
     const player = document.createElement("dotlottie-player");
     player.src = getRandomLottie();
     player.loop = true;

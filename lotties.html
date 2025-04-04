@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lottie ファイル一覧</title>
+    <script src="https://cdn.jsdelivr.net/npm/@johanaarstein/dotlottie-player@1.5.23/dist/index.min.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+        background-color: #f5f5f5;
+        padding: 20px;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #333;
+      }
+
+      .grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .lottie-item {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        position: relative;
+      }
+
+      .lottie-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+      }
+
+      .lottie-container {
+        aspect-ratio: 1/1;
+        width: 100%;
+        background-color: #f9f9f9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .lottie-player {
+        width: 100%;
+        height: 100%;
+      }
+
+      .lottie-info {
+        padding: 15px;
+      }
+
+      .lottie-name {
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 5px;
+        color: #333;
+      }
+
+      .lottie-path {
+        font-size: 12px;
+        color: #666;
+        word-break: break-all;
+      }
+
+      .controls {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .play-all,
+      .pause-all {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin: 0 5px;
+        font-weight: 500;
+        transition: background-color 0.3s;
+      }
+
+      .pause-all {
+        background-color: #f44336;
+      }
+
+      .play-all:hover {
+        background-color: #3e8e41;
+      }
+
+      .pause-all:hover {
+        background-color: #d32f2f;
+      }
+
+      .loading {
+        text-align: center;
+        font-size: 18px;
+        padding: 30px;
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Lottie ファイル一覧</h1>
+    <div class="controls">
+      <button class="play-all">すべて再生</button>
+      <button class="pause-all">すべて停止</button>
+    </div>
+
+    <div class="grid-container" id="grid-container">
+      <div class="loading">ファイルをロード中...</div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Lottieファイルの設定
+        const MAX_LOTTIE_FILES = 25; // 22種類のLottieファイル
+        const basePath = "assets/img/shapes/lottie/shape-";
+
+        // Lottieプレイヤーを格納する配列
+        const lottiePlayers = [];
+
+        // グリッドコンテナの取得
+        const gridContainer = document.getElementById("grid-container");
+
+        // ローディング表示をクリア
+        gridContainer.innerHTML = "";
+
+        // 各Lottieファイルのアイテムを作成
+        for (let i = 1; i <= MAX_LOTTIE_FILES; i++) {
+          // ファイル番号をフォーマット
+          const fileNumber = i.toString().padStart(2, "0");
+          const filePath = `${basePath}${fileNumber}.lottie`;
+
+          // アイテム要素を作成
+          const lottieItem = document.createElement("div");
+          lottieItem.className = "lottie-item";
+
+          // Lottieアニメーションを表示するコンテナ
+          const lottieContainer = document.createElement("div");
+          lottieContainer.className = "lottie-container";
+
+          // dotlottie-player要素を作成
+          const lottiePlayer = document.createElement("dotlottie-player");
+          lottiePlayer.className = "lottie-player";
+          lottiePlayer.setAttribute("src", filePath);
+          lottiePlayer.setAttribute("autoplay", "");
+          lottiePlayer.setAttribute("loop", "");
+          lottiePlayer.setAttribute("mode", "normal");
+
+          // Lottieプレイヤーを配列に追加
+          lottiePlayers.push(lottiePlayer);
+
+          // 情報を表示する部分を作成
+          const lottieInfo = document.createElement("div");
+          lottieInfo.className = "lottie-info";
+
+          const lottieName = document.createElement("div");
+          lottieName.className = "lottie-name";
+          lottieName.textContent = `Shape ${fileNumber}`;
+
+          const lottiePath = document.createElement("div");
+          lottiePath.className = "lottie-path";
+          lottiePath.textContent = filePath;
+
+          // 要素を組み立てる
+          lottieInfo.appendChild(lottieName);
+          lottieInfo.appendChild(lottiePath);
+          lottieContainer.appendChild(lottiePlayer);
+          lottieItem.appendChild(lottieContainer);
+          lottieItem.appendChild(lottieInfo);
+
+          // グリッドに追加
+          gridContainer.appendChild(lottieItem);
+
+          // ロード中のエラーハンドリング
+          lottiePlayer.addEventListener("error", (e) => {
+            console.error(`Error loading Lottie file ${filePath}:`, e);
+            lottieContainer.innerHTML = `<div style="padding: 20px; color: red; text-align: center;">ロードエラー</div>`;
+          });
+        }
+
+        // 一括制御ボタンの処理
+        const playAllButton = document.querySelector(".play-all");
+        const pauseAllButton = document.querySelector(".pause-all");
+
+        playAllButton.addEventListener("click", () => {
+          lottiePlayers.forEach((player) => {
+            if (typeof player.play === "function") {
+              player.play();
+            }
+          });
+        });
+
+        pauseAllButton.addEventListener("click", () => {
+          lottiePlayers.forEach((player) => {
+            if (typeof player.pause === "function") {
+              player.pause();
+            }
+          });
+        });
+
+        // 個別のLottieプレイヤーをクリックで一時停止/再生
+        document.querySelectorAll(".lottie-container").forEach((container) => {
+          container.addEventListener("click", (e) => {
+            const player = container.querySelector("dotlottie-player");
+            if (player && typeof player.isPaused === "function") {
+              if (player.isPaused) {
+                player.play();
+              } else {
+                player.pause();
+              }
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

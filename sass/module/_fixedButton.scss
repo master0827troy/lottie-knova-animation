@@ -1,0 +1,103 @@
+/* === CSS === */
+.fixed-button {
+  position: fixed;
+  bottom: clamp(16px, 2.5vh, 24px);
+  right: clamp(16px, 2.5vh, 24px);
+  z-index: 100;
+  width: 305px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease, visibility 0.5s;
+}
+.fixed-button__image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.fixed-button__links {
+  position: absolute;
+  bottom: 16px;
+  left: 0;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+.fixed-button__link {
+  display: block;
+  width: 100%;
+  height: 40px;
+  position: relative;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+
+.fixed-button__close {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #fff;
+  border: 1px solid var(--color-primary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s ease;
+}
+.fixed-button__close::before,
+.fixed-button__close::after {
+  content: "";
+  position: absolute;
+  width: 13px;
+  height: 2px;
+  background-color: var(--color-primary);
+}
+.fixed-button__close::before {
+  transform: rotate(45deg);
+}
+.fixed-button__close::after {
+  transform: rotate(-45deg);
+}
+
+@media (max-width: 768px) {
+  /* === CSS === */
+  .fixed-button {
+    max-width: 400px;
+    width: calc(100% - 32px);
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .fixed-button__image {
+  }
+  .fixed-button__links {
+  }
+  .fixed-button__link {
+    height: auto;
+  }
+
+  .fixed-button__close {
+  }
+  .fixed-button__close::before,
+  .fixed-button__close::after {
+  }
+  .fixed-button__close::before {
+  }
+  .fixed-button__close::after {
+  }
+}
+@media (hover: hover) and (pointer: fine) {
+  .fixed-button__link:hover {
+  }
+  .fixed-button__close:hover {
+    transform: scale(1.1);
+  }
+}

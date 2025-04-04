@@ -1,0 +1,675 @@
+.liver-top main {
+  margin-top: 0;
+}
+.liver-mainvisual {
+  padding-top: var(--header-height);
+  min-height: calc(100vh - var(--header-height));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.liver-mainvisual__container {
+  display: flex;
+  align-items: center;
+  width: 67.7%;
+  height: 100%;
+  margin-inline: auto;
+}
+// 左カラム
+.liver-mainvisual__content {
+  flex: 1;
+  padding-left: 38px;
+  margin-bottom: 60px;
+}
+.liver-mainvisual__badges {
+  display: flex;
+  gap: 8px;
+}
+.liver-mainvisual__badge {
+  border-radius: 50%;
+  width: 112px;
+  height: 112px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 0 30px;
+}
+.liver-mainvisual__badge.liver-mainvisual__badge--fee {
+  background-color: var(--color-primary);
+  color: var(--color-primary);
+}
+.liver-mainvisual__badge.liver-mainvisual__badge--delivery {
+  background-color: var(--color-blue);
+  color: var(--color-blue);
+}
+.liver-mainvisual__badge-text {
+  display: inline-block;
+  background-color: #fff;
+  padding: 0px 10px;
+  border-radius: 34px;
+  font-size: 18px;
+  font-weight: 700;
+}
+.liver-mainvisual__badge-value {
+  color: #fff;
+  font-size: 32px;
+  line-height: 1;
+  font-weight: 700;
+  margin-top: 10px;
+}
+.liver-mainvisual__message {
+  margin-top: 16px;
+}
+.liver-mainvisual__heading {
+  font-size: 48px;
+  line-height: 1.5;
+}
+.liver-mainvisual__apps {
+  margin-top: 48px;
+}
+// 右側カラム
+.liver-mainvisual__image-container {
+  position: relative;
+  width: 47%;
+  height: 100%;
+}
+.liver-mainvisual__phone-container {
+  height: 100%;
+  display: flex;
+}
+.liver-mainvisual__image {
+  position: absolute;
+
+  visibility: hidden;
+}
+/* スマートフォンと人物の配置 */
+.liver-mainvisual__image--phone {
+  position: relative;
+  object-fit: contain;
+}
+.liver-mainvisual__image--person {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  z-index: 2;
+}
+/* 化粧品アイテムの配置 */
+.liver-mainvisual__image--item-1 {
+  width: 50px;
+  top: 28%;
+  left: -10%;
+  z-index: 3;
+  animation: float 6s ease-in-out infinite;
+}
+.liver-mainvisual__image--item-2 {
+  width: 61px;
+  width: 61px;
+  bottom: 15%;
+  left: -2.55%;
+  z-index: 3;
+  animation: float 7s ease-in-out infinite 0.5s;
+}
+.liver-mainvisual__image--item-3 {
+  width: 107px;
+  top: 21%;
+  right: 0;
+  z-index: 3;
+  animation: float 5s ease-in-out infinite 1s;
+}
+.liver-mainvisual__image--item-4 {
+  width: 66px;
+  top: 50%;
+  right: 4.77%;
+  z-index: 3;
+  animation: float 6.5s ease-in-out infinite 1.5s;
+}
+.liver-mainvisual__image--item-5 {
+  width: 61px;
+  bottom: 0;
+  right: 29%;
+  z-index: 3;
+  animation: float 5.5s ease-in-out infinite 2s;
+}
+/* グリッドコンテナのスタイル */
+.lottie-grid {
+  position: absolute;
+  top: var(--header-height);
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(22, 1fr);
+  grid-template-rows: repeat(13, 1fr);
+  pointer-events: none; /* 下のコンテンツへのクリックを妨げない */
+  z-index: 1;
+}
+
+/* Lottieアイテムの基本スタイル */
+.lottie-item {
+  width: 100%;
+  height: 100%;
+  justify-self: center;
+  align-self: center;
+  opacity: 0.7;
+}
+
+/* エクセル表に基づく位置指定 (行/列) */
+/* 1行目 */
+.lottie-item-1 {
+  grid-area: 1 / 3 / 2 / 4;
+} /* C1 */
+.lottie-item-2 {
+  grid-area: 1 / 6 / 2 / 7;
+} /* F1 */
+.lottie-item-3 {
+  grid-area: 1 / 8 / 2 / 9;
+} /* H1 */
+.lottie-item-4 {
+  grid-area: 1 / 13 / 2 / 14;
+} /* M1 */
+.lottie-item-5 {
+  grid-area: 1 / 17 / 2 / 18;
+} /* Q1 */
+.lottie-item-6 {
+  grid-area: 1 / 19 / 2 / 20;
+} /* S1 */
+.lottie-item-7 {
+  grid-area: 1 / 22 / 2 / 23;
+} /* V1 */
+
+/* 2行目 */
+.lottie-item-8 {
+  grid-area: 2 / 1 / 3 / 2;
+} /* A2 */
+.lottie-item-9 {
+  grid-area: 2 / 18 / 3 / 19;
+} /* Q2 */
+
+/* 3行目 */
+.lottie-item-10 {
+  grid-area: 3 / 2 / 4 / 3;
+} /* B3 */
+
+/* 4行目 */
+.lottie-item-11 {
+  grid-area: 4 / 1 / 5 / 2;
+} /* A4 */
+.lottie-item-12 {
+  grid-area: 4 / 21 / 5 / 22;
+} /* U4 */
+
+/* 5行目 */
+.lottie-item-13 {
+  grid-area: 5 / 2 / 6 / 3;
+} /* B5 */
+
+/* 6行目 */
+.lottie-item-14 {
+  grid-area: 6 / 1 / 7 / 2;
+} /* A6 */
+.lottie-item-15 {
+  grid-area: 6 / 22 / 7 / 23;
+} /* V6 */
+
+/* 8行目 */
+.lottie-item-16 {
+  grid-area: 8 / 21 / 9 / 22;
+} /* U8 */
+
+/* 10行目 */
+.lottie-item-17 {
+  grid-area: 10 / 1 / 11 / 2;
+} /* A10 */
+.lottie-item-18 {
+  grid-area: 10 / 21 / 11 / 22;
+} /* U10 */
+
+/* 11行目 */
+.lottie-item-19 {
+  grid-area: 11 / 2 / 12 / 3;
+} /* B11 */
+.lottie-item-20 {
+  grid-area: 11 / 22 / 12 / 23;
+} /* V11 */
+
+/* 12行目 */
+.lottie-item-21 {
+  grid-area: 12 / 1 / 13 / 2;
+} /* A12 */
+.lottie-item-22 {
+  grid-area: 12 / 9 / 13 / 10;
+} /* I12 */
+.lottie-item-23 {
+  grid-area: 12 / 21 / 13 / 22;
+} /* U12 */
+.lottie-item-24 {
+  grid-area: 12 / 22 / 13 / 23;
+} /* V12 */
+
+/* 13行目 */
+.lottie-item-25 {
+  grid-area: 13 / 2 / 14 / 3;
+} /* B13 */
+.lottie-item-26 {
+  grid-area: 13 / 3 / 14 / 4;
+} /* C13 */
+.lottie-item-27 {
+  grid-area: 13 / 6 / 14 / 7;
+} /* F13 */
+.lottie-item-28 {
+  grid-area: 13 / 9 / 14 / 10;
+} /* I13 */
+.lottie-item-29 {
+  grid-area: 13 / 12 / 14 / 13;
+} /* L13 */
+.lottie-item-30 {
+  grid-area: 13 / 16 / 14 / 17;
+} /* P13 */
+
+/* コンセプトセクションのスタイル */
+.liver-concept__section {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: calc(100vh - var(--header-height));
+  margin-top: var(--header-height);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.liver-concept__container {
+  display: flex;
+  align-items: center;
+  width: 67.7%;
+  height: calc(100% - var(--header-height));
+  margin-inline: auto;
+}
+
+.liver-concept__content {
+  width: 45.3%;
+  opacity: 0;
+  margin-right: 11%;
+}
+
+.liver-concept__title {
+  font-size: 24px;
+}
+
+.liver-concept__text {
+  margin-top: 24px;
+}
+
+.liver-concept__image-container {
+  position: relative;
+  width: 47%;
+  height: 100%;
+  opacity: 0;
+}
+
+.concept-person {
+  position: absolute;
+  left: -2.4%;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  visibility: hidden;
+  object-fit: contain;
+  bottom: 3.5%;
+}
+
+.liver-concept__item {
+  position: absolute;
+  z-index: 3;
+  visibility: hidden; /* GSAPで制御 */
+}
+
+.liver-concept__item-6 {
+  width: 129px;
+  top: 19%;
+  left: -10%;
+  z-index: 1;
+}
+
+.liver-concept__item-7 {
+  width: 115px;
+  bottom: 17%;
+  left: -10.55%;
+}
+
+.liver-concept__item-8 {
+  width: 97px;
+  top: 37%;
+  right: 2%;
+}
+
+.liver-concept__item-9 {
+  width: 156px;
+  bottom: 9%;
+  right: 10.77%;
+}
+
+/* フロートアニメーションのキーフレーム - CSSでも定義可能 */
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+// POINT
+.liver-point {
+  background-color: #f3fff6;
+  padding: 160px 0;
+}
+.liver-point__features {
+  margin-top: 32px;
+}
+.liver-point__feature {
+  width: 597px;
+  max-width: 90%;
+  background-color: #fff;
+  border-radius: 24px;
+  padding: 32px;
+  display: flex;
+  align-items: center;
+  gap: 48px;
+}
+.liver-point__feature:nth-of-type(2) {
+  margin-left: auto;
+  margin-top: -102px;
+}
+.liver-point__feature:nth-of-type(3) {
+  margin-top: -74px;
+  margin-left: 130px;
+}
+.liver-point__image-container {
+  width: 31%;
+}
+.liver-point__image {
+}
+.liver-point__description {
+  flex: 1;
+}
+.liver-point__heading {
+  font-size: 20px;
+  line-height: 1.5;
+  color: var(--color-blue);
+  font-weight: 700;
+}
+.liver-point__text {
+  margin-top: 24px;
+}
+
+// PASSION
+.liver-passion {
+  padding: 160px 0;
+}
+.liver-passion__content {
+  display: flex;
+  gap: 80px;
+}
+.liver-passion__intro {
+  width: 34%;
+}
+.liver-passion__image-container {
+  margin-top: 80px;
+}
+.liver-passion__image {
+}
+.liver-passion__message {
+  flex: 1;
+}
+.liver-passion__heading {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--color-blue);
+  line-height: 1.346;
+}
+.liver-passion__text-container {
+  margin-top: 24px;
+}
+.liver-passion__text {
+}
+.liver-passion__text-container .liver-passion__text:not(:first-child) {
+  margin-top: 1.5em;
+}
+.liver-passion__signature-block {
+  margin-top: 48px;
+}
+.liver-passion__signature {
+}
+.liver-passion__signature-image {
+}
+.liver-passion__company {
+  margin-top: 24px;
+  font-size: 14px;
+}
+.liver-passion__company-name {
+}
+.liver-passion__company-position {
+}
+@media (max-width: 768px) {
+  .liver-mainvisual {
+  }
+  .liver-mainvisual__container {
+    width: 87.7%;
+    flex-direction: column;
+    padding-top: 76px;
+    padding-bottom: 32px;
+    // height: calc(100% - 108px);
+  }
+  // 左カラム
+  .liver-mainvisual__content {
+    padding-left: 0;
+    margin-bottom: 0;
+  }
+  .liver-mainvisual__badges {
+    justify-content: center;
+  }
+  .liver-mainvisual__badge {
+    width: 80px;
+    height: 80px;
+  }
+  .liver-mainvisual__badge.liver-mainvisual__badge--fee {
+  }
+  .liver-mainvisual__badge.liver-mainvisual__badge--delivery {
+  }
+  .liver-mainvisual__badge-text {
+    font-size: 12px;
+    padding: 0 10px;
+  }
+  .liver-mainvisual__badge-value {
+    font-size: 22px;
+    margin-top: 6px;
+  }
+  .liver-mainvisual__message {
+    margin-top: 8px;
+    text-align: center;
+  }
+  .liver-mainvisual__heading {
+    font-size: 32px;
+  }
+  .liver-mainvisual__apps {
+    margin-top: 24px;
+  }
+  // 右側カラム
+  .liver-mainvisual__image-container {
+    margin-top: 34px;
+    width: 88.9%;
+    margin-left: auto;
+  }
+  .liver-mainvisual__phone-container {
+  }
+  .liver-mainvisual__image {
+  }
+  /* スマートフォンと人物の配置 */
+  .liver-mainvisual__image--phone {
+  }
+  /* 化粧品アイテムの配置 */
+  .liver-mainvisual__image--item-1 {
+    width: 23px;
+    top: 30%;
+    left: -10%;
+  }
+  .liver-mainvisual__image--item-2 {
+    width: 38px;
+    bottom: 18%;
+    left: -3.55%;
+  }
+  .liver-mainvisual__image--item-3 {
+    width: 67px;
+  }
+  .liver-mainvisual__image--item-4 {
+    width: 42px;
+  }
+  .liver-mainvisual__image--item-5 {
+    width: 39px;
+  }
+  .lottie-grid {
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(20, 1fr);
+  }
+
+  .lottie-item {
+    width: 40px;
+    height: 40px;
+  }
+
+  /* SP用位置指定 - 新しいグリッド上の配置 */
+  .lottie-item-1 {
+    grid-area: 1 / 4 / 2 / 5;
+  } /* D1 */
+  .lottie-item-2 {
+    grid-area: 1 / 10 / 2 / 11;
+  } /* J1 */
+  .lottie-item-3 {
+    grid-area: 2 / 1 / 3 / 2;
+  } /* A2 */
+  .lottie-item-4 {
+    grid-area: 2 / 9 / 3 / 10;
+  } /* H2 */
+  .lottie-item-5 {
+    grid-area: 3 / 2 / 4 / 3;
+  } /* B3 */
+  .lottie-item-6 {
+    grid-area: 3 / 10 / 4 / 11;
+  } /* J3 */
+  .lottie-item-7 {
+    grid-area: 4 / 1 / 5 / 2;
+  } /* A4 */
+  .lottie-item-8 {
+    grid-area: 4 / 10 / 5 / 11;
+  } /* J4 */
+  .lottie-item-9 {
+    grid-area: 6 / 1 / 7 / 2;
+  } /* A6 */
+  .lottie-item-10 {
+    grid-area: 7 / 10 / 8 / 11;
+  } /* J7 */
+  .lottie-item-11 {
+    grid-area: 9 / 1 / 10 / 2;
+  } /* A9 */
+  .lottie-item-12 {
+    grid-area: 11 / 10 / 12 / 11;
+  } /* I12 */
+  .lottie-item-13 {
+    grid-area: 17 / 1 / 18 / 2;
+  } /* A17 */
+  .lottie-item-14 {
+    grid-area: 18/10/19/11;
+  } /* I18 */
+  .lottie-item-15 {
+    grid-area: 19 / 1 / 20 / 2;
+  } /* A19 */
+  .lottie-item-16 {
+    grid-area: 20 / 2 / 21 / 3;
+  } /* B20 */
+  .lottie-item-17 {
+    grid-area: 20/9/21/10;
+  } /* H20 */
+
+  /* 他のLottieアイテムは非表示 */
+  .lottie-item-18,
+  .lottie-item-19,
+  .lottie-item-20,
+  .lottie-item-21,
+  .lottie-item-22,
+  .lottie-item-23,
+  .lottie-item-24,
+  .lottie-item-25,
+  .lottie-item-26,
+  .lottie-item-27,
+  .lottie-item-28,
+  .lottie-item-29,
+  .lottie-item-30 {
+    display: none;
+  }
+
+  // POINT
+  .liver-point {
+  }
+  .liver-point__features {
+  }
+  .liver-point__feature {
+  }
+  .liver-point__feature:nth-of-type(2) {
+  }
+  .liver-point__feature:nth-of-type(3) {
+  }
+  .liver-point__image-container {
+  }
+  .liver-point__image {
+  }
+  .liver-point__description {
+  }
+  .liver-point__heading {
+  }
+  .liver-point__text {
+  }
+
+  // PASSION
+  .liver-passion {
+  }
+  .liver-passion__content {
+  }
+  .liver-passion__intro {
+  }
+  .liver-passion__image-container {
+  }
+  .liver-passion__image {
+  }
+  .liver-passion__message {
+  }
+  .liver-passion__heading {
+  }
+  .liver-passion__text-container {
+  }
+  .liver-passion__text {
+  }
+  .liver-passion__text-container .liver-passion__text:not(:first-child) {
+  }
+  .liver-passion__signature-block {
+  }
+  .liver-passion__signature {
+  }
+  .liver-passion__signature-image {
+  }
+  .liver-passion__company {
+  }
+  .liver-passion__company-name {
+  }
+  .liver-passion__company-position {
+  }
+}
