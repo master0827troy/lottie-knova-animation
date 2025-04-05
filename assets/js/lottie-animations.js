@@ -1,9 +1,18 @@
 import { DotLottie } from "https://cdn.jsdelivr.net/npm/@lottiefiles/dotlottie-web/+esm";
 
 let lottieFiles = [];
+let lottieSize = 0;
+if(window.innerWidth < 768) {
+  lottieSize = innerWidth / 100 * 8.2;
+  lottieSize < 32 ? 32 : lottieSize;
+} else {
+  lottieSize = innerWidth / 100 * 4.23;
+  lottieSize > 64 ? 64 : lottieSize;
+}
+
 const CONFIG = {
   animationSpeed: 1,
-  baseSize: innerWidth / 22 > 64 ? 64 : innerWidth / 22,
+  baseSize: lottieSize,
   basePath: "../assets/img/shapes/lottie/",
   maxVisible: 3,
   totalCells: 9,
