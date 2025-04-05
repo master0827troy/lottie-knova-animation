@@ -229,3 +229,170 @@ function getRandomItem(list) {
 
 // Run
 start();
+
+
+const grid1 = document.getElementById("mainvisual_shapes_bottom1");
+
+let cells1 = [];
+let visibleAnimations1 = [];
+
+// Setup grid
+for (let i = 0; i < totalCells; i++) {
+  const cell = document.createElement("div");
+  cell.className = "cell";
+  grid1.appendChild(cell);
+  cells1.push(cell);
+}
+
+// Start animations
+function start1() {
+  for (let i = 0; i < maxVisible; i++) {
+    placeRandomAnimation1();
+  }
+}
+
+// Place a new animation into a random EMPTY cell
+async function placeRandomAnimation1(excludeCellIndex = null) {
+  const unusedAnimations = lottieFiles.filter(
+    (src) => !visibleAnimations1.some((anim) => anim.src === src)
+  );
+
+  if (unusedAnimations.length === 0) return;
+
+  const newSrc = getRandomItem(unusedAnimations);
+  const freeCells = cells1
+    .map((_, idx) => idx)
+    .filter((idx) => !visibleAnimations1.some((anim) => anim.cellIndex === idx));
+
+  if (freeCells.length === 0) return;
+
+  const validCells =
+    excludeCellIndex !== null
+      ? freeCells.filter((idx) => idx !== excludeCellIndex)
+      : freeCells;
+
+  const newCellIndex = getRandomItem(
+    validCells.length ? validCells : freeCells
+  );
+  const cell = cells1[newCellIndex];
+
+  try {
+    const canvas = document.createElement("canvas");
+    cell.appendChild(canvas);
+
+    const anim = new DotLottie({
+      canvas,
+      src: newSrc,
+      autoplay: true,
+      loop: false,
+    });
+
+    // Handle animation completion
+    anim.addEventListener("complete", () => {
+      cell.removeChild(canvas);
+      visibleAnimations1 = visibleAnimations1.filter(
+        (a) => a.cellIndex !== newCellIndex
+      );
+      anim.destroy();
+
+      setTimeout(() => {
+        placeRandomAnimation1(newCellIndex);
+      }, 300);
+    });
+
+    visibleAnimations1.push({
+      cellIndex: newCellIndex,
+      src: newSrc,
+      instance: anim,
+    });
+  } catch (error) {
+    console.error("Failed to create animation:", error);
+  }
+}
+
+// Run
+start1();
+
+
+
+const grid2 = document.getElementById("mainvisual_shapes_bottom2");
+
+let cells2 = [];
+let visibleAnimations2 = [];
+
+// Setup grid
+for (let i = 0; i < totalCells; i++) {
+  const cell = document.createElement("div");
+  cell.className = "cell";
+  grid2.appendChild(cell);
+  cells2.push(cell);
+}
+
+// Start animations
+function start2() {
+  for (let i = 0; i < maxVisible; i++) {
+    placeRandomAnimation2();
+  }
+}
+
+// Place a new animation into a random EMPTY cell
+async function placeRandomAnimation2(excludeCellIndex = null) {
+  const unusedAnimations = lottieFiles.filter(
+    (src) => !visibleAnimations2.some((anim) => anim.src === src)
+  );
+
+  if (unusedAnimations.length === 0) return;
+
+  const newSrc = getRandomItem(unusedAnimations);
+  const freeCells = cells2
+    .map((_, idx) => idx)
+    .filter((idx) => !visibleAnimations2.some((anim) => anim.cellIndex === idx));
+
+  if (freeCells.length === 0) return;
+
+  const validCells =
+    excludeCellIndex !== null
+      ? freeCells.filter((idx) => idx !== excludeCellIndex)
+      : freeCells;
+
+  const newCellIndex = getRandomItem(
+    validCells.length ? validCells : freeCells
+  );
+  const cell = cells2[newCellIndex];
+
+  try {
+    const canvas = document.createElement("canvas");
+    cell.appendChild(canvas);
+
+    const anim = new DotLottie({
+      canvas,
+      src: newSrc,
+      autoplay: true,
+      loop: false,
+    });
+
+    // Handle animation completion
+    anim.addEventListener("complete", () => {
+      cell.removeChild(canvas);
+      visibleAnimations2 = visibleAnimations2.filter(
+        (a) => a.cellIndex !== newCellIndex
+      );
+      anim.destroy();
+
+      setTimeout(() => {
+        placeRandomAnimation2(newCellIndex);
+      }, 300);
+    });
+
+    visibleAnimations2.push({
+      cellIndex: newCellIndex,
+      src: newSrc,
+      instance: anim,
+    });
+  } catch (error) {
+    console.error("Failed to create animation:", error);
+  }
+}
+
+// Run
+start2();
