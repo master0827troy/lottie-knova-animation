@@ -1,228 +1,143 @@
-let lottieFiles = [];
+import { DotLottie } from "https://cdn.jsdelivr.net/npm/@lottiefiles/dotlottie-web/+esm";
 
-const itemSize = innerWidth / 22;
+const CONFIG = {
+  animationSpeed: 1,
+  baseSize: innerWidth / 22 > 64 ? 64 : innerWidth / 22,
+  basePath: "../assets/img/shapes/lottie/",
+};
 
-for (let i = 1; i < 23; i++) {
-  i < 10
-    ? lottieFiles.push("../assets/img/shapes/lottie/shape-0" + i + ".lottie")
-    : lottieFiles.push("../assets/img/shapes/lottie/shape-" + i + ".lottie");
-}
+class LottieAnimationManager {
+  constructor() {
+    this.lottieFiles = [];
+    this.animations = [];
+    this.widthTop = 0;
+    this.numAnimations = 0;
+    this.isRunning = false;
+    this.rafId = null;
 
-// Select 10 random animations
-function getRandomLottieFiles(num) {
-  let shuffled = [];
-  for (let i = 1; i < 33; i++) {
-    const urlID = Math.floor(Math.random() * lottieFiles.length);
-    shuffled.push(lottieFiles[urlID]);
+    this.initLottieFiles();
+    this.bindEvents();
   }
 
-  return shuffled.slice(0, num);
-}
+  initLottieFiles() {
+    for (let i = 1; i < 26; i++) {
+      const fileName = `shape-${i < 10 ? "0" + i : i}.lottie`;
+      this.lottieFiles.push(`${CONFIG.basePath}${fileName}`);
+    }
+  }
 
-const selectedFiles1 = getRandomLottieFiles(24);
-const selectedFiles2 = getRandomLottieFiles(24);
-const selectedFiles3 = getRandomLottieFiles(24);
+  bindEvents() {
+    document.addEventListener("DOMContentLoaded", () => this.initialize());
+    window.addEventListener("unload", () => this.destroy());
+  }
 
-// Render the animations in a grid
-function renderLottieGrid() {
-  const gridContainer = document.getElementById("mainvisual_shapes_top");
+  initialize() {
+    const container = document.getElementById(
+      "mainvisual_shapes_center_animation"
+    );
+    const element = document.querySelector(".mainvisual__catch");
 
-  selectedFiles1.forEach((url, index) => {
-    if (itemSize > 64) {
-      if (index > 21) {
-        const player = document.createElement("dotlottie-player");
-        player.src = url;
-        player.loop = true;
-        player.autoplay = true;
-        player.speed = 1;
-        player.background = "transparent";
-        player.style.opacity = 0;
-        gridContainer.appendChild(player);
+    if (!container || !element) return;
+
+    this.widthTop = element.offsetWidth;
+    this.numAnimations = Math.floor(this.widthTop / CONFIG.baseSize) + 2;
+
+    this.createAnimations(container);
+    this.startAnimation();
+  }
+
+  createAnimations(container) {
+    for (let i = 0; i < this.numAnimations * 2; i++) {
+      const canvas = this.createCanvas(i);
+      container.appendChild(canvas);
+
+      try {
+        const anim = new DotLottie({
+          canvas,
+          src: this.getRandomAnimationUrl(),
+          autoplay: true,
+          loop: true,
+        });
+
+        this.animations.push({
+          canvas,
+          x:
+            i >= this.numAnimations
+              ? parseFloat(canvas.style.right)
+              : parseFloat(canvas.style.left),
+          y: parseFloat(canvas.style.top) || 0,
+          instance: anim,
+        });
+      } catch (error) {
+        console.error("Failed to create animation:", error);
       }
     }
-    if ((index + 1) % 8 == 0) {
-      const player = document.createElement("dotlottie-player");
-      player.src = url;
-      player.loop = true;
-      player.autoplay = true;
-      player.speed = 1;
-      player.background = "transparent";
-      player.style.opacity = 0;
-      gridContainer.appendChild(player);
+  }
+
+  createCanvas(index) {
+    const canvas = document.createElement("canvas");
+    canvas.width = CONFIG.baseSize;
+    canvas.height = CONFIG.baseSize;
+    canvas.style.position = "absolute";
+
+    if (index >= this.numAnimations) {
+      canvas.style.right =
+        (index - this.numAnimations) * CONFIG.baseSize + "px";
+      canvas.style.bottom = "0";
     } else {
-      const player = document.createElement("dotlottie-player");
-      player.src = url;
-      player.loop = true;
-      player.autoplay = true;
-      player.speed = 1;
-      index % Math.floor(Math.random() * 10) == 0
-        ? (player.style.opacity = 100)
-        : (player.style.opacity = 0);
-      player.background = "transparent";
-      gridContainer.appendChild(player);
+      canvas.style.left = index * CONFIG.baseSize + "px";
+      canvas.style.top = "0";
     }
-  });
-}
 
-function renderLottieGridBottom1() {
-  const gridContainer = document.getElementById("mainvisual_shapes_bottom1");
+    return canvas;
+  }
 
-  selectedFiles2.forEach((url, index) => {
-    const player = document.createElement("dotlottie-player");
-    player.src = url;
-    player.loop = true;
-    player.autoplay = true;
-    player.speed = 1;
-    index % Math.floor(Math.random() * 10) == 0
-      ? (player.style.opacity = 100)
-      : (player.style.opacity = 0);
-    player.background = "transparent";
-    gridContainer.appendChild(player);
-  });
-}
+  getRandomAnimationUrl() {
+    return this.lottieFiles[
+      Math.floor(Math.random() * this.lottieFiles.length)
+    ];
+  }
 
-function renderLottieGridBottom2() {
-  const gridContainer = document.getElementById("mainvisual_shapes_bottom2");
-  gridContainer.innerHTML = ""; // Clear previous animations
+  animate() {
+    this.animations.forEach((obj, index) => {
+      if (index < this.numAnimations) {
+        obj.x -= CONFIG.animationSpeed;
+        if (obj.x < -CONFIG.baseSize) {
+          obj.x = (this.numAnimations - 1) * CONFIG.baseSize;
+        }
+        obj.canvas.style.left = `${obj.x}px`;
+      } else {
+        obj.x -= CONFIG.animationSpeed;
+        if (obj.x < -CONFIG.baseSize) {
+          obj.x = (this.numAnimations - 1) * CONFIG.baseSize;
+        }
+        obj.canvas.style.right = `${obj.x}px`;
+      }
+    });
 
-  selectedFiles3.forEach((url, index) => {
-    const player = document.createElement("dotlottie-player");
-    player.src = url;
-    player.loop = true;
-    player.autoplay = true;
-    player.speed = 1;
-    index % Math.floor(Math.random() * 10) == 0
-      ? (player.style.opacity = 100)
-      : (player.style.opacity = 0);
-    player.background = "transparent";
-    gridContainer.appendChild(player);
-  });
-}
-
-function renderLottieGridDraw() {
-  const gridContainer = document.getElementById("mainvisual_shapes_top");
-  const dotlottieItems = gridContainer.getElementsByTagName("dotlottie-player");
-  for (let i = 0; i < dotlottieItems.length; i++) {
-    i % Math.floor(Math.random() * 10) == 0
-      ? (dotlottieItems[i].style.opacity = 100)
-      : (dotlottieItems[i].style.opacity = 0);
-    if (i > 21) {
-      dotlottieItems[i].style.opacity = 0;
-    }
-    if ((i + 1) % 8 == 0) {
-      dotlottieItems[i].style.opacity = 0;
+    if (this.isRunning) {
+      this.rafId = requestAnimationFrame(() => this.animate());
     }
   }
-}
 
-function renderLottieGridBottomDraw1() {
-  const gridContainer = document.getElementById("mainvisual_shapes_bottom1");
-  const dotlottieItems = gridContainer.getElementsByTagName("dotlottie-player");
-  // console.log(dotlottieItems);
+  startAnimation() {
+    if (!this.isRunning) {
+      this.isRunning = true;
+      this.animate();
+    }
+  }
 
-  for (let i = 0; i < dotlottieItems.length; i++) {
-    i % Math.floor(Math.random() * 10) == 0
-      ? (dotlottieItems[i].style.opacity = 100)
-      : (dotlottieItems[i].style.opacity = 0);
+  destroy() {
+    this.isRunning = false;
+    if (this.rafId) {
+      cancelAnimationFrame(this.rafId);
+    }
+    this.animations.forEach((anim) => {
+      anim.instance?.destroy?.();
+    });
+    this.animations = [];
   }
 }
 
-function renderLottieGridBottomDraw2() {
-  const gridContainer = document.getElementById("mainvisual_shapes_bottom2");
-  const dotlottieItems = gridContainer.getElementsByTagName("dotlottie-player");
-  for (let i = 0; i < dotlottieItems.length; i++) {
-    i % Math.floor(Math.random() * 10) == 0
-      ? (dotlottieItems[i].style.opacity = 100)
-      : (dotlottieItems[i].style.opacity = 0);
-  }
-}
-
-renderLottieGrid();
-renderLottieGridBottom1();
-renderLottieGridBottom2();
-
-setInterval(() => {
-  renderLottieGridBottomDraw1();
-  setTimeout(() => {
-    renderLottieGridBottomDraw2();
-    setTimeout(() => {
-      renderLottieGridDraw();
-    }, 2000);
-  }, 2000);
-}, 6000);
-
-// ---------------------------
-
-// Lottie Animation URLs
-
-let lottieObjects = [];
-
-// Create Grid of Animations
-function getRandomLottie() {
-  return lottieFiles[Math.floor(Math.random() * lottieFiles.length)];
-}
-
-function createLottieGrid(k) {
-  let container = document.getElementById("mainvisual_shapes_center-top");
-  if (k) {
-    container = document.getElementById("mainvisual_shapes_center-bottom");
-  }
-  for (let i = 0; i < 30; i++) {
-    const player = document.createElement("dotlottie-player");
-    player.src = getRandomLottie();
-    player.loop = true;
-    player.autoplay = true;
-    container.appendChild(player);
-  }
-}
-
-createLottieGrid(0);
-createLottieGrid(1);
-
-// const lottieContainer = document.getElementById("mainvisual_shapes_center-top");
-// const lottieClone = lottieContainer.cloneNode(true);
-// lottieClone.style.position = "absolute";
-// lottieClone.style.left = `${lottieContainer.offsetWidth}px`; // Place it right after the first set
-// document
-//   .getElementById("mainvisual_shapes_center-top")
-//   .appendChild(lottieClone);
-
-// let posX = 0;
-// let speed = 2;
-
-// function slideAnimation() {
-//   posX += speed;
-//   if (posX >= 300) {
-//     posX = 0;
-//   }
-//   lottieContainer.style.transform = `translateX(${posX}px)`;
-// }
-// setInterval(() => {
-//   slideAnimation();
-// }, 100);
-
-// slideAnimation();
-
-// const lottieContainerDown = document.getElementById(
-//   "mainvisual_shapes_center-bottom"
-// );
-// const lottieCloneDown = lottieContainerDown.cloneNode(true);
-// lottieCloneDown.style.position = "absolute";
-// lottieCloneDown.style.left = `${lottieContainerDown.offsetWidth}px`; // Place it right after the first set
-// document
-//   .getElementById("mainvisual_shapes_center-bottom")
-//   .appendChild(lottieCloneDown);
-// let posXDown = 0;
-// function slideAnimationDown() {
-//   posXDown -= speed;
-//   if (posXDown <= -300) {
-//     posXDown = 0;
-//   }
-//   lottieContainerDown.style.transform = `translateX(${posXDown}px)`;
-// }
-
-// setInterval(() => {
-//   slideAnimationDown();
-// }, 100);
-
-// slideAnimationDown();
+// Initialize
+const manager = new LottieAnimationManager();
