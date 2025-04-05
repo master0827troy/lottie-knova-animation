@@ -18,7 +18,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="assets/css/lottie-css.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+    <script src="https://unpkg.com/@johanaarstein/dotlottie-player@latest/dist/index.js"></script>
   </head>
   <body>
     <header class="header">
@@ -108,145 +108,156 @@
 
     <main>
       <section class="mainvisual">
-        <div class="shape-size" id="block1-shape1"></div>
-        <div class="shape-size" id="block3-shape1"></div>
-        <div class="shape-size" id="block4-shape1"></div>
-        <div class="shape-size" id="block5-shape2"></div>
-        <div class="shape-size" id="block5-shape3"></div>
-        <div class="shape-size" id="block7-shape1"></div>
-        <div class="shape-size" id="block7-shape2"></div>
-        <div class="shape-size" id="block7-shape3"></div>
-
         <div class="mainvisual__container">
           <!-- 上段グループ（上揃え） -->
           <div class="mainvisual__grid">
             <div class="mainvisual__catch">
               <h2 class="mainvisual__catch-text">
-                さぁ、でかけよう。ライブコマースへ。
+                さぁ、でかけよう。<br class="sp" />ライブコマースへ。
               </h2>
-              <div class="mainvisual__catch__lottie-top">
-                <div id="catch-shape1" class="shape-size"></div>
-                <div id="catch-shape2" class="shape-size"></div>
-                <div id="catch-shape3" class="shape-size"></div>
-                <div id="catch-shape4" class="shape-size"></div>
-                <div id="catch-shape5" class="shape-size"></div>
-                <div id="catch-shape6" class="shape-size"></div>
-                <div id="catch-shape7" class="shape-size"></div>
-                <div id="catch-shape8" class="shape-size"></div>
-                <div id="catch-shape9" class="shape-size"></div>
-                <div id="catch-shape10" class="shape-size"></div>
-                <div id="catch-shape11" class="shape-size"></div>
-                <div id="catch-shape12" class="shape-size"></div>
-                <div id="catch-shape13" class="shape-size"></div>
-                <div id="catch-shape14" class="shape-size"></div>
-              </div>
-              <div class="mainvisual__catch__lottie-down">
-                <div id="catch-shape15" class="shape-size"></div>
-                <div id="catch-shape16" class="shape-size"></div>
-                <div id="catch-shape17" class="shape-size"></div>
-                <div id="catch-shape18" class="shape-size"></div>
-                <div id="catch-shape19" class="shape-size"></div>
-                <div id="catch-shape20" class="shape-size"></div>
-                <div id="catch-shape21" class="shape-size"></div>
-                <div id="catch-shape22" class="shape-size"></div>
-                <div id="catch-shape23" class="shape-size"></div>
-                <div id="catch-shape24" class="shape-size"></div>
-                <div id="catch-shape25" class="shape-size"></div>
-                <div id="catch-shape26" class="shape-size"></div>
-                <div id="catch-shape27" class="shape-size"></div>
-                <div id="catch-shape28" class="shape-size"></div>
-              </div>
+              <div
+                class="grid-mainvisual grid-container-center slider-top"
+                id="mainvisual_shapes_center-top"
+              ></div>
+              <div
+                class="grid-mainvisual grid-container-center slider-bottom"
+                id="mainvisual_shapes_center-bottom"
+              ></div>
             </div>
+
             <div class="mainvisual__block mainvisual__block--1">
-              <img
-                src="assets/img/visual-01.png"
-                alt=""
-                class="mainvisual__image"
-              />
-              <div class="mainvisual__block1__lottie-shape">
-                <div class="shape-size" id="block1-shape2"></div>
-                <div class="shape-size" id="block1-shape3"></div>
-              </div>
+              <picture>
+                <source
+                  media="(max-width: 768px)"
+                  srcset="assets/img/visual-01--sp.png"
+                />
+                <img
+                  src="assets/img/visual-01.png"
+                  alt=""
+                  class="mainvisual__image"
+                />
+              </picture>
             </div>
             <div class="mainvisual__block mainvisual__block--2">
-              <img
-                src="assets/img/visual-02.png"
-                alt=""
-                class="mainvisual__image"
-              />
-              <div class="shape-size" id="block2-shape1"></div>
+              <picture>
+                <source
+                  media="(max-width: 768px)"
+                  srcset="assets/img/visual-02--sp.png"
+                />
+                <img
+                  src="assets/img/visual-02.png"
+                  alt=""
+                  class="mainvisual__image"
+                />
+              </picture>
             </div>
             <div class="mainvisual__block mainvisual__block--3">
-              <img
-                src="assets/img/visual-03.png"
-                alt=""
-                class="mainvisual__image"
-              />
+              <picture>
+                <source
+                  media="(max-width: 768px)"
+                  srcset="assets/img/visual-03--sp.png"
+                />
+                <img
+                  src="assets/img/visual-03.png"
+                  alt=""
+                  class="mainvisual__image"
+                />
+              </picture>
             </div>
             <div class="mainvisual__block mainvisual__block--4">
-              <img
-                src="assets/img/visual-04.png"
-                alt=""
-                class="mainvisual__image"
-              />
+              <p class="mainvisual__ambassador">
+                <picture>
+                  <source
+                    media="(max-width: 768px)"
+                    srcset="assets/img/mainvisual__ambassador-text--sp.svg"
+                  />
+                  <img
+                    src="assets/img/mainvisual__ambassador-text.svg"
+                    alt="「中小企業からニッポンを元気にプロジェクト」公式アンバサダー 前田敦子"
+                    class="mainvisual__ambassador-text"
+                  />
+                </picture>
+              </p>
+              <picture>
+                <source
+                  media="(max-width: 768px)"
+                  srcset="assets/img/visual-04--sp.png"
+                />
+                <img
+                  src="assets/img/visual-04.png"
+                  alt=""
+                  class="mainvisual__image"
+                />
+              </picture>
             </div>
             <div class="mainvisual__block mainvisual__block--5">
-              <img
-                src="assets/img/visual-05.png"
-                alt=""
-                class="mainvisual__image"
-              />
-              <div class="shape-size" id="block5-shape1"></div>
+              <picture>
+                <source
+                  media="(max-width: 768px)"
+                  srcset="assets/img/visual-05--sp.png"
+                />
+                <img
+                  src="assets/img/visual-05.png"
+                  alt=""
+                  class="mainvisual__image"
+                />
+              </picture>
             </div>
             <div class="mainvisual__block mainvisual__block--6">
-              <img
-                src="assets/img/visual-06.png"
-                alt=""
-                class="mainvisual__image"
-              />
+              <picture>
+                <source
+                  media="(max-width: 768px)"
+                  srcset="assets/img/visual-06--sp.png"
+                />
+                <img
+                  src="assets/img/visual-06.png"
+                  alt=""
+                  class="mainvisual__image"
+                />
+              </picture>
             </div>
             <div class="mainvisual__block mainvisual__block--7">
-              <img
-                src="assets/img/visual-07.png"
-                alt=""
-                class="mainvisual__image"
-              />
+              <picture>
+                <source
+                  media="(max-width: 768px)"
+                  srcset="assets/img/visual-07--sp.png"
+                />
+                <img
+                  src="assets/img/visual-07.png"
+                  alt=""
+                  class="mainvisual__image"
+                />
+              </picture>
             </div>
             <div class="mainvisual__block mainvisual__block--8">
-              <div class="download">
-                <div class="download__texts">
-                  <p class="download__text-head">
-                    ライブを見ながらショッピング！
-                  </p>
-                  <p class="download__text">
-                    ライブコマース専用の<br />
-                    ECモールアプリ「WABE」
-                  </p>
-                </div>
-                <div class="download__links">
-                  <a href="#" class="download__link" target="_blank">
-                    <img
-                      src="assets/img/icon__appstore.png"
-                      alt="App Storeからダウンロード"
-                      width="160"
-                      height="48"
-                    />
-                  </a>
-                  <a href="#" class="download__link" target="_blank">
-                    <img
-                      src="assets/img/icon__googleplay.png"
-                      alt="Google Playで手に入れよう"
-                      width="160"
-                      height="48"
-                    />
-                  </a>
-                </div>
-              </div>
+              <picture>
+                <source
+                  media="(max-width: 768px)"
+                  srcset="assets/img/visual-08--sp.png"
+                />
+                <img
+                  src="assets/img/visual-08.png"
+                  alt=""
+                  class="mainvisual__image"
+                />
+              </picture>
             </div>
           </div>
 
           <!-- キャッチコピー -->
         </div>
+        <div
+          class="grid-mainvisual grid-container-top"
+          id="mainvisual_shapes_top"
+        ></div>
+        <div
+          class="grid-mainvisual grid-container-bottom1"
+          id="mainvisual_shapes_bottom1"
+        ></div>
+        <div
+          class="grid-mainvisual grid-container-bottom2"
+          id="mainvisual_shapes_bottom2"
+        ></div>
       </section>
 
       <section class="concept">
@@ -300,7 +311,7 @@
                     CONCEPT
                   </h2>
                   <p class="section-title__ja fade-in" data-delay="200">
-                    見て、きいて、買って、たのしい！
+                    見て、きいて、<br class="sp" />買って、たのしい！
                   </p>
                 </hgroup>
 
@@ -310,21 +321,50 @@
                   </p>
 
                   <p class="section-text__paragraph">
-                    私たちが届けたいのは、ただの商品と情報ではありません。<br />WABEにあるのは、<br />
-                    信じられるライブコマーサーがほんとうに好きなモノ、<br />
+                    私たちが届けたいのは<br
+                      class="sp"
+                    />、ただの商品と情報ではありません。<br />WABEにあるのは、<br
+                      class="sp"
+                    />信じられるライブコマーサーが<br
+                      class="sp"
+                    />ほんとうに好きなモノ、<br />
                     ここで出会った仲間たちからの気づきと共感。
                   </p>
 
                   <p class="section-text__paragraph">
-                    その熱量にリアルタイムで触れるたび、<br />
-                    ショッピングがもっと<br />
-                    「たのしい！」エンターテインメントに変わっていく。
+                    その熱量にリアルタイムで触れるたび、<br
+                      class="sp"
+                    />ショッピングがもっと 「たのしい！」<br
+                      class="sp"
+                    />エンターテインメントに変わっていく。
                   </p>
 
                   <p class="section-text__paragraph">
                     だから、一緒にでかけませんか？<br />
-                    胸がときめくモノと人に出会える新体験へ。
+                    胸がときめくモノと人に出会える新体験へ。 
                   </p>
+                </div>
+                <div class="concept__download">
+                  <div class="download">
+                    <div class="download__links">
+                      <a href="#" class="download__link" target="_blank">
+                        <img
+                          src="assets/img/icon__appstore.png"
+                          alt="App Storeからダウンロード"
+                          width="160"
+                          height="48"
+                        />
+                      </a>
+                      <a href="#" class="download__link" target="_blank">
+                        <img
+                          src="assets/img/icon__googleplay.png"
+                          alt="Google Playで手に入れよう"
+                          width="160"
+                          height="48"
+                        />
+                      </a>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -333,7 +373,7 @@
       </section>
 
       <section class="point">
-        <div class="point__container">
+        <div class="point__container point__container--pc">
           <div class="point__visual">
             <div class="point__images">
               <div class="point__image-container">
@@ -393,6 +433,70 @@
                 <p class="point__text">
                   視聴者同士で情報をシェアしたり、配信者に直接質問したり、気軽なやりとりが、ショッピングをもっと身近で楽しいものに。ひとりで選ぶのではなく、みんなでわいわいしながら選べるのもWABEの魅力。
                 </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="point__container point__container--sp">
+          <div class="point__content">
+            <div class="point__items">
+              <div class="point__item" data-point="01">
+                <div class="point__item-content">
+                  <p class="point__number --color-yellow">POINT 01</p>
+                  <h2 class="point__title">
+                    ライブで質問、リアルに体感。<br />新しいショッピング。
+                  </h2>
+                  <p class="point__text">
+                    気になることは、その場で直接質問。厳しい審査をクリアした配信者が、商品の魅力をリアルに伝えるから、購入前の不安がなくなる。画面越しでも、しっかり納得して選べる新しい買い物の形です。
+                  </p>
+                </div>
+                <div class="point__image-box">
+                  <img
+                    src="assets/img/use-image-01.jpg"
+                    alt=""
+                    class="point__image"
+                  />
+                </div>
+              </div>
+
+              <div class="point__item" data-point="02">
+                <div class="point__item-content">
+                  <p class="point__number --color-yellow">POINT 02</p>
+                  <h2 class="point__title">
+                    ライブでも、モールでも。 <br />配信外でも自由にお買い物。
+                  </h2>
+                  <p class="point__text">
+                    リアルタイムのライブ配信で買うのも、後からモールでじっくり選んで買うのも思いのまま。だから、忙しい人でも大丈夫。好きなタイミングで、あなたのライフスタイルに合ったショッピングを楽しめます。
+                  </p>
+                </div>
+                <div class="point__image-box">
+                  <img
+                    src="assets/img/use-image-02.jpg"
+                    alt=""
+                    class="point__image"
+                  />
+                </div>
+              </div>
+
+              <div class="point__item" data-point="03">
+                <div class="point__item-content">
+                  <p class="point__number --color-yellow">POINT 03</p>
+                  <h2 class="point__title">
+                    つながる、広がる。<br />
+                    仲間と一緒で、もっと楽しい。
+                  </h2>
+                  <p class="point__text">
+                    視聴者同士で情報をシェアしたり、配信者に直接質問したり、気軽なやりとりが、ショッピングをもっと身近で楽しいものに。ひとりで選ぶのではなく、みんなでわいわいしながら選べるのもWABEの魅力。
+                  </p>
+                </div>
+                <div class="point__image-box">
+                  <img
+                    src="assets/img/use-image-03.jpg"
+                    alt=""
+                    class="point__image"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -647,7 +751,7 @@
                 </div>
               </div>
             </div>
-            <!-- SPサイズ（769px以下）表示用 -->
+            <!-- SPサイズ（768px以下）表示用 -->
             <div class="tab-sp">
               <!-- タブメニュー部分はPC版と同じ -->
               <div class="tab-menu" role="tablist">
@@ -1019,7 +1123,7 @@
               <p>
                 <picture>
                   <source
-                    media="(max-width: 769px)"
+                    media="(max-width: 768px)"
                     srcset="assets/img/information__figure--sp.jpg"
                   />
                   <img
@@ -1182,6 +1286,39 @@
       </section>
     </main>
 
+    <!-- <div class="fixed-button">
+      <picture>
+        <source
+          media="(max-width: 768px)"
+          srcset="assets/img/fixed-button--sp.png"
+        />
+        <img
+          src="assets/img/fixed-button.png"
+          alt=""
+          class="fixed-button__image"
+        />
+      </picture>
+      <div class="fixed-button__links">
+        <a href="#" class="fixed-button__link" target="_blank">
+          <img
+            src="assets/img/icon__appstore.png"
+            alt="App Storeからダウンロード"
+            width="132"
+            height="40"
+          />
+        </a>
+        <a href="#" class="fixed-button__link" target="_blank">
+          <img
+            src="assets/img/icon__googleplay.png"
+            alt="Google Playで手に入れよう"
+            width="132"
+            height="40"
+          />
+        </a>
+      </div>
+      <div class="fixed-button__close"></div>
+    </div> -->
+
     <footer class="footer">
       <div class="footer__inner">
         <!-- 1段目：メインナビゲーション -->
@@ -1297,7 +1434,6 @@
       </div>
     </footer>
 
-    <script src="https://unpkg.com/konva@9/konva.min.js"></script>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
       integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg=="
@@ -1315,12 +1451,16 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
+    <script src="https://unpkg.com/konva@9/konva.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@johanaarstein/dotlottie-player@1.5.23/dist/index.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="assets/js/script.js"></script>
     <script src="assets/js/pointsection-animation.js"></script>
     <!-- MVCatchの幾何学Slider -->
     <script src="assets/js/catch-slider.js"></script>
     <!-- MV左右の幾何学模様 -->
+
     <!-- <script src="assets/js/mainvisual-shapes.js"></script> -->
     <script src="assets/js/lottie-animations.js"></script>
 

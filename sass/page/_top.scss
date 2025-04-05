@@ -1,17 +1,19 @@
 .mainvisual {
   position: relative;
   width: 100%;
-  height: calc(100vh - var(--header-height));
+  // height: calc(100vh - var(--header-height));
 }
 .mainvisual__container {
   height: 100%;
   padding: clamp(16px, 2.5vh, 24px);
   margin: 0 auto;
+  aspect-ratio: 1464 / 866;
+  width: 100%;
 }
 .mainvisual__grid {
   display: grid;
   grid-template-columns: 27.3fr 18.7fr 7.5fr 18.7fr 27.3fr;
-  grid-template-rows: 23fr 12.1fr 23fr 21.7fr 23fr;
+  grid-template-rows: 23fr 12.1fr minmax(200px, 23fr) 21.7fr 23fr;
   gap: clamp(4px, 1vh, 8px);
   height: 100%;
   width: 100%;
@@ -81,7 +83,9 @@
   grid-column: 5/6;
   grid-row: 5/6;
   background: #f38fbb;
-  padding: 20px 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .mainvisual__image {
   position: absolute;
@@ -90,10 +94,22 @@
   object-fit: contain;
   object-position: center bottom;
 }
-
+.mainvisual__block--4 .mainvisual__image {
+  height: auto;
+  top: 10%;
+}
+.mainvisual__block--8 .mainvisual__image {
+  object-position: center center;
+}
+.mainvisual__ambassador {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+}
+.mainvisual__ambassador-text {
+  width: 38px;
+}
 .concept {
-  // padding-top: 222px;
-  // padding-bottom: 222px;
   position: relative;
   height: calc(100vh - var(--header-height));
   display: flex;
@@ -108,7 +124,6 @@
   width: 100%;
   height: 100%;
 }
-
 .concept__visual {
   position: absolute;
   top: 50%;
@@ -151,6 +166,7 @@
   transform: translateX(-50%);
   z-index: 2;
   max-width: none;
+  visibility: visible;
 }
 /* 化粧品アイテムの配置 */
 .concept__image--item-1 {
@@ -212,6 +228,9 @@
 }
 .section-text__paragraph:not(:first-child) {
   margin-top: 1.5em;
+}
+.concept__download {
+  margin-top: 32px;
 }
 .point {
   position: relative;
@@ -310,10 +329,13 @@
   margin-top: 24px;
 }
 .use {
+  position: relative;
   padding-top: 160px;
   padding-bottom: 210px;
   --pseudo-opacity: 0;
   background-color: #fff;
+  overflow: hidden;
+  z-index: 0;
 }
 .use::before {
   content: "";
@@ -342,6 +364,7 @@
   display: flex;
   flex-wrap: wrap;
   overflow: hidden;
+  opacity: var(--pseudo-opacity);
 }
 
 .use__container {
@@ -420,16 +443,17 @@
 .news__article {
   margin-top: 55px;
 }
-@media screen and (max-width: 769px) {
+
+@media screen and (max-width: 768px) {
   .mainvisual {
-    height: auto;
   }
   .mainvisual__container {
     padding: 8px 16px;
+    aspect-ratio: 358 / 764;
   }
   .mainvisual__grid {
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 147px 84px 120px 84px 147px 141px;
+    grid-template-rows: 2.44fr 1.39fr 1.99fr 1.39fr 2.44fr 2.34fr;
     gap: 8px;
   }
   .mainvisual__catch {
@@ -437,18 +461,10 @@
     grid-row: 3 / 4;
   }
   .mainvisual__catch-text {
-  }
-  .catch-shapes {
-  }
-  .catch-shapes--top {
-  }
-  .catch-shapes--bottom {
-  }
-  .mainvisualcatch-text {
-  }
-  .mainvisual__catch {
+    font-size: 28px;
   }
   .mainvisual__block {
+    border-radius: 8px;
   }
   .mainvisual__block--1 {
     display: none;
@@ -483,13 +499,29 @@
   }
   .mainvisual__image {
   }
-
+  .mainvisual__block--4 .mainvisual__image {
+    height: auto;
+    top: inherit;
+    bottom: 0;
+  }
+  .mainvisual__ambassador {
+    top: 11px;
+    left: 11px;
+  }
+  .mainvisual__ambassador-text {
+    width: 41px;
+  }
   .concept {
+    height: auto;
+    padding: 24px 0 0;
   }
   .concept__container {
+    flex-direction: column;
   }
-
   .concept__visual {
+    position: static;
+    width: 100%;
+    order: 2;
   }
   .concept__visual-inner {
   }
@@ -525,16 +557,26 @@
     }
   }
   .concept__content {
+    order: 1;
+    width: 100%;
   }
   .section-text {
+    font-size: 14px;
+    margin-top: 16px;
   }
   .section-text__paragraph:not(:first-child) {
+  }
+  .concept__download {
+    margin-top: 24px;
   }
   .point {
   }
   .point__container {
+    flex-direction: column;
   }
   .point__visual {
+    width: 100%;
+    height: 50%;
   }
   .point-shape-grid {
   }
@@ -655,7 +697,161 @@
   }
   .news__article {
     order: 1;
+    margin-top: 40px;
   }
 }
 @media (hover: hover) and (pointer: fine) {
+}
+/* 共通スタイル */
+.point {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  background-color: #fff;
+}
+
+/* PCレイアウト */
+.point__container--pc {
+  display: flex;
+}
+
+.point__visual {
+  width: 50%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-yellow);
+}
+
+.point__images {
+  width: 36.11%;
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 273 / 593;
+}
+
+.point__image-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* PC用の画像ボックス */
+.point__container--pc .point__image-box {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.point__container--pc .point__image-box:first-child {
+  opacity: 1;
+}
+
+.point__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.point__container--pc .point__content {
+  width: 50%;
+  padding: 0 6.944%;
+}
+
+.point__container--pc .point__items {
+  padding: 120px 0;
+}
+
+.point__container--pc .point__item {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.point__container--pc .point__item + .point__item {
+  margin-top: 40vh;
+}
+
+/* SP用のレイアウト */
+.point__container--sp {
+  display: none;
+}
+
+.point__container--sp .point__item {
+  padding: 60px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.point__container--sp .point__item-content {
+  order: 2;
+}
+
+.point__container--sp .point__image-box {
+  order: 1;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+
+/* 共通のテキストスタイル */
+.point__number {
+  font-size: 16px;
+  font-family: var(--font-en);
+  font-weight: 400;
+}
+
+.point__number.--color-yellow {
+  color: var(--color-yellow);
+}
+
+.point__title {
+  font-size: 32px;
+  font-weight: 700;
+  margin-top: 16px;
+  font-weight: 500;
+}
+
+.point__text {
+  margin-top: 24px;
+  line-height: 1.8;
+}
+
+/* メディアクエリ - スマホレイアウト */
+@media screen and (max-width: 768px) {
+  .point__container--pc {
+    display: none;
+  }
+
+  .point__container--sp {
+    display: block;
+    padding: 0 5%;
+  }
+
+  .point__title {
+    font-size: 24px;
+    line-height: 1.5;
+  }
+
+  .point__text {
+    font-size: 14px;
+  }
+
+  .point__container--sp .point__item + .point__item {
+    margin-top: 80px;
+  }
+
+  /* スマホでの画像表示 */
+  .point__container--sp .point__image-box {
+    border-radius: 16px;
+    overflow: hidden;
+  }
 }

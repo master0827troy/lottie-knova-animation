@@ -15,6 +15,9 @@
 .tab-menu__content.--use-orange {
   background-color: #ffebe1;
 }
+.tab-menu__content.--use-blue {
+  background-color: #fff;
+}
 .tab-menu__background {
   position: absolute;
   left: 8px; /* 親要素のpaddingと同じ */
@@ -25,6 +28,9 @@
 }
 .tab-menu__background.--use-orange {
   background: linear-gradient(90deg, #f38fbb 0%, #ff8f5b 100%);
+}
+.tab-menu__background.--use-blue {
+  background: linear-gradient(90deg, #8bd9cc 0%, #b5fd62 100%);
 }
 .tab-menu__item {
   padding: 8px 36px;
@@ -39,11 +45,14 @@
 .tab-menu__item.--use-orange {
   color: var(--color-orange);
 }
-.tab-menu__item--active {
-  color: #fff !important;
+.tab-menu__item.--use-blue {
+  color: var(--color-blue);
 }
-.tab-menu__item:focus {
-  outline: none;
+.tab-menu__item.--use-orange.tab-menu__item--active {
+  color: #fff;
+}
+.tab-menu__item.--use-blue.tab-menu__item--active {
+  color: inherit;
 }
 .tab-panel {
   opacity: 0;
@@ -124,6 +133,9 @@
   font-weight: 500;
   transition: color 0.2s ease;
 }
+.content-box__title.--color-blue {
+  color: var(--color-blue);
+}
 .content-box__text {
   margin-top: 16px;
   transition: color 0.2s ease;
@@ -140,10 +152,13 @@
 .is-background .content-box--active .content-box__title.--color-orange {
   color: var(--color-orange);
 }
+.is-background .content-box--active .content-box__title.--color-blue {
+  color: var(--color-blue);
+}
 .is-background .content-box--active .content-box__text {
   color: #282828;
 }
-@media screen and (max-width: 769px) {
+@media screen and (max-width: 768px) {
   .tab {
     display: none;
   }

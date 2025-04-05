@@ -94,22 +94,41 @@ class HamburgerMenuManager {
   }
 
   openMenu() {
-    // スクロール位置を保存
+    // 現在のスクロール位置を保存
     this.scrollPosition = window.pageYOffset;
 
     // aria属性の更新
     this.hamburgerButton.setAttribute("aria-expanded", true);
     this.spNav.setAttribute("aria-hidden", false);
 
+    // メニュー開く前に、固定用のラッパー要素を作成
+    const wrapper = document.createElement("div");
+    wrapper.id = "menu-position-wrapper";
+    wrapper.style.position = "fixed";
+    wrapper.style.top = "0";
+    wrapper.style.left = "0";
+    wrapper.style.width = "100%";
+    wrapper.style.height = "100%";
+    wrapper.style.overflow = "auto";
+    wrapper.style.zIndex = "1000"; // 必要に応じて調整
+
+    // スクロール位置を設定
+    wrapper.scrollTop = this.scrollPosition;
+
+    // bodyの内容をラッパーに移動
+    while (document.body.firstChild) {
+      wrapper.appendChild(document.body.firstChild);
+    }
+    document.body.appendChild(wrapper);
+
     // クラスの追加
     this.hamburgerButton.classList.add(APP_CONFIG.DOM.HEADER.ACTIVE_CLASS);
     this.spNav.classList.add(APP_CONFIG.DOM.HEADER.ACTIVE_CLASS);
     this.body.classList.add(APP_CONFIG.DOM.HEADER.ACTIVE_CLASS);
 
-    // bodyの位置を固定し、現在のスクロール位置を維持
-    this.body.style.position = "fixed";
-    this.body.style.top = `-${this.scrollPosition}px`;
-    this.body.style.width = "100%";
+    // bodyのスクロール無効化（positionやtopプロパティは使わない）
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
   }
 
   closeMenu() {
@@ -122,10 +141,20 @@ class HamburgerMenuManager {
     this.spNav.classList.remove(APP_CONFIG.DOM.HEADER.ACTIVE_CLASS);
     this.body.classList.remove(APP_CONFIG.DOM.HEADER.ACTIVE_CLASS);
 
+    // ラッパー要素を取得
+    const wrapper = document.getElementById("menu-position-wrapper");
+    if (wrapper) {
+      // bodyに内容を戻す
+      while (wrapper.firstChild) {
+        document.body.insertBefore(wrapper.firstChild, wrapper);
+      }
+      // ラッパーを削除
+      wrapper.remove();
+    }
+
     // bodyのスタイルをリセット
-    this.body.style.position = "";
-    this.body.style.top = "";
-    this.body.style.width = "";
+    document.body.style.overflow = "";
+    document.documentElement.style.overflow = "";
 
     // 保存していたスクロール位置に戻る
     window.scrollTo(0, this.scrollPosition);
@@ -646,13 +675,97 @@ class SectionAnimationManager {
       pin: true,
       pinSpacing: false,
     });
+  }
 
+  initConceptAnimation() {
+    // すべての要素を最初は非表示に
+    gsap.set(
+      [
+        ".concept__image--phone",
+        ".concept__image--person",
+        ".concept__image--item-1",
+        ".concept__image--item-2",
+        ".concept__image--item-3",
+        ".concept__image--item-4",
+        ".concept__image--item-5",
+      ],
+      {
+        autoAlpha: 0,
+        scale: 0.5,
+        y: 30,
+      }
+    );
+
+    // メインのスクロールタイムライン
+    const scrollTimeline = gsap.timeline({
+      scrollTrigger: {
+        trigger: APP_CONFIG.DOM.SECTION.CONCEPT.VISUAL,
+        start: "top 70%", // 画面の下から30%の位置でトリガー開始
+        end: "center 30%", // 中央が画面上部30%に達したら画像アニメーション完了
+        scrub: 0.5, // スクロールにスムーズに追従
+        // markers: true, // デバッグ用
+      },
+    });
+
+    // 要素とその表示タイミング（0-1の間）
+    const elements = [
+      {
+        selector: ".concept__image--phone",
+        progress: 0.0,
+        scale: 0.5,
+        y: 30,
+        z: -300,
+      },
+      { selector: ".concept__image--person", progress: 0.2, scale: 0, y: 20 },
+      { selector: ".concept__image--item-1", progress: 0.4, scale: 0, y: 15 },
+      { selector: ".concept__image--item-2", progress: 0.5, scale: 0, y: 15 },
+      { selector: ".concept__image--item-3", progress: 0.6, scale: 0, y: 15 },
+      { selector: ".concept__image--item-4", progress: 0.7, scale: 0, y: 15 },
+      { selector: ".concept__image--item-5", progress: 0.8, scale: 0, y: 15 },
+    ];
+
+    // 各要素をスクロール進行度に応じて表示
+    elements.forEach((element) => {
+      scrollTimeline.fromTo(
+        element.selector,
+        {
+          autoAlpha: 0,
+          scale: element.scale || 0.5,
+          y: element.y || 30,
+          z: element.z || 0,
+          visibility: "visible",
+        },
+        {
+          autoAlpha: 1,
+          scale: 1,
+          y: 0,
+          z: 0,
+          ease: "power2.out",
+        },
+        element.progress // タイムライン上の位置（進行度）
+      );
+    });
+
+    // shapeアニメーションの開始（スクロールの最後で）
+    scrollTimeline.call(
+      () => {
+        if (window.shapeAnimationManager) {
+          window.shapeAnimationManager.initAnimation();
+        }
+      },
+      [],
+      0.9
+    ); // 90%進行したところでshapeアニメーション開始
+
+    // 画像アニメーションの完了後、コンテンツをフェードアウト
+    // 別のScrollTriggerでコンテンツのフェードアウトを制御
     gsap.to(APP_CONFIG.DOM.SECTION.CONCEPT.CONTENT, {
       scrollTrigger: {
         trigger: APP_CONFIG.DOM.SECTION.CONCEPT.WRAPPER,
-        start: `top ${APP_CONFIG.HEADER.HEIGHT}`,
-        end: "+=100%",
+        start: "center 30%", // 画像アニメーションが完了するタイミングで開始
+        end: "+=50%", // その後のスクロールで完全に透明に
         scrub: true,
+        // markers: true, // デバッグ用
         onUpdate: (self) => {
           gsap.set(APP_CONFIG.DOM.SECTION.CONCEPT.CONTENT, {
             opacity: 1 - self.progress,
@@ -660,133 +773,8 @@ class SectionAnimationManager {
         },
       },
     });
-  }
 
-  initConceptAnimation() {
-    // メインのタイムラインを作成
-    const mainTimeline = gsap.timeline({
-      scrollTrigger: {
-        trigger: APP_CONFIG.DOM.SECTION.CONCEPT.VISUAL,
-        start: "top center",
-        toggleActions: "play none none reverse",
-      },
-    });
-
-    // コンセプトセクションのアニメーション
-    mainTimeline
-      // 1. phone
-      .fromTo(
-        ".concept__image--phone",
-        {
-          scale: 0.5,
-          opacity: 0,
-          z: -300,
-          visibility: "visible",
-        },
-        {
-          scale: 1,
-          opacity: 1,
-          z: 0,
-          duration: 1.2,
-          ease: "power2.out",
-        }
-      )
-      .fromTo(
-        ".concept__image--person",
-        {
-          scale: 0,
-          opacity: 0,
-          visibility: "visible",
-        },
-        {
-          scale: 1,
-          opacity: 1,
-          duration: 0.8,
-          ease: "elastic.out(1, 0.5)",
-        }
-      )
-      .fromTo(
-        ".concept__image--item-1",
-        {
-          scale: 0,
-          opacity: 0,
-          visibility: "visible",
-        },
-        {
-          scale: 1,
-          opacity: 1,
-          duration: 0.4,
-          ease: "back.out(2)",
-        }
-      )
-      .fromTo(
-        ".concept__image--item-2",
-        {
-          scale: 0,
-          opacity: 0,
-          visibility: "visible",
-        },
-        {
-          scale: 1,
-          opacity: 1,
-          duration: 0.4,
-          ease: "back.out(2)",
-        },
-        "-=0.2"
-      )
-      .fromTo(
-        ".concept__image--item-3",
-        {
-          scale: 0,
-          opacity: 0,
-          visibility: "visible",
-        },
-        {
-          scale: 1,
-          opacity: 1,
-          duration: 0.4,
-          ease: "back.out(2)",
-        },
-        "-=0.2"
-      )
-      .fromTo(
-        ".concept__image--item-4",
-        {
-          scale: 0,
-          opacity: 0,
-          visibility: "visible",
-        },
-        {
-          scale: 1,
-          opacity: 1,
-          duration: 0.4,
-          ease: "back.out(2)",
-        },
-        "-=0.2"
-      )
-      .fromTo(
-        ".concept__image--item-5",
-        {
-          scale: 0,
-          opacity: 0,
-          visibility: "visible",
-        },
-        {
-          scale: 1,
-          opacity: 1,
-          duration: 0.4,
-          ease: "back.out(2)",
-        },
-        "-=0.2"
-      )
-      // shapeアニメーションの開始
-      .call(() => {
-        if (window.shapeAnimationManager) {
-          window.shapeAnimationManager.initAnimation(mainTimeline);
-        }
-      });
-
-    return mainTimeline;
+    return scrollTimeline;
   }
 
   initBackgroundAnimation() {
@@ -840,33 +828,70 @@ class SectionAnimationManager {
 
 // DOMContentLoaded イベントリスナーを修正
 document.addEventListener("DOMContentLoaded", () => {
-  ViewportManager.init();
+  // Viewportの初期化
+  if (typeof ViewportManager !== "undefined") {
+    ViewportManager.init();
+  }
 
   // ハンバーガーメニュー初期化
-  new HamburgerMenuManager();
+  const hamburgerButton = document.querySelector(
+    APP_CONFIG.DOM.HEADER.HAMBURGER
+  );
+  if (hamburgerButton) {
+    new HamburgerMenuManager();
+  }
 
   // PC用タブ初期化
-  window.tabManager = new TabManager();
-  new ContentBoxManager();
+  const tabButtons = document.querySelectorAll(APP_CONFIG.DOM.TAB.BUTTON);
+  if (tabButtons.length > 0) {
+    window.tabManager = new TabManager();
+  }
+
+  // コンテンツボックス初期化
+  const contentBoxes = document.querySelectorAll(APP_CONFIG.DOM.CONTENT.BOX);
+  if (contentBoxes.length > 0) {
+    new ContentBoxManager();
+  }
 
   // SP用タブ初期化
-  window.spTabManager = new SPTabManager();
+  // SPタブの存在チェック（実際のセレクタに置き換えてください）
+  const spTabElements = document.querySelectorAll(".sp-tab-element");
+  if (spTabElements.length > 0 && typeof SPTabManager !== "undefined") {
+    window.spTabManager = new SPTabManager();
+  }
 
   // レスポンシブ管理
-  new ResponsiveManager();
+  if (typeof ResponsiveManager !== "undefined") {
+    new ResponsiveManager();
+  }
 
-  new AccordionManager();
+  // アコーディオン初期化
+  const accordionElements = document.querySelectorAll(
+    APP_CONFIG.DOM.ACCORDION.TOGGLE
+  );
+  if (accordionElements.length > 0 && typeof AccordionManager !== "undefined") {
+    new AccordionManager();
+  }
 
   // アニメーション初期化
-  const sectionAnimations = new SectionAnimationManager();
-  sectionAnimations.initAll();
+  if (typeof SectionAnimationManager !== "undefined") {
+    const sectionAnimations = new SectionAnimationManager();
+    sectionAnimations.initAll();
+  }
 
   // POINTアニメーション初期化
-  const pointAnimation = new PointAnimationManager();
-  pointAnimation.init();
+  const pointElements = document.querySelector(
+    APP_CONFIG.DOM.SECTION.POINT.WRAPPER
+  );
+  if (pointElements && typeof PointAnimationManager !== "undefined") {
+    const pointAnimation = new PointAnimationManager();
+    pointAnimation.init();
+  }
 
   // ScrollTriggerの更新
-  ScrollTrigger.refresh();
+  if (typeof ScrollTrigger !== "undefined") {
+    ScrollTrigger.refresh();
+  }
 });
 
 // リサイズイベント設定を修正
@@ -877,10 +902,15 @@ window.addEventListener("resize", () => {
       window.tabManager.updateTabBackground();
     }
 
-    const contentBoxManager = new ContentBoxManager();
-    const activeBox = document.querySelector(APP_CONFIG.DOM.CONTENT.ACTIVE_BOX);
-    if (activeBox) {
-      contentBoxManager.updateContentBackground(activeBox);
+    const contentBoxes = document.querySelectorAll(APP_CONFIG.DOM.CONTENT.BOX);
+    if (contentBoxes.length > 0) {
+      const contentBoxManager = new ContentBoxManager();
+      const activeBox = document.querySelector(
+        APP_CONFIG.DOM.CONTENT.ACTIVE_BOX
+      );
+      if (activeBox) {
+        contentBoxManager.updateContentBackground(activeBox);
+      }
     }
   }
   // SP用タブの更新
@@ -894,8 +924,13 @@ window.addEventListener("resize", () => {
 // ソート選択機能のJavaScript
 document.addEventListener("DOMContentLoaded", function () {
   const sortSelector = document.querySelector(".sort-selector");
+  if (!sortSelector) return; // ソートセレクタがない場合は処理しない
+
   const sortButton = document.querySelector(".sort-selector__button");
+  if (!sortButton) return; // ソートボタンがない場合は処理しない
+
   const sortLinks = document.querySelectorAll(".sort-selector__link");
+  if (sortLinks.length === 0) return; // ソートリンクがない場合は処理しない
 
   // ボタンクリックでドロップダウンの表示/非表示を切り替える
   sortButton.addEventListener("click", function (e) {
@@ -910,9 +945,10 @@ document.addEventListener("DOMContentLoaded", function () {
       e.stopPropagation(); // イベントの伝播を停止
 
       // アクティブクラスの切り替え
-      document
-        .querySelector(".sort-selector__link--active")
-        ?.classList.remove("sort-selector__link--active");
+      const activeLink = document.querySelector(".sort-selector__link--active");
+      if (activeLink) {
+        activeLink.classList.remove("sort-selector__link--active");
+      }
       this.classList.add("sort-selector__link--active");
 
       // ここにソート処理を追加
@@ -926,17 +962,123 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // ドキュメント上でのクリックでドロップダウンを閉じる
   document.addEventListener("click", function () {
-    sortSelector.classList.remove("sort-selector--open");
+    if (sortSelector) {
+      sortSelector.classList.remove("sort-selector--open");
+    }
   });
 
   // タッチデバイス対応
   document.addEventListener(
     "touchstart",
     function (e) {
-      if (!sortSelector.contains(e.target)) {
+      if (sortSelector && !sortSelector.contains(e.target)) {
         sortSelector.classList.remove("sort-selector--open");
       }
     },
     { passive: true }
   );
+});
+
+// ページが読み込まれた時に実行されるコード
+window.onload = function () {
+  // ページの最上部にスクロール
+  window.scrollTo(0, 0);
+};
+
+// ページが更新されたかどうかを記録するためのローカルストレージを使用
+if (
+  performance.navigation.type === 1 ||
+  sessionStorage.getItem("pageIsReloaded") === "true"
+) {
+  // ページがリロードされたことを検知
+
+  // スクロール位置をリセット
+  window.scrollTo(0, 0);
+
+  // フラグをリセット
+  sessionStorage.removeItem("pageIsReloaded");
+} else {
+  // 次回のページロード時に最上部にスクロールするためのフラグを設定
+  sessionStorage.setItem("pageIsReloaded", "true");
+}
+
+// ユーザーがページを離れる前（更新ボタンをクリックした時など）にも実行
+window.addEventListener("beforeunload", function () {
+  // リロード時に最上部にスクロールするためのフラグを設定
+  sessionStorage.setItem("pageIsReloaded", "true");
+});
+
+// 追加の保険として、window.onload でも実行
+window.onload = function () {
+  if (sessionStorage.getItem("pageIsReloaded") === "true") {
+    window.scrollTo(0, 0);
+    sessionStorage.removeItem("pageIsReloaded");
+  }
+};
+
+// ブラウザによっては history API を使った方法も効果的
+if (window.history && window.history.scrollRestoration) {
+  window.history.scrollRestoration = "manual";
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  // 要素の取得
+  const fixedButton = document.querySelector(".fixed-button");
+  const closeButton = document.querySelector(".fixed-button__close");
+  const mainVisual = document.querySelector(".mainvisual");
+  const footer = document.querySelector("footer"); // フッター要素を取得
+
+  // ボタンの初期状態を設定（最初は非表示）
+  fixedButton.style.opacity = "0";
+  fixedButton.style.visibility = "hidden";
+  fixedButton.style.transition = "opacity 0.5s ease, visibility 0.5s ease";
+
+  // 表示状態を管理する変数（クローズボタンが押されたかどうか）
+  let isButtonClosed = false;
+
+  // スクロールイベントのリスナー追加
+  window.addEventListener("scroll", function () {
+    // mainvisualまたはfooterがない場合はエラー防止のためリターン
+    if (!mainVisual || !footer) return;
+
+    // mainvisualの底辺位置を取得
+    const mainVisualBottom = mainVisual.offsetTop + mainVisual.offsetHeight;
+
+    // フッターの上端位置を取得
+    const footerTop = footer.offsetTop;
+
+    // 現在のスクロール位置
+    const scrollPosition = window.scrollY + window.innerHeight / 2; // 画面の半分の位置で判定
+    const scrollBottom = window.scrollY + window.innerHeight; // 画面の下端位置
+
+    // ボタンを表示する条件:
+    // 1. mainvisualを超えている
+    // 2. フッターの上端よりも上にいる
+    // 3. クローズボタンが押されていない
+    if (
+      scrollPosition > mainVisualBottom &&
+      scrollBottom < footerTop &&
+      !isButtonClosed
+    ) {
+      fixedButton.style.opacity = "1";
+      fixedButton.style.visibility = "visible";
+    } else {
+      // 条件を満たさない場合は非表示
+      fixedButton.style.opacity = "0";
+      fixedButton.style.visibility = "hidden";
+    }
+  });
+
+  // クローズボタンのクリックイベント
+  closeButton.addEventListener("click", function () {
+    // ボタンを非表示にする
+    fixedButton.style.opacity = "0";
+    fixedButton.style.visibility = "hidden";
+
+    // クローズ状態にする
+    isButtonClosed = true;
+  });
+
+  // ページロード時にスクロールイベントを一度トリガーして初期状態を設定
+  window.dispatchEvent(new Event("scroll"));
 });

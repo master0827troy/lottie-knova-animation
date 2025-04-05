@@ -1,0 +1,117 @@
+/* === CSS === */
+.fixed-button {
+  position: fixed;
+  bottom: clamp(16px, 2.5vh, 24px);
+  right: clamp(16px, 2.5vh, 24px);
+  z-index: 100;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease, visibility 0.5s;
+  pointer-events: none;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+.fixed-button.is-visible {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+.fixed-button__image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.fixed-button__links {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.fixed-button__link {
+  display: block;
+  width: 45%;
+  height: 40px;
+  border-radius: 8px;
+  position: relative;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+
+.fixed-button__link:hover {
+  transform: translateY(-2px);
+}
+
+.fixed-button__link--appstore {
+  background: url("assets/img/appstore-badge.png") no-repeat center;
+  background-size: contain;
+}
+
+.fixed-button__link--googleplay {
+  background: url("assets/img/googleplay-badge.png") no-repeat center;
+  background-size: contain;
+}
+
+.fixed-button__close {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.fixed-button__close:hover {
+  transform: scale(1.1);
+}
+
+.fixed-button__close::before,
+.fixed-button__close::after {
+  content: "";
+  position: absolute;
+  width: 15px;
+  height: 2px;
+  background-color: #555;
+}
+
+.fixed-button__close::before {
+  transform: rotate(45deg);
+}
+
+.fixed-button__close::after {
+  transform: rotate(-45deg);
+}
+
+@media (max-width: 768px) {
+  .fixed-button {
+    width: 200px;
+    bottom: 15px;
+    right: 15px;
+  }
+  .fixed-button__links {
+    bottom: 15px;
+    padding: 0 15px;
+  }
+  .fixed-button__link {
+    height: 30px;
+  }
+}/*# sourceMappingURL=fixedButton.css.map */

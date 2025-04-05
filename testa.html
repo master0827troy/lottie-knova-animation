@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div style="height: 2000px; background-color: pink">aa</div>
+    <script>
+      // ページが更新されたかどうかを記録するためのローカルストレージを使用
+      if (
+        performance.navigation.type === 1 ||
+        sessionStorage.getItem("pageIsReloaded") === "true"
+      ) {
+        // ページがリロードされたことを検知
+
+        // スクロール位置をリセット
+        window.scrollTo(0, 0);
+
+        // フラグをリセット
+        sessionStorage.removeItem("pageIsReloaded");
+      } else {
+        // 次回のページロード時に最上部にスクロールするためのフラグを設定
+        sessionStorage.setItem("pageIsReloaded", "true");
+      }
+
+      // ユーザーがページを離れる前（更新ボタンをクリックした時など）にも実行
+      window.addEventListener("beforeunload", function () {
+        // リロード時に最上部にスクロールするためのフラグを設定
+        sessionStorage.setItem("pageIsReloaded", "true");
+      });
+
+      // 追加の保険として、window.onload でも実行
+      window.onload = function () {
+        if (sessionStorage.getItem("pageIsReloaded") === "true") {
+          window.scrollTo(0, 0);
+          sessionStorage.removeItem("pageIsReloaded");
+        }
+      };
+
+      // ブラウザによっては history API を使った方法も効果的
+      if (window.history && window.history.scrollRestoration) {
+        window.history.scrollRestoration = "manual";
+      }
+    </script>
+  </body>
+</html>

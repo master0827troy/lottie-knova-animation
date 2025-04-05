@@ -1,97 +1,78 @@
-.mainvisual__catch__lottie-top {
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: flex;
-    align-items: center;
+:root {
+  /* 基本グリッド単位: 最大64px、それ以下は4.23vw */
+  --grid-unit: min(64px, 4.23vw);
+  /* 各エリア用の変数（各セクションで上書き可能） */
+  --grid-cols: 3;
+  --grid-rows: 3;
+}
+.grid-container-top {
+  display: grid;
+  grid-template-columns: repeat(8, min(64px, 4.23vw)); /* 5 columns */
+  position: absolute;
 }
 
-.mainvisual__catch__lottie-down {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    display: flex;
-    align-items: center;
+.grid-container-bottom1 {
+  display: grid;
+  grid-template-columns: repeat(6, min(64px, 4.23vw)); /* 5 columns */
+  position: absolute;
 }
 
-.shape-size {
-    width: 64px;
-    height: 64px;
+.grid-container-bottom2 {
+  display: grid;
+  grid-template-columns: repeat(6, min(64px, 4.23vw)); /* 5 columns */
+  position: absolute;
 }
 
-/* block1 */
+#mainvisual_shapes_top {
+  top: 0;
+}
 
-#block1-shape1 {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 10000;
+.grid-container-center {
+  display: grid;
+  grid-template-columns: repeat(30, min(64px, 4.23vw)); /* 5 columns */
+  position: absolute;
 }
-#block1-shape2 {
-    position: absolute;
-    top: 50%;
-    left: 10%;
+
+#mainvisual_shapes_bottom1 {
+  bottom: 25%;
+  right: 0;
 }
-#block1-shape3 {
-    position: absolute;
-    bottom: 50%;
-    left: 60%;
+
+#mainvisual_shapes_bottom2 {
+  bottom: 0;
+  left: 0;
 }
-#block2-shape1 {
-    position: absolute;
-    top: 10%;
-    left: 5%;
+
+/* ------------------------ */
+
+#mainvisual_shapes_center-top {
+  top: 0;
+  left: 0;
+  will-change: transform;
+  animation: center-top 20s linear infinite;
 }
-#block3-shape1 {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translate(100%, 0%);
-    z-index: 10;
+
+#mainvisual_shapes_center-bottom {
+  bottom: 0;
+  right: 0;
+  will-change: transform;
+  animation: center-bottom 20s linear infinite;
 }
-#block4-shape1 {
-    position: absolute;
-    top: 50%;
-    right: 0;
-    z-index: 10;
-}
-#block5-shape1 {
-    position: absolute;
-    bottom: 10%;
-    left: 10%;
-    transform: translate(0, 50%);
-    z-index: 10;
-}
-#block5-shape2 {
-    position: absolute;
-    top: 70%;
-    left: 0;
-    z-index: 10;
-}
-#block5-shape3 {
-    position: absolute;
-    bottom: 0;
-    left: 20%;
+
+@keyframes center-bottom {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
     transform: translateX(50%);
-    z-index: 10;
+  }
 }
-#block7-shape1 {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translate(-150%, -100%);
-    z-index: 10;
-}
-#block7-shape2 {
-    position: absolute;
-    bottom: 0;
-    right: 30%;
-    z-index: 10;
-}
-#block7-shape3 {
-    position: absolute;
-    bottom: 25%;
-    right: 25%;
-    transform: translate(-50%,100%);
-    z-index: 10;
+
+@keyframes center-top {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }
