@@ -5,47 +5,50 @@
   --grid-cols: 3;
   --grid-rows: 3;
 }
-.grid-container-top {
+
+.grid-mainvisual {
   display: grid;
-  grid-template-columns: repeat(9, min(64px, 4.23vw)); /* 5 columns */
+  grid-template-columns: repeat(var(--grid-cols), 1fr);
+  grid-template-rows: repeat(var(--grid-rows), 1fr);
   position: absolute;
+}
+
+.grid-container-top {
+  top: 0;
+  left: 0;
 }
 
 .grid-container-bottom1 {
-  display: grid;
-  grid-template-columns: repeat(6, min(64px, 4.23vw)); /* 5 columns */
-  position: absolute;
+  bottom: 0;
+  left: 0;
 }
 
 .grid-container-bottom2 {
-  display: grid;
-  grid-template-columns: repeat(6, min(64px, 4.23vw)); /* 5 columns */
-  position: absolute;
-}
-
-#mainvisual_shapes_top {
-  top: 0;
-}
-
-#mainvisual_shapes_bottom1 {
-  bottom: 25%;
-  right: 0;
-}
-
-#mainvisual_shapes_bottom2 {
   bottom: 0;
-  left: 0;
+  right: 0;
 }
 
 /* ------------------------ */
 
-#mainvisual_shapes_center-top {
-  width: 100%;
-  top: 0;
-  left: 0;
+.cell {
+  display: flex;
+  overflow: hidden;
+  width: var(--grid-unit);
+  height: var(--grid-unit);
 }
 
-#mainvisual_shapes_center-bottom {
-  bottom: 0;
-  right: 0;
+dotlottie-player {
+  width: 100%;
+  height: 100%;
+}
+
+.grid-container-center canvas {
+  max-width: var(--grid-unit);
+  max-height: var(--grid-unit);
+}
+
+@media (max-width: 768px) {
+  :root {
+    --grid-unit: min(32px, 8.2vw);
+  }
 }
