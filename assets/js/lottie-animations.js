@@ -1,12 +1,16 @@
 import { DotLottie } from "https://cdn.jsdelivr.net/npm/@lottiefiles/dotlottie-web/+esm";
 
+let lottieFiles = [];
 const CONFIG = {
   animationSpeed: 1,
   baseSize: innerWidth / 22 > 64 ? 64 : innerWidth / 22,
   basePath: "../assets/img/shapes/lottie/",
+  maxVisible: 3,
+  totalCells: 9,
+  animationFiles: lottieFiles,
+  delayBetweenAnimations: 300
 };
 
-let lottieFiles = [];
 class LottieAnimationManager {
   constructor() {
     this.animations = [];
@@ -142,257 +146,99 @@ class LottieAnimationManager {
 // Initialize
 const manager = new LottieAnimationManager();
 
-const maxVisible = 3;
-const totalCells = 9;
-const grid = document.getElementById("mainvisual_shapes_top");
-
-let cells = [];
-let visibleAnimations = [];
-
-// Setup grid
-for (let i = 0; i < totalCells; i++) {
-  const cell = document.createElement("div");
-  cell.className = "cell";
-  grid.appendChild(cell);
-  cells.push(cell);
-}
-
-// Start animations
-function start() {
-  for (let i = 0; i < maxVisible; i++) {
-    placeRandomAnimation();
+class AnimationGrid {
+  constructor(gridId, config) {
+    this.cells = [];
+    this.visibleAnimations = [];
+    this.grid = document.getElementById(gridId);
+    this.config = {
+      maxVisible: config.maxVisible || 3,
+      totalCells: config.totalCells || 9,
+      animationFiles: config.animationFiles || [],
+      delayBetweenAnimations: config.delayBetweenAnimations || 300
+    };
+    
+    this.initGrid();
   }
-}
 
-// Place a new animation into a random EMPTY cell
-async function placeRandomAnimation(excludeCellIndex = null) {
-  const unusedAnimations = lottieFiles.filter(
-    (src) => !visibleAnimations.some((anim) => anim.src === src)
-  );
+  initGrid() {
+    for (let i = 0; i < this.config.totalCells; i++) {
+      const cell = document.createElement("div");
+      cell.className = "cell";
+      this.grid.appendChild(cell);
+      this.cells.push(cell);
+    }
+  }
 
-  if (unusedAnimations.length === 0) return;
+  async placeRandomAnimation(excludeCellIndex = null) {
+    const unusedAnimations = this.config.animationFiles.filter(
+      src => !this.visibleAnimations.some(anim => anim.src === src)
+    );
+    if (unusedAnimations.length === 0) return;
 
-  const newSrc = getRandomItem(unusedAnimations);
-  const freeCells = cells
-    .map((_, idx) => idx)
-    .filter((idx) => !visibleAnimations.some((anim) => anim.cellIndex === idx));
+    const freeCells = this.cells
+      .map((_, idx) => idx)
+      .filter(idx => !this.visibleAnimations.some(anim => anim.cellIndex === idx));
+    if (freeCells.length === 0) return;
 
-  if (freeCells.length === 0) return;
-
-  const validCells =
-    excludeCellIndex !== null
-      ? freeCells.filter((idx) => idx !== excludeCellIndex)
+    const validCells = excludeCellIndex !== null
+      ? freeCells.filter(idx => idx !== excludeCellIndex)
       : freeCells;
 
-  const newCellIndex = getRandomItem(
-    validCells.length ? validCells : freeCells
-  );
-  const cell = cells[newCellIndex];
+    const newCellIndex = this.getRandomItem(validCells.length ? validCells : freeCells);
+    const cell = this.cells[newCellIndex];
+    const newSrc = this.getRandomItem(unusedAnimations);
 
-  try {
-    const canvas = document.createElement("canvas");
-    cell.appendChild(canvas);
+    try {
+      const canvas = document.createElement("canvas");
+      cell.appendChild(canvas);
 
-    const anim = new DotLottie({
-      canvas,
-      src: newSrc,
-      autoplay: true,
-      loop: false,
-    });
+      const anim = new DotLottie({
+        canvas,
+        src: newSrc,
+        autoplay: true,
+        loop: false
+      });
 
-    // Handle animation completion
-    anim.addEventListener("complete", () => {
-      cell.removeChild(canvas);
-      visibleAnimations = visibleAnimations.filter(
-        (a) => a.cellIndex !== newCellIndex
-      );
-      anim.destroy();
+      anim.addEventListener("complete", () => {
+        cell.removeChild(canvas);
+        this.visibleAnimations = this.visibleAnimations.filter(
+          a => a.cellIndex !== newCellIndex
+        );
+        anim.destroy();
 
-      setTimeout(() => {
-        placeRandomAnimation(newCellIndex);
-      }, 300);
-    });
+        setTimeout(() => {
+          this.placeRandomAnimation(newCellIndex);
+        }, this.config.delayBetweenAnimations);
+      });
 
-    visibleAnimations.push({
-      cellIndex: newCellIndex,
-      src: newSrc,
-      instance: anim,
-    });
-  } catch (error) {
-    console.error("Failed to create animation:", error);
+      this.visibleAnimations.push({
+        cellIndex: newCellIndex,
+        src: newSrc,
+        instance: anim
+      });
+    } catch (error) {
+      console.error("Failed to create animation:", error);
+    }
+  }
+
+  start() {
+    for (let i = 0; i < this.config.maxVisible; i++) {
+      this.placeRandomAnimation();
+    }
+  }
+
+  getRandomItem(list) {
+    return list[Math.floor(Math.random() * list.length)];
   }
 }
 
-function getRandomItem(list) {
-  return list[Math.floor(Math.random() * list.length)];
-}
+// Create and start animation grids
+const grids = [
+  new AnimationGrid("mainvisual_shapes_top", CONFIG),
+  new AnimationGrid("mainvisual_shapes_bottom1", CONFIG),
+  new AnimationGrid("mainvisual_shapes_bottom2", CONFIG)
+];
 
-// Run
-start();
-
-
-const grid1 = document.getElementById("mainvisual_shapes_bottom1");
-
-let cells1 = [];
-let visibleAnimations1 = [];
-
-// Setup grid
-for (let i = 0; i < totalCells; i++) {
-  const cell = document.createElement("div");
-  cell.className = "cell";
-  grid1.appendChild(cell);
-  cells1.push(cell);
-}
-
-// Start animations
-function start1() {
-  for (let i = 0; i < maxVisible; i++) {
-    placeRandomAnimation1();
-  }
-}
-
-// Place a new animation into a random EMPTY cell
-async function placeRandomAnimation1(excludeCellIndex = null) {
-  const unusedAnimations = lottieFiles.filter(
-    (src) => !visibleAnimations1.some((anim) => anim.src === src)
-  );
-
-  if (unusedAnimations.length === 0) return;
-
-  const newSrc = getRandomItem(unusedAnimations);
-  const freeCells = cells1
-    .map((_, idx) => idx)
-    .filter((idx) => !visibleAnimations1.some((anim) => anim.cellIndex === idx));
-
-  if (freeCells.length === 0) return;
-
-  const validCells =
-    excludeCellIndex !== null
-      ? freeCells.filter((idx) => idx !== excludeCellIndex)
-      : freeCells;
-
-  const newCellIndex = getRandomItem(
-    validCells.length ? validCells : freeCells
-  );
-  const cell = cells1[newCellIndex];
-
-  try {
-    const canvas = document.createElement("canvas");
-    cell.appendChild(canvas);
-
-    const anim = new DotLottie({
-      canvas,
-      src: newSrc,
-      autoplay: true,
-      loop: false,
-    });
-
-    // Handle animation completion
-    anim.addEventListener("complete", () => {
-      cell.removeChild(canvas);
-      visibleAnimations1 = visibleAnimations1.filter(
-        (a) => a.cellIndex !== newCellIndex
-      );
-      anim.destroy();
-
-      setTimeout(() => {
-        placeRandomAnimation1(newCellIndex);
-      }, 300);
-    });
-
-    visibleAnimations1.push({
-      cellIndex: newCellIndex,
-      src: newSrc,
-      instance: anim,
-    });
-  } catch (error) {
-    console.error("Failed to create animation:", error);
-  }
-}
-
-// Run
-start1();
-
-
-
-const grid2 = document.getElementById("mainvisual_shapes_bottom2");
-
-let cells2 = [];
-let visibleAnimations2 = [];
-
-// Setup grid
-for (let i = 0; i < totalCells; i++) {
-  const cell = document.createElement("div");
-  cell.className = "cell";
-  grid2.appendChild(cell);
-  cells2.push(cell);
-}
-
-// Start animations
-function start2() {
-  for (let i = 0; i < maxVisible; i++) {
-    placeRandomAnimation2();
-  }
-}
-
-// Place a new animation into a random EMPTY cell
-async function placeRandomAnimation2(excludeCellIndex = null) {
-  const unusedAnimations = lottieFiles.filter(
-    (src) => !visibleAnimations2.some((anim) => anim.src === src)
-  );
-
-  if (unusedAnimations.length === 0) return;
-
-  const newSrc = getRandomItem(unusedAnimations);
-  const freeCells = cells2
-    .map((_, idx) => idx)
-    .filter((idx) => !visibleAnimations2.some((anim) => anim.cellIndex === idx));
-
-  if (freeCells.length === 0) return;
-
-  const validCells =
-    excludeCellIndex !== null
-      ? freeCells.filter((idx) => idx !== excludeCellIndex)
-      : freeCells;
-
-  const newCellIndex = getRandomItem(
-    validCells.length ? validCells : freeCells
-  );
-  const cell = cells2[newCellIndex];
-
-  try {
-    const canvas = document.createElement("canvas");
-    cell.appendChild(canvas);
-
-    const anim = new DotLottie({
-      canvas,
-      src: newSrc,
-      autoplay: true,
-      loop: false,
-    });
-
-    // Handle animation completion
-    anim.addEventListener("complete", () => {
-      cell.removeChild(canvas);
-      visibleAnimations2 = visibleAnimations2.filter(
-        (a) => a.cellIndex !== newCellIndex
-      );
-      anim.destroy();
-
-      setTimeout(() => {
-        placeRandomAnimation2(newCellIndex);
-      }, 300);
-    });
-
-    visibleAnimations2.push({
-      cellIndex: newCellIndex,
-      src: newSrc,
-      instance: anim,
-    });
-  } catch (error) {
-    console.error("Failed to create animation:", error);
-  }
-}
-
-// Run
-start2();
+// Start all grids
+grids.forEach(grid => grid.start());

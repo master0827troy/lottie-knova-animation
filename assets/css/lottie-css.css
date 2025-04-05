@@ -8,8 +8,8 @@
 
 .grid-mainvisual {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, 1fr);
+  grid-template-columns: repeat(var(--grid-cols), 1fr);
+  grid-template-rows: repeat(var(--grid-rows), 1fr);
   position: absolute;
 }
 
@@ -33,11 +33,22 @@
 .cell {
   display: flex;
   overflow: hidden;
-  width: min(64px, 4.23vw);
-  height: min(64px, 4.23vw);
+  width: var(--grid-unit);
+  height: var(--grid-unit);
 }
 
 dotlottie-player {
   width: 100%;
   height: 100%;
+}
+
+.grid-container-center canvas {
+  max-width: var(--grid-unit);
+  max-height: var(--grid-unit);
+}
+
+@media (max-width: 768px) {
+  :root {
+    --grid-unit: min(32px, 8.2vw);
+  }
 }
