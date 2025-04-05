@@ -6,9 +6,9 @@ const CONFIG = {
   basePath: "../assets/img/shapes/lottie/",
 };
 
+let lottieFiles = [];
 class LottieAnimationManager {
   constructor() {
-    this.lottieFiles = [];
     this.animations = [];
     this.widthTop = 0;
     this.numAnimations = 0;
@@ -22,7 +22,7 @@ class LottieAnimationManager {
   initLottieFiles() {
     for (let i = 1; i < 26; i++) {
       const fileName = `shape-${i < 10 ? "0" + i : i}.lottie`;
-      this.lottieFiles.push(`${CONFIG.basePath}${fileName}`);
+      lottieFiles.push(`${CONFIG.basePath}${fileName}`);
     }
   }
 
@@ -93,8 +93,8 @@ class LottieAnimationManager {
   }
 
   getRandomAnimationUrl() {
-    return this.lottieFiles[
-      Math.floor(Math.random() * this.lottieFiles.length)
+    return lottieFiles[
+      Math.floor(Math.random() * lottieFiles.length)
     ];
   }
 
@@ -141,3 +141,91 @@ class LottieAnimationManager {
 
 // Initialize
 const manager = new LottieAnimationManager();
+
+const maxVisible = 3;
+const totalCells = 9;
+const grid = document.getElementById("mainvisual_shapes_top");
+
+let cells = [];
+let visibleAnimations = [];
+
+// Setup grid
+for (let i = 0; i < totalCells; i++) {
+  const cell = document.createElement("div");
+  cell.className = "cell";
+  grid.appendChild(cell);
+  cells.push(cell);
+}
+
+// Start animations
+function start() {
+  for (let i = 0; i < maxVisible; i++) {
+    placeRandomAnimation();
+  }
+}
+
+// Place a new animation into a random EMPTY cell
+async function placeRandomAnimation(excludeCellIndex = null) {
+  const unusedAnimations = lottieFiles.filter(
+    (src) => !visibleAnimations.some((anim) => anim.src === src)
+  );
+
+  if (unusedAnimations.length === 0) return;
+
+  const newSrc = getRandomItem(unusedAnimations);
+  const freeCells = cells
+    .map((_, idx) => idx)
+    .filter((idx) => !visibleAnimations.some((anim) => anim.cellIndex === idx));
+
+  if (freeCells.length === 0) return;
+
+  const validCells =
+    excludeCellIndex !== null
+      ? freeCells.filter((idx) => idx !== excludeCellIndex)
+      : freeCells;
+
+  const newCellIndex = getRandomItem(
+    validCells.length ? validCells : freeCells
+  );
+  const cell = cells[newCellIndex];
+
+  try {
+    const canvas = document.createElement("canvas");
+    cell.appendChild(canvas);
+
+    const anim = new DotLottie({
+      canvas,
+      src: newSrc,
+      autoplay: true,
+      loop: false,
+    });
+
+    // Handle animation completion
+    anim.addEventListener("complete", () => {
+      cell.removeChild(canvas);
+      visibleAnimations = visibleAnimations.filter(
+        (a) => a.cellIndex !== newCellIndex
+      );
+      anim.destroy();
+
+      setTimeout(() => {
+        placeRandomAnimation(newCellIndex);
+      }, 300);
+    });
+
+    visibleAnimations.push({
+      cellIndex: newCellIndex,
+      src: newSrc,
+      instance: anim,
+    });
+  } catch (error) {
+    console.error("Failed to create animation:", error);
+  }
+}
+
+function getRandomItem(list) {
+  return list[Math.floor(Math.random() * list.length)];
+}
+
+// Run
+start();
