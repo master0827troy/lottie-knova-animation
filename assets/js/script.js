@@ -7,6 +7,7 @@ const APP_CONFIG = {
   },
   HEADER: {
     HEIGHT: 68,
+    SPHEIGHT: 56,
   },
   SCROLL: {
     CONCEPT_MULTIPLIER: 3,
@@ -371,15 +372,22 @@ class SPTabManager {
     this.isSP = window.innerWidth <= 769;
     this.tabButtons = document.querySelectorAll(".tab-sp .tab-menu__item");
     this.tabPanels = document.querySelectorAll(".tab-sp .tab-panel");
+    this.background = document.querySelector(".tab-sp .tab-menu__background");
     this.initialize();
+
+    // リサイズイベントリスナーを追加
+    window.addEventListener("resize", () => {
+      this.isSP = window.innerWidth <= 769;
+      this.updateTabBackground();
+    });
   }
 
   initialize() {
-    if (!this.isSP) return;
-
     this.tabButtons.forEach((button) => {
       button.addEventListener("click", () => this.handleTabClick(button));
     });
+
+    // 初期表示時に背景位置を設定
     this.updateTabBackground();
   }
 
@@ -402,20 +410,36 @@ class SPTabManager {
   setActiveTab(button) {
     button.classList.add("tab-menu__item--active");
     const panelId = button.getAttribute("aria-controls");
-    document.getElementById(panelId).classList.add("tab-panel--active");
+    document.getElementById(panelId)?.classList.add("tab-panel--active");
   }
 
   updateTabBackground() {
-    const activeTab = document.querySelector(".tab-sp .tab-menu__item--active");
-    const background = document.querySelector(".tab-sp .tab-menu__background");
+    // 背景要素が存在しない場合は処理しない
+    if (!this.background) return;
 
-    if (activeTab && background) {
+    const activeTab = document.querySelector(".tab-sp .tab-menu__item--active");
+
+    if (activeTab) {
       const tabRect = activeTab.getBoundingClientRect();
       const containerRect = activeTab.parentElement.getBoundingClientRect();
-      const leftPosition = tabRect.left - containerRect.left - 8;
 
-      background.style.width = `${tabRect.width}px`;
-      background.style.transform = `translateX(${leftPosition}px)`;
+      // スマホ表示時のタブ背景位置計算
+      // CSSによると、スマホ時は .tab-menu__content のパディングが 4px 8px になっている
+      // また、.tab-menu__background は left: 8px だが、スマホサイズでは left: 左パディング と同じにする必要がある
+
+      // 左端からの相対位置を計算（ブラウザのスケールなどに影響されない計算方法）
+      let leftPosition = tabRect.left - containerRect.left;
+
+      // スマホ表示でのパディング調整（左右パディングが非対称の場合に重要）
+      if (this.isSP) {
+        // タブメニューのコンテンツの左パディングは8px（CSSより）
+        // 背景要素の位置を正確に調整
+        leftPosition = leftPosition - 8; // タブメニューの左パディングを引く
+      }
+
+      // 背景サイズと位置を設定
+      this.background.style.width = `${tabRect.width}px`;
+      this.background.style.transform = `translateX(${leftPosition}px)`;
     }
   }
 
@@ -600,8 +624,10 @@ class ResponsiveManager {
       if (this.pcTab) this.pcTab.style.display = "none";
       if (this.spTab) this.spTab.style.display = "";
 
-      // SP用タブの初期化
-      if (window.spTabManager) {
+      // SP用タブマネージャーの初期化または更新
+      if (!window.spTabManager && document.querySelector(".tab-sp")) {
+        window.spTabManager = new SPTabManager();
+      } else if (window.spTabManager) {
         window.spTabManager.updateTabBackground();
       }
     }
@@ -654,35 +680,89 @@ class AccordionManager {
 class SectionAnimationManager {
   constructor() {
     gsap.registerPlugin(ScrollTrigger);
+    this.isMobile = window.innerWidth <= 767; // スマホかどうかの判定
+    this.scrollTriggers = []; // ScrollTriggerインスタンスを保存する配列
+
+    // リサイズイベントで表示モードの切り替えを検知
+    this._setupResizeListener();
+  }
+
+  _setupResizeListener() {
+    // デバウンス処理用の変数
+    let resizeTimeout;
+
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimeout);
+
+      resizeTimeout = setTimeout(() => {
+        const wasMobile = this.isMobile;
+        this.isMobile = window.innerWidth <= 767;
+
+        // モバイル/PC間の切り替えが発生した場合
+        if (wasMobile !== this.isMobile) {
+          // 既存のScrollTriggerをすべて削除
+          this._killAllScrollTriggers();
+
+          // アニメーションを再初期化
+          this.initAll();
+        }
+      }, 250);
+    });
+  }
+
+  _killAllScrollTriggers() {
+    // 登録済みのScrollTriggerをすべて削除
+    this.scrollTriggers.forEach((trigger) => {
+      if (trigger) {
+        trigger.kill();
+      }
+    });
+
+    // 配列をクリア
+    this.scrollTriggers = [];
+
+    // GSAPによって自動作成されたScrollTriggerも削除
+    ScrollTrigger.getAll().forEach((st) => st.kill());
+
+    // アニメーション関連のスタイルをリセット
+    gsap.set(
+      [
+        APP_CONFIG.DOM.SECTION.CONCEPT.WRAPPER,
+        APP_CONFIG.DOM.SECTION.CONCEPT.VISUAL,
+        ".concept__image--phone",
+        ".concept__image--item-1",
+        ".concept__image--item-2",
+        ".concept__image--item-3",
+        ".concept__image--item-4",
+        ".concept__image--item-5",
+        APP_CONFIG.DOM.SECTION.CONCEPT.CONTENT,
+      ],
+      { clearProps: "all" }
+    );
   }
 
   initAll() {
-    this.initConceptPin();
-    this.initConceptAnimation();
+    // スマホかPCかで初期化処理を分岐
+    if (this.isMobile) {
+      this.initMobileConceptAnimation();
+    } else {
+      // PC版はピン止め後にアニメーションを開始する統合版を使用
+      this.initConceptPinWithAnimation();
+    }
+
+    // 共通のアニメーション初期化
     this.initBackgroundAnimation();
+
+    // ScrollTriggerの更新
     ScrollTrigger.refresh();
   }
 
-  initConceptPin() {
-    gsap.set(APP_CONFIG.DOM.SECTION.CONCEPT.WRAPPER, {
-      zIndex: -1,
-    });
-
-    ScrollTrigger.create({
-      trigger: APP_CONFIG.DOM.SECTION.CONCEPT.WRAPPER,
-      start: `top ${APP_CONFIG.HEADER.HEIGHT}`,
-      end: "max",
-      pin: true,
-      pinSpacing: false,
-    });
-  }
-
-  initConceptAnimation() {
-    // すべての要素を最初は非表示に
+  // PC用のピン止めとアニメーションを統合したメソッド
+  initConceptPinWithAnimation() {
+    // 要素を最初は非表示に
     gsap.set(
       [
         ".concept__image--phone",
-        ".concept__image--person",
         ".concept__image--item-1",
         ".concept__image--item-2",
         ".concept__image--item-3",
@@ -696,87 +776,191 @@ class SectionAnimationManager {
       }
     );
 
-    // メインのスクロールタイムライン
-    const scrollTimeline = gsap.timeline({
-      scrollTrigger: {
-        trigger: APP_CONFIG.DOM.SECTION.CONCEPT.VISUAL,
-        start: "top 70%", // 画面の下から30%の位置でトリガー開始
-        end: "center 30%", // 中央が画面上部30%に達したら画像アニメーション完了
-        scrub: 0.5, // スクロールにスムーズに追従
-        // markers: true, // デバッグ用
+    // ピン止め用のScrollTrigger
+    const pinTrigger = ScrollTrigger.create({
+      trigger: APP_CONFIG.DOM.SECTION.CONCEPT.WRAPPER,
+      start: `top ${APP_CONFIG.HEADER.HEIGHT}`,
+      end: "max",
+      pin: true,
+      pinSpacing: false,
+      onEnter: () => {
+        // ピン止めされた直後にアニメーションを開始
+        this._playConceptAnimation();
       },
     });
 
-    // 要素とその表示タイミング（0-1の間）
-    const elements = [
-      {
-        selector: ".concept__image--phone",
-        progress: 0.0,
-        scale: 0.5,
-        y: 30,
-        z: -300,
+    this.scrollTriggers.push(pinTrigger);
+
+    // コンテンツフェードアウト処理（スクロールに応じて）
+    const fadeOutTrigger = ScrollTrigger.create({
+      trigger: APP_CONFIG.DOM.SECTION.CONCEPT.WRAPPER,
+      start: "top top", // ピン止め後からスタート
+      end: "+=30%", // その後のスクロールで完全に透明に
+      scrub: true,
+      onUpdate: (self) => {
+        gsap.set(APP_CONFIG.DOM.SECTION.CONCEPT.CONTENT, {
+          opacity: 1 - self.progress,
+        });
       },
-      { selector: ".concept__image--person", progress: 0.2, scale: 0, y: 20 },
-      { selector: ".concept__image--item-1", progress: 0.4, scale: 0, y: 15 },
-      { selector: ".concept__image--item-2", progress: 0.5, scale: 0, y: 15 },
-      { selector: ".concept__image--item-3", progress: 0.6, scale: 0, y: 15 },
-      { selector: ".concept__image--item-4", progress: 0.7, scale: 0, y: 15 },
-      { selector: ".concept__image--item-5", progress: 0.8, scale: 0, y: 15 },
+    });
+
+    this.scrollTriggers.push(fadeOutTrigger);
+  }
+
+  // 分離したアニメーション再生メソッド
+  _playConceptAnimation() {
+    const timeline = gsap.timeline();
+
+    // 電話を最初に表示
+    timeline.to(".concept__image--phone", {
+      autoAlpha: 1,
+      scale: 1,
+      y: 0,
+      duration: 0.5,
+      ease: "back.out(1.7)",
+    });
+
+    // 各アイテムを順番に表示
+    const items = [
+      ".concept__image--item-1",
+      ".concept__image--item-2",
+      ".concept__image--item-3",
+      ".concept__image--item-4",
+      ".concept__image--item-5",
     ];
 
-    // 各要素をスクロール進行度に応じて表示
-    elements.forEach((element) => {
-      scrollTimeline.fromTo(
-        element.selector,
-        {
-          autoAlpha: 0,
-          scale: element.scale || 0.5,
-          y: element.y || 30,
-          z: element.z || 0,
-          visibility: "visible",
-        },
+    items.forEach((item, index) => {
+      timeline.to(
+        item,
         {
           autoAlpha: 1,
           scale: 1,
           y: 0,
-          z: 0,
-          ease: "power2.out",
+          duration: 0.05,
+          ease: "back.out(1.7)",
         },
-        element.progress // タイムライン上の位置（進行度）
+        ">=0.1" // 少し間隔を空ける
       );
     });
 
-    // shapeアニメーションの開始（スクロールの最後で）
-    scrollTimeline.call(
-      () => {
-        if (window.shapeAnimationManager) {
-          window.shapeAnimationManager.initAnimation();
-        }
-      },
-      [],
-      0.9
-    ); // 90%進行したところでshapeアニメーション開始
+    // すべてのアイテムが表示された後、Lottieアニメーションを開始
+    timeline.call(() => {
+      if (window.lottieAnimationManager) {
+        window.lottieAnimationManager.playAnimation();
+      }
+    });
 
-    // 画像アニメーションの完了後、コンテンツをフェードアウト
-    // 別のScrollTriggerでコンテンツのフェードアウトを制御
-    gsap.to(APP_CONFIG.DOM.SECTION.CONCEPT.CONTENT, {
-      scrollTrigger: {
-        trigger: APP_CONFIG.DOM.SECTION.CONCEPT.WRAPPER,
-        start: "center 30%", // 画像アニメーションが完了するタイミングで開始
-        end: "+=50%", // その後のスクロールで完全に透明に
-        scrub: true,
-        // markers: true, // デバッグ用
-        onUpdate: (self) => {
-          gsap.set(APP_CONFIG.DOM.SECTION.CONCEPT.CONTENT, {
-            opacity: 1 - self.progress,
-          });
-        },
+    return timeline;
+  }
+
+  // スマホ用のシンプルなアニメーション（ピン止めなし）
+  initMobileConceptAnimation() {
+    // すべての要素を最初は非表示に
+    gsap.set(
+      [
+        ".concept__image--phone",
+        ".concept__image--item-1",
+        ".concept__image--item-2",
+        ".concept__image--item-3",
+        ".concept__image--item-4",
+        ".concept__image--item-5",
+      ],
+      {
+        autoAlpha: 0,
+        scale: 0.5,
+        y: 20,
+      }
+    );
+
+    // スクロールトリガーを使用して、ビジュアルが画面内に入ったらアニメーション開始
+    const animationTrigger = ScrollTrigger.create({
+      trigger: APP_CONFIG.DOM.SECTION.CONCEPT.VISUAL,
+      start: "top 80%", // ビジュアルの上部が画面の下から20%の位置に入ったら
+      once: true, // 一度だけ実行
+      onEnter: () => {
+        // アイテムを順番に表示するアニメーション
+        const itemsTimeline = gsap.timeline();
+
+        // 電話を最初に表示
+        itemsTimeline.to(".concept__image--phone", {
+          autoAlpha: 1,
+          scale: 1,
+          y: 0,
+          duration: 0.5,
+          ease: "back.out(1.7)",
+        });
+
+        // 各アイテムを順番に表示
+        const items = [
+          ".concept__image--item-1",
+          ".concept__image--item-2",
+          ".concept__image--item-3",
+          ".concept__image--item-4",
+          ".concept__image--item-5",
+        ];
+
+        items.forEach((item, index) => {
+          itemsTimeline.to(
+            item,
+            {
+              autoAlpha: 1,
+              scale: 1,
+              y: 0,
+              duration: 0.5,
+              ease: "back.out(1.7)",
+            },
+            `>-0.3`
+          ); // 少し重ねて表示
+        });
+
+        // すべてのアイテムが表示された後、Lottieアニメーションを開始
+        itemsTimeline.call(() => {
+          if (window.lottieAnimationManager) {
+            window.lottieAnimationManager.playAnimation();
+          }
+        });
       },
     });
 
-    return scrollTimeline;
+    this.scrollTriggers.push(animationTrigger);
+
+    // 追加のスクロールトリガー: ビジュアルが画面から出ようとする時にLottieアニメーションを確実に開始
+    const exitTrigger = ScrollTrigger.create({
+      trigger: APP_CONFIG.DOM.SECTION.CONCEPT.VISUAL,
+      start: "bottom 30%", // ビジュアルの下部が画面の上から30%の位置を通過する時
+      once: true,
+      onEnter: () => {
+        // すべての要素が表示されていることを確認
+        gsap.set(
+          [
+            ".concept__image--phone",
+            ".concept__image--item-1",
+            ".concept__image--item-2",
+            ".concept__image--item-3",
+            ".concept__image--item-4",
+            ".concept__image--item-5",
+          ],
+          {
+            autoAlpha: 1,
+            scale: 1,
+            y: 0,
+          }
+        );
+
+        // Lottieアニメーションを開始（まだ開始していない場合）
+        if (
+          window.lottieAnimationManager &&
+          !window.lottieAnimationManager.hasAnimated
+        ) {
+          window.lottieAnimationManager.playAnimation();
+        }
+      },
+    });
+
+    this.scrollTriggers.push(exitTrigger);
   }
 
+  // 背景アニメーション
   initBackgroundAnimation() {
     gsap.set(APP_CONFIG.DOM.SECTION.USE.WRAPPER, { position: "relative" });
 
@@ -805,6 +989,8 @@ class SectionAnimationManager {
         },
       },
     });
+
+    this.scrollTriggers.push(tl.scrollTrigger);
 
     tl.to(
       APP_CONFIG.DOM.SECTION.USE.WRAPPER,
@@ -854,9 +1040,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // SP用タブ初期化
-  // SPタブの存在チェック（実際のセレクタに置き換えてください）
-  const spTabElements = document.querySelectorAll(".sp-tab-element");
-  if (spTabElements.length > 0 && typeof SPTabManager !== "undefined") {
+  const spTab = document.querySelector(".tab-sp");
+  if (spTab) {
     window.spTabManager = new SPTabManager();
   }
 
@@ -875,8 +1060,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // アニメーション初期化
   if (typeof SectionAnimationManager !== "undefined") {
-    const sectionAnimations = new SectionAnimationManager();
-    sectionAnimations.initAll();
+    // グローバル変数として保存（リサイズ時に再利用するため）
+    window.sectionAnimations = new SectionAnimationManager();
+    window.sectionAnimations.initAll();
   }
 
   // POINTアニメーション初期化
@@ -979,46 +1165,49 @@ document.addEventListener("DOMContentLoaded", function () {
   );
 });
 
-// ページが読み込まれた時に実行されるコード
-window.onload = function () {
-  // ページの最上部にスクロール
-  window.scrollTo(0, 0);
-};
-
-// ページが更新されたかどうかを記録するためのローカルストレージを使用
-if (
-  performance.navigation.type === 1 ||
-  sessionStorage.getItem("pageIsReloaded") === "true"
-) {
-  // ページがリロードされたことを検知
-
-  // スクロール位置をリセット
-  window.scrollTo(0, 0);
-
-  // フラグをリセット
-  sessionStorage.removeItem("pageIsReloaded");
-} else {
-  // 次回のページロード時に最上部にスクロールするためのフラグを設定
-  sessionStorage.setItem("pageIsReloaded", "true");
+// スクロール位置をリセットする関数
+function resetScroll() {
+  window.scrollTo({
+    top: 0,
+    left: 0,
+    behavior: "instant", // 'auto'でも可
+  });
 }
 
-// ユーザーがページを離れる前（更新ボタンをクリックした時など）にも実行
-window.addEventListener("beforeunload", function () {
-  // リロード時に最上部にスクロールするためのフラグを設定
-  sessionStorage.setItem("pageIsReloaded", "true");
+// history API を使用してスクロール復元を無効化
+if (history.scrollRestoration) {
+  history.scrollRestoration = "manual";
+}
+
+// DOMContentLoadedの段階でスクロールをリセット
+document.addEventListener("DOMContentLoaded", function () {
+  resetScroll();
 });
 
-// 追加の保険として、window.onload でも実行
-window.onload = function () {
-  if (sessionStorage.getItem("pageIsReloaded") === "true") {
-    window.scrollTo(0, 0);
-    sessionStorage.removeItem("pageIsReloaded");
-  }
-};
+// ページが完全に読み込まれた後にもスクロールをリセット
+window.addEventListener("load", function () {
+  // 少し遅延させることでより確実にスクロール位置をリセット
+  setTimeout(resetScroll, 0);
+});
 
-// ブラウザによっては history API を使った方法も効果的
-if (window.history && window.history.scrollRestoration) {
-  window.history.scrollRestoration = "manual";
+// beforeunloadではスクロール制御はせず、フラグだけ設定
+window.addEventListener("beforeunload", function () {
+  sessionStorage.setItem("pageIsReloading", "true");
+});
+
+// ページロード時にフラグをチェック
+if (
+  sessionStorage.getItem("pageIsReloading") === "true" ||
+  performance.navigation.type === 1
+) {
+  // リロードされた場合
+  resetScroll();
+
+  // 100ms後にもう一度スクロールリセット（より確実に）
+  setTimeout(resetScroll, 100);
+
+  // フラグをクリア
+  sessionStorage.removeItem("pageIsReloading");
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -1051,10 +1240,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const scrollPosition = window.scrollY + window.innerHeight / 2; // 画面の半分の位置で判定
     const scrollBottom = window.scrollY + window.innerHeight; // 画面の下端位置
 
-    // ボタンを表示する条件:
-    // 1. mainvisualを超えている
-    // 2. フッターの上端よりも上にいる
-    // 3. クローズボタンが押されていない
     if (
       scrollPosition > mainVisualBottom &&
       scrollBottom < footerTop &&

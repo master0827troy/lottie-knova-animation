@@ -2,11 +2,11 @@ import { DotLottie } from "https://cdn.jsdelivr.net/npm/@lottiefiles/dotlottie-w
 
 let lottieFiles = [];
 let lottieSize = 0;
-if(window.innerWidth < 768) {
-  lottieSize = innerWidth / 100 * 8.2;
+if (window.innerWidth < 768) {
+  lottieSize = (innerWidth / 100) * 8.2;
   lottieSize < 32 ? 32 : lottieSize;
 } else {
-  lottieSize = innerWidth / 100 * 4.23;
+  lottieSize = (innerWidth / 100) * 4.23;
   lottieSize > 64 ? 64 : lottieSize;
 }
 
@@ -17,7 +17,7 @@ const CONFIG = {
   maxVisible: 3,
   totalCells: 9,
   animationFiles: lottieFiles,
-  delayBetweenAnimations: 300
+  delayBetweenAnimations: 300,
 };
 
 class LottieAnimationManager {
@@ -106,9 +106,7 @@ class LottieAnimationManager {
   }
 
   getRandomAnimationUrl() {
-    return lottieFiles[
-      Math.floor(Math.random() * lottieFiles.length)
-    ];
+    return lottieFiles[Math.floor(Math.random() * lottieFiles.length)];
   }
 
   animate() {
@@ -164,9 +162,9 @@ class AnimationGrid {
       maxVisible: config.maxVisible || 3,
       totalCells: config.totalCells || 9,
       animationFiles: config.animationFiles || [],
-      delayBetweenAnimations: config.delayBetweenAnimations || 300
+      delayBetweenAnimations: config.delayBetweenAnimations || 300,
     };
-    
+
     this.initGrid();
   }
 
@@ -181,20 +179,25 @@ class AnimationGrid {
 
   async placeRandomAnimation(excludeCellIndex = null) {
     const unusedAnimations = this.config.animationFiles.filter(
-      src => !this.visibleAnimations.some(anim => anim.src === src)
+      (src) => !this.visibleAnimations.some((anim) => anim.src === src)
     );
     if (unusedAnimations.length === 0) return;
 
     const freeCells = this.cells
       .map((_, idx) => idx)
-      .filter(idx => !this.visibleAnimations.some(anim => anim.cellIndex === idx));
+      .filter(
+        (idx) => !this.visibleAnimations.some((anim) => anim.cellIndex === idx)
+      );
     if (freeCells.length === 0) return;
 
-    const validCells = excludeCellIndex !== null
-      ? freeCells.filter(idx => idx !== excludeCellIndex)
-      : freeCells;
+    const validCells =
+      excludeCellIndex !== null
+        ? freeCells.filter((idx) => idx !== excludeCellIndex)
+        : freeCells;
 
-    const newCellIndex = this.getRandomItem(validCells.length ? validCells : freeCells);
+    const newCellIndex = this.getRandomItem(
+      validCells.length ? validCells : freeCells
+    );
     const cell = this.cells[newCellIndex];
     const newSrc = this.getRandomItem(unusedAnimations);
 
@@ -206,13 +209,13 @@ class AnimationGrid {
         canvas,
         src: newSrc,
         autoplay: true,
-        loop: false
+        loop: false,
       });
 
       anim.addEventListener("complete", () => {
         cell.removeChild(canvas);
         this.visibleAnimations = this.visibleAnimations.filter(
-          a => a.cellIndex !== newCellIndex
+          (a) => a.cellIndex !== newCellIndex
         );
         anim.destroy();
 
@@ -224,7 +227,7 @@ class AnimationGrid {
       this.visibleAnimations.push({
         cellIndex: newCellIndex,
         src: newSrc,
-        instance: anim
+        instance: anim,
       });
     } catch (error) {
       console.error("Failed to create animation:", error);
@@ -246,8 +249,8 @@ class AnimationGrid {
 const grids = [
   new AnimationGrid("mainvisual_shapes_top", CONFIG),
   new AnimationGrid("mainvisual_shapes_bottom1", CONFIG),
-  new AnimationGrid("mainvisual_shapes_bottom2", CONFIG)
+  new AnimationGrid("mainvisual_shapes_bottom2", CONFIG),
 ];
 
 // Start all grids
-grids.forEach(grid => grid.start());
+grids.forEach((grid) => grid.start());

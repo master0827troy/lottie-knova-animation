@@ -116,6 +116,7 @@
   align-items: center;
   overflow: hidden;
   margin-bottom: 700px;
+  z-index: 1;
 }
 .concept__container {
   position: relative;
@@ -243,35 +244,11 @@
 }
 .point__visual {
   width: 50%;
-  height: 100vh;
+  height: calc(100vh - var(--header-height));
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: var(--color-yellow);
-}
-.point-shape-grid {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.point-shape-cell {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.point-shape {
-  pointer-events: none;
-  will-change: transform, opacity;
-  width: 100%;
-  height: 100%;
 }
 .point__images {
   width: 36.11%;
@@ -335,7 +312,7 @@
   --pseudo-opacity: 0;
   background-color: #fff;
   overflow: hidden;
-  z-index: 0;
+  z-index: 2;
 }
 .use::before {
   content: "";
@@ -375,8 +352,10 @@
   margin-top: 32px;
 }
 .information {
+  position: relative;
   background-color: #fff;
   padding: 192px 0;
+  z-index: 2;
 }
 .information__download {
   margin-top: 48px;
@@ -389,9 +368,11 @@
   width: 40.7%;
 }
 .faq {
+  position: relative;
   background-color: var(--color-blue);
   padding-top: 184px;
   padding-bottom: 188px;
+  z-index: 2;
 }
 .section-head {
   width: 35.4%;
@@ -453,7 +434,7 @@
   }
   .mainvisual__grid {
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 2.44fr 1.39fr 1.99fr 1.39fr 2.44fr 2.34fr;
+    grid-template-rows: 2.44fr 1.39fr minmax(164px, 1.99fr) 1.39fr 2.44fr 2.34fr;
     gap: 8px;
   }
   .mainvisual__catch {
@@ -514,6 +495,7 @@
   .concept {
     height: auto;
     padding: 24px 0 0;
+    margin-bottom: 0;
   }
   .concept__container {
     flex-direction: column;
@@ -522,10 +504,15 @@
     position: static;
     width: 100%;
     order: 2;
+    height: auto;
+    transform: none;
+    margin-top: 20px;
   }
   .concept__visual-inner {
+    width: 74%;
   }
   .concept__phone-container {
+    padding-bottom: 100px;
   }
   .concept__image {
   }
@@ -533,17 +520,31 @@
   .concept__image--phone {
   }
   .concept__image--person {
+    width: 64.4%;
+    left: 50%;
   }
   /* 化粧品アイテムの配置 */
   .concept__image--item-1 {
+    width: 27px;
+    top: 16%;
+    left: 6.1%;
   }
   .concept__image--item-2 {
+    width: 33px;
+    bottom: 23%;
   }
   .concept__image--item-3 {
+    width: 57px;
+    top: 4%;
+    right: -4.36%;
   }
   .concept__image--item-4 {
+    width: 42px;
+    top: 36%;
   }
   .concept__image--item-5 {
+    width: 43px;
+    bottom: 20%;
   }
   /* より繊細な動きのバージョン */
   @keyframes float {
@@ -570,45 +571,85 @@
     margin-top: 24px;
   }
   .point {
+    height: calc(100vh - var(--header-height));
+    overflow: hidden;
   }
   .point__container {
+    position: relative;
     flex-direction: column;
+    height: 100%;
   }
   .point__visual {
     width: 100%;
     height: 50%;
-  }
-  .point-shape-grid {
-  }
-
-  .point-shape-cell {
-  }
-
-  .point-shape {
+    position: absolute;
+    top: 0;
+    left: 0;
   }
   .point__images {
   }
   .point__image-container {
   }
   .point__image-box {
+    padding: 16px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .point__image-box:first-child {
   }
   .point__image {
+    width: 113px;
   }
   .point__content {
+    position: absolute;
+    height: 50%;
+    width: 100%;
+    top: 50%;
+    left: 0;
+    padding: 20px 6%; /* 適切なパディングを設定 */
+    background-color: #fff; /* 背景色を設定 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
   .point__items {
+    padding: 0;
+    position: relative;
+    height: 100%;
   }
   .point__item {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    min-height: auto;
+    margin-top: 0;
+    opacity: 0; /* 初期状態は非表示 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .point__item:first-child {
+    opacity: 1; /* 最初のアイテムのみ表示 */
   }
   .point__item + .point__item {
+    margin-top: 0;
+  }
+  .point__item-content {
   }
   .point__number {
+    font-size: 14px;
   }
   .point__title {
+    font-size: 20px;
+    line-height: 1.5;
+    margin-top: 8px;
   }
   .point__text {
+    margin-top: 16px;
+    font-size: 14px;
   }
   .use {
     padding: 64px 0;
@@ -670,6 +711,7 @@
   }
   .news {
     padding: 64px 0;
+    min-height: auto;
   }
   .news__container {
     width: 100%;
@@ -701,157 +743,4 @@
   }
 }
 @media (hover: hover) and (pointer: fine) {
-}
-/* 共通スタイル */
-.point {
-  position: relative;
-  z-index: 1;
-  overflow: hidden;
-  background-color: #fff;
-}
-
-/* PCレイアウト */
-.point__container--pc {
-  display: flex;
-}
-
-.point__visual {
-  width: 50%;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--color-yellow);
-}
-
-.point__images {
-  width: 36.11%;
-  position: relative;
-  overflow: hidden;
-  aspect-ratio: 273 / 593;
-}
-
-.point__image-container {
-  width: 100%;
-  height: 100%;
-  position: relative;
-}
-
-/* PC用の画像ボックス */
-.point__container--pc .point__image-box {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0;
-  transition: opacity 0.5s ease;
-}
-
-.point__container--pc .point__image-box:first-child {
-  opacity: 1;
-}
-
-.point__image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.point__container--pc .point__content {
-  width: 50%;
-  padding: 0 6.944%;
-}
-
-.point__container--pc .point__items {
-  padding: 120px 0;
-}
-
-.point__container--pc .point__item {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.point__container--pc .point__item + .point__item {
-  margin-top: 40vh;
-}
-
-/* SP用のレイアウト */
-.point__container--sp {
-  display: none;
-}
-
-.point__container--sp .point__item {
-  padding: 60px 0;
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-}
-
-.point__container--sp .point__item-content {
-  order: 2;
-}
-
-.point__container--sp .point__image-box {
-  order: 1;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-}
-
-/* 共通のテキストスタイル */
-.point__number {
-  font-size: 16px;
-  font-family: var(--font-en);
-  font-weight: 400;
-}
-
-.point__number.--color-yellow {
-  color: var(--color-yellow);
-}
-
-.point__title {
-  font-size: 32px;
-  font-weight: 700;
-  margin-top: 16px;
-  font-weight: 500;
-}
-
-.point__text {
-  margin-top: 24px;
-  line-height: 1.8;
-}
-
-/* メディアクエリ - スマホレイアウト */
-@media screen and (max-width: 768px) {
-  .point__container--pc {
-    display: none;
-  }
-
-  .point__container--sp {
-    display: block;
-    padding: 0 5%;
-  }
-
-  .point__title {
-    font-size: 24px;
-    line-height: 1.5;
-  }
-
-  .point__text {
-    font-size: 14px;
-  }
-
-  .point__container--sp .point__item + .point__item {
-    margin-top: 80px;
-  }
-
-  /* スマホでの画像表示 */
-  .point__container--sp .point__image-box {
-    border-radius: 16px;
-    overflow: hidden;
-  }
 }

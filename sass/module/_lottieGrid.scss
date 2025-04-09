@@ -110,7 +110,30 @@
   --grid-cols: 2;
   --grid-rows: 8;
 }
+@media (max-width: 768px) {
+  .preset-bg-left-top {
+    --grid-cols: 8;
+    --grid-rows: 2;
+  }
 
+  /* 背景用の右上エリア */
+  .preset-bg-right-top {
+    --grid-cols: 2;
+    --grid-rows: 6;
+  }
+
+  /* 背景用の右下エリア */
+  .preset-bg-right-bottom {
+    --grid-cols: 5;
+    --grid-rows: 2;
+  }
+
+  /* 背景用の左下エリア */
+  .preset-bg-left-bottom {
+    --grid-cols: 4;
+    --grid-rows: 4;
+  }
+}
 /* ==========================
      プリセット設定 - ポイント用グリッド
      ========================== */

@@ -23,7 +23,7 @@ function initLottieAnimations() {
     lottieIds.forEach((id) => {
       const numId = parseInt(id.trim());
       // IDが1〜22の範囲内かチェック
-      if (numId >= 1 && numId <= 22) {
+      if (numId >= 1 && numId <= 56) {
         createLottiePlayer(container, numId);
       }
     });
@@ -33,7 +33,7 @@ function initLottieAnimations() {
 /**
  * lottieプレイヤーを作成してコンテナに追加
  * @param {HTMLElement} container - プレイヤーを追加するコンテナ要素
- * @param {number} id - lottieファイルのID (1-22)
+ * @param {number} id - lottieファイルのID (1-56)
  * @param {Object} options - オプション設定（オプショナル）
  */
 function createLottiePlayer(container, id, options = {}) {

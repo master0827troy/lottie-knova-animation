@@ -20,9 +20,9 @@
 }
 .tab-menu__background {
   position: absolute;
-  left: 8px; /* 親要素のpaddingと同じ */
-  top: 8px; /* 親要素のpaddingと同じ */
-  height: calc(100% - 16px); /* padding分を引く */
+  left: 8px;
+  top: 8px;
+  height: calc(100% - 16px);
   border-radius: 100px;
   transition: all 0.3s ease;
 }

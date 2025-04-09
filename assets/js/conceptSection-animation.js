@@ -1,20 +1,36 @@
-// conceptSection-animation.js
-// グリッド位置を維持するLottieアニメーション
-
-// 定数の定義
 const LOTTIE_CONSTANTS = {
-  GRID_SIZE: 64,
-  TOTAL_SHAPES: 30,
+  // グリッドサイズの計算を整数に丸める処理を追加
+  getGridSize: function () {
+    // メディアクエリでモバイルかどうかを判断
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
+
+    if (isMobile) {
+      // SPサイズ: min(32px, 8.2vw)
+      const vwSize = Math.floor(window.innerWidth * 0.082);
+      return Math.min(32, vwSize);
+    } else {
+      // PCサイズ: min(64px, 4.23vw)
+      const vwSize = Math.floor(window.innerWidth * 0.0423);
+      return Math.min(64, vwSize);
+    }
+  },
+  // デバイスタイプに応じたシェイプ数を取得するメソッドを追加
+  getTotalShapes: function () {
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
+    return isMobile ? this.MOBILE_TOTAL_SHAPES : this.PC_TOTAL_SHAPES;
+  },
+  PC_TOTAL_SHAPES: 20, // PC版の表示数
+  MOBILE_TOTAL_SHAPES: 12, // スマホ版の表示数
   DISTRIBUTION: {
-    RIGHT_TOP: 0.4,
-    LEFT_TOP: 0.1,
-    LEFT_BOTTOM: 0.35,
-    // RIGHT_BOTTOMは残りの0.15になる
+    LEFT_TOP: 0.1, // 左上: 2個 (20 * 0.1 = 2)
+    RIGHT_TOP: 0.35, // 右上: 7個 (20 * 0.35 = 7)
+    RIGHT_BOTTOM: 0.15, // 右下: 3個 (20 * 0.15 = 3)
+    LEFT_BOTTOM: 0.25,
   },
   ANIMATION: {
-    DURATION: 0.5, // 個々のアニメーション時間
-    STAGGER: 0.05, // 連続表示の間隔
-    DELAY: 0.3, // 画像検出後の遅延
+    DURATION: 0.5,
+    STAGGER: 0.05,
+    DELAY: 0.3,
   },
   PATHS: {
     LOTTIE: "assets/img/shapes/lottie/",
@@ -25,14 +41,13 @@ const LOTTIE_CONSTANTS = {
     CONCEPT_CONTENT: ".concept__content",
     CONCEPT_ITEMS: [
       ".concept__image--phone",
-      ".concept__image--person",
       ".concept__image--item-1",
       ".concept__image--item-2",
       ".concept__image--item-3",
       ".concept__image--item-4",
-      ".concept__image--item-5", // 最後の画像（トリガー）
+      ".concept__image--item-5",
     ],
-    TRIGGER_IMAGE: ".concept__image--item-5", // 表示検知する画像
+    TRIGGER_IMAGE: ".concept__image--item-5",
   },
 };
 
@@ -55,16 +70,23 @@ class LottieUtils {
     rows,
     totalShapes,
     isLShape = false,
+    gridSize,
   }) {
     const availableCells = [];
+    // 現在のグリッドサイズを使用（引数から取得）
+    const currentGridSize = gridSize || LOTTIE_CONSTANTS.getGridSize();
 
     for (let row = 0; row < rows; row++) {
       for (let col = 0; col < cols; col++) {
         if (isLShape && !this.isInLShape(row, col, rows, cols)) continue;
 
+        // 整数にするために小数点以下を切り捨て
+        const cellX = Math.floor(startX + col * currentGridSize);
+        const cellY = Math.floor(startY + row * currentGridSize);
+
         availableCells.push({
-          x: startX + col * LOTTIE_CONSTANTS.GRID_SIZE,
-          y: startY + row * LOTTIE_CONSTANTS.GRID_SIZE,
+          x: cellX,
+          y: cellY,
           row,
           col,
         });
@@ -74,7 +96,7 @@ class LottieUtils {
     return this.shuffleArray(availableCells).slice(0, totalShapes);
   }
 
-  // 要素が表示されているか確認
+  // 他のメソッドは変更なし
   static isElementVisible(element) {
     if (!element) return false;
 
@@ -89,7 +111,6 @@ class LottieUtils {
     );
   }
 
-  // 要素が存在するか確認
   static elementExists(selector) {
     return document.querySelector(selector) !== null;
   }
@@ -100,18 +121,39 @@ class LottieLayoutManager {
   constructor(windowWidth, sectionHeight) {
     this.windowWidth = windowWidth;
     this.sectionHeight = sectionHeight;
+    this.gridSize = LOTTIE_CONSTANTS.getGridSize();
+    this.totalShapes = LOTTIE_CONSTANTS.getTotalShapes(); // 現在のデバイスに応じたシェイプ数
+  }
+
+  // グリッドサイズを更新するメソッドを追加
+  updateGridSize() {
+    const oldSize = this.gridSize;
+    this.gridSize = LOTTIE_CONSTANTS.getGridSize();
+    console.log(`グリッドサイズ更新: ${oldSize} -> ${this.gridSize}`);
+    return this.gridSize;
   }
 
   calculateAllPositions() {
-    const { GRID_SIZE, TOTAL_SHAPES, DISTRIBUTION } = LOTTIE_CONSTANTS;
+    const { DISTRIBUTION } = LOTTIE_CONSTANTS;
+    this.updateGridSize();
+    // トータルシェイプ数も最新化
+    this.totalShapes = LOTTIE_CONSTANTS.getTotalShapes();
+
+    // モバイルかどうかを判定
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
+
+    // モバイルの場合は異なる位置計算を行う
+    if (isMobile) {
+      return this._getMobilePositions(this.totalShapes);
+    }
 
     const shapeCounts = {
-      rightTop: Math.ceil(TOTAL_SHAPES * DISTRIBUTION.RIGHT_TOP),
-      leftTop: Math.floor(TOTAL_SHAPES * DISTRIBUTION.LEFT_TOP),
-      leftBottom: Math.ceil(TOTAL_SHAPES * DISTRIBUTION.LEFT_BOTTOM),
+      rightTop: Math.ceil(this.totalShapes * DISTRIBUTION.RIGHT_TOP),
+      leftTop: Math.floor(this.totalShapes * DISTRIBUTION.LEFT_TOP),
+      leftBottom: Math.ceil(this.totalShapes * DISTRIBUTION.LEFT_BOTTOM),
     };
     shapeCounts.rightBottom =
-      TOTAL_SHAPES -
+      this.totalShapes -
       (shapeCounts.rightTop + shapeCounts.leftTop + shapeCounts.leftBottom);
 
     return [
@@ -123,12 +165,14 @@ class LottieLayoutManager {
   }
 
   _getRightTopPositions(count) {
+    const cols = 8;
     return LottieUtils.createGridPattern({
-      startX: this.windowWidth - LOTTIE_CONSTANTS.GRID_SIZE * 8,
+      startX: Math.floor(this.windowWidth - cols * this.gridSize),
       startY: 0,
-      cols: 8,
-      rows: 6,
+      cols: cols,
+      rows: 2,
       totalShapes: count,
+      gridSize: this.gridSize,
     });
   }
 
@@ -139,27 +183,152 @@ class LottieLayoutManager {
       cols: 5,
       rows: 3,
       totalShapes: count,
+      gridSize: this.gridSize,
     });
   }
 
   _getLeftBottomPositions(count) {
     return LottieUtils.createGridPattern({
       startX: 0,
-      startY: this.sectionHeight - LOTTIE_CONSTANTS.GRID_SIZE * 8,
+      startY: Math.floor(this.sectionHeight - this.gridSize * 8),
       cols: 8,
       rows: 8,
       totalShapes: count,
       isLShape: true,
+      gridSize: this.gridSize,
     });
   }
 
   _getRightBottomPositions(count) {
+    const cols = 3;
+    const rows = 3;
     return LottieUtils.createGridPattern({
-      startX: this.windowWidth - LOTTIE_CONSTANTS.GRID_SIZE * 3,
-      startY: this.sectionHeight - LOTTIE_CONSTANTS.GRID_SIZE * 3,
-      cols: 3,
-      rows: 3,
+      startX: Math.floor(this.windowWidth - cols * this.gridSize),
+      startY: Math.floor(this.sectionHeight - rows * this.gridSize),
+      cols: cols,
+      rows: rows,
       totalShapes: count,
+      gridSize: this.gridSize,
+    });
+  }
+
+  // モバイル用の位置計算を調整
+  _getMobilePositions(totalShapes) {
+    // モバイル用の配分を設定
+    const shapeCounts = {
+      mobileRightTop: Math.ceil(totalShapes * 0.25),
+      mobileRightBottom: Math.ceil(totalShapes * 0.25),
+      mobileLeftBottom: Math.ceil(totalShapes * 0.25),
+      mobileLeftTopFixed: Math.floor(totalShapes * 0.25), // 名前を変更：mobileCenterBottom → mobileLeftTopFixed
+    };
+
+    // 合計数の調整
+    let total = Object.values(shapeCounts).reduce((a, b) => a + b, 0);
+    if (total > totalShapes) {
+      shapeCounts.mobileLeftTopFixed -= total - totalShapes;
+    }
+
+    // 左上エリアのアイテム位置を計算（z-index: 10を追加）
+    const mobileLeftTopPositions = this._getMobileLeftTopPositions(
+      shapeCounts.mobileRightTop
+    );
+
+    // 他のエリアの位置も計算
+    const mobileRightBottomPositions = this._getMobileRightBottomPositions(
+      shapeCounts.mobileRightBottom
+    );
+    const mobileLeftBottomPositions = this._getMobileLeftBottomPositions(
+      shapeCounts.mobileLeftBottom
+    );
+    const mobileLeftTopFixedPositions = this._getMobileLeftTopFixedPositions(
+      shapeCounts.mobileLeftTopFixed
+    );
+
+    // 全ての位置を結合して返す
+    return [
+      ...mobileLeftTopPositions,
+      ...mobileRightBottomPositions,
+      ...mobileLeftBottomPositions,
+      ...mobileLeftTopFixedPositions,
+    ];
+  }
+
+  // モバイルの左上エリア位置計算
+  _getMobileLeftTopPositions(count) {
+    const cols = 4;
+    const rows = 2;
+    // startXを変更して右側に配置
+    const positions = LottieUtils.createGridPattern({
+      startX: Math.floor(this.windowWidth - cols * this.gridSize), // 右端から開始
+      startY: 0,
+      cols: cols,
+      rows: rows,
+      totalShapes: count,
+      gridSize: this.gridSize,
+    });
+
+    return positions;
+  }
+
+  // モバイルの右上エリア位置計算
+  _getMobileRightTopPositions(count) {
+    const cols = 4;
+    const rows = 2;
+    return LottieUtils.createGridPattern({
+      startX: Math.floor(this.windowWidth - cols * this.gridSize),
+      startY: 0,
+      cols: cols,
+      rows: rows,
+      totalShapes: count,
+      gridSize: this.gridSize,
+    });
+  }
+
+  _getMobileRightBottomPositions(count) {
+    const cols = 2;
+    const rows = 2;
+    return LottieUtils.createGridPattern({
+      startX: Math.floor(this.windowWidth - cols * this.gridSize),
+      startY: Math.floor(this.sectionHeight - rows * this.gridSize),
+      cols: cols,
+      rows: rows,
+      totalShapes: count,
+      gridSize: this.gridSize,
+    });
+  }
+
+  // 左下のグリッドを横2縦3に変更
+  _getMobileLeftBottomPositions(count) {
+    const cols = 3;
+    const rows = 3; // 縦3に変更
+    return LottieUtils.createGridPattern({
+      startX: 0,
+      startY: Math.floor(this.sectionHeight - rows * this.gridSize),
+      cols: cols,
+      rows: rows,
+      totalShapes: count,
+      gridSize: this.gridSize,
+    });
+  }
+
+  // - 横1縦5、下から100px固定
+  _getMobileLeftTopFixedPositions(count) {
+    const cols = 1; // 横1列
+    const rows = 5; // 縦5行
+
+    // 下から100pxの位置を計算
+    const bottomOffset = 150;
+    const startY = Math.floor(
+      this.sectionHeight - bottomOffset - rows * this.gridSize
+    );
+
+    return LottieUtils.createGridPattern({
+      startX: 0, // 左端に固定
+      startY: Math.max(0, startY), // 負の値にならないように制御
+      cols: cols,
+      rows: rows,
+      totalShapes: count,
+      gridSize: this.gridSize,
     });
   }
 }
@@ -179,135 +348,294 @@ class LottieAnimationManager {
     this.hasAnimated = false;
     this.observer = null;
     this.isAnimating = false;
-    this.positions = []; // 各シェイプの位置情報を保存
+    this.positions = [];
+    this.currentGridSize = LOTTIE_CONSTANTS.getGridSize();
+    this.areaObservers = {};
+    this.totalShapes = LOTTIE_CONSTANTS.getTotalShapes(); // 現在のデバイスに応じたシェイプ数
+    this.animatedAreas = {
+      rightTop: false,
+      leftTop: false,
+      leftBottom: false,
+      rightBottom: false,
+      mobileCenterBottom: false,
+      mobileRightTop: false,
+      mobileRightBottom: false,
+      mobileLeftBottom: false,
+    };
   }
 
-  // 表示検知用のIntersectionObserverを設定
   setupTriggerObserver() {
     if (this.observer) return;
 
-    const triggerImage = document.querySelector(
-      LOTTIE_CONSTANTS.SELECTORS.TRIGGER_IMAGE
-    );
-    if (!triggerImage) {
-      console.warn("トリガーとなる画像が見つかりません。1秒後に再試行します。");
-      setTimeout(() => this.setupTriggerObserver(), 1000);
-      return;
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
+
+    if (isMobile) {
+      // SPモードの場合は各エリアごとに監視
+      this.setupMobileAreaObservers();
+    } else {
+      // PCモードは従来通り
+      const triggerImage = document.querySelector(
+        LOTTIE_CONSTANTS.SELECTORS.TRIGGER_IMAGE
+      );
+      if (!triggerImage) {
+        setTimeout(() => this.setupTriggerObserver(), 1000);
+        return;
+      }
+
+      this.observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && !this.hasAnimated) {
+              setTimeout(() => {
+                this.playAnimation();
+              }, LOTTIE_CONSTANTS.ANIMATION.DELAY * 1000);
+
+              this.observer.disconnect();
+              this.observer = null;
+            }
+          });
+        },
+        {
+          threshold: 0.5,
+          rootMargin: "0px",
+        }
+      );
+
+      this.observer.observe(triggerImage);
     }
 
-    this.observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          // 画像が表示され、まだアニメーションが実行されていなければ実行
-          if (entry.isIntersecting && !this.hasAnimated) {
-            // 少し遅延を入れてアニメーション開始
-            setTimeout(() => {
-              this.playAnimation();
-            }, LOTTIE_CONSTANTS.ANIMATION.DELAY * 1000);
-
-            // 監視を終了
-            this.observer.disconnect();
-            this.observer = null;
-          }
-        });
-      },
-      {
-        threshold: 0.5, // 50%以上表示されたら検知
-        rootMargin: "0px", // マージンなし
-      }
-    );
-
-    // 監視開始
-    this.observer.observe(triggerImage);
-    console.log(
-      "トリガー画像の監視を開始しました:",
-      LOTTIE_CONSTANTS.SELECTORS.TRIGGER_IMAGE
-    );
-
-    // 位置を計算して保存
+    // 位置を計算
     this.calculateAndSetPositions();
   }
 
-  // 位置を計算して保存
+  // SPモード用の各エリア監視
+  setupMobileAreaObservers() {
+    // エリアごとのシェイプ数を計算
+    const shapeCounts = {
+      mobileRightTop: Math.ceil(this.totalShapes * 0.25),
+      mobileRightBottom: Math.ceil(this.totalShapes * 0.25),
+      mobileLeftBottom: Math.ceil(this.totalShapes * 0.25),
+      mobileLeftTopFixed: Math.floor(this.totalShapes * 0.25), // 名前を更新
+    };
+
+    // 合計数の調整
+    let total = Object.values(shapeCounts).reduce((a, b) => a + b, 0);
+    if (total > this.totalShapes) {
+      shapeCounts.mobileLeftTopFixed -= total - this.totalShapes;
+    }
+
+    // 各エリアの配置インデックス
+    let startIndex = 0;
+    const areaIndices = {};
+
+    // 各エリアのインデックス範囲を計算
+    for (const area in shapeCounts) {
+      areaIndices[area] = {
+        start: startIndex,
+        count: shapeCounts[area],
+      };
+      startIndex += shapeCounts[area];
+    }
+
+    // エリアに対応する要素を作成
+    if (!this.conceptSection) return;
+
+    // 監視対象エリアの設定
+    const areas = [
+      {
+        id: "mobileRightTop",
+        element: this.createAreaElement(
+          "mobile-right-top",
+          "0",
+          "0",
+          "40%",
+          "30%",
+          "right: 0;" // 右上に配置
+        ),
+      },
+      {
+        id: "mobileLeftTopFixed", // 縦長エリア
+        element: this.createAreaElement(
+          "mobile-left-fixed",
+          "40%",
+          "0",
+          "30%",
+          "30%",
+          "left: 0;"
+        ),
+      },
+      {
+        id: "mobileLeftBottom",
+        element: this.createAreaElement(
+          "mobile-left-bottom",
+          "0",
+          "70%",
+          "30%",
+          "30%",
+          "left: 0;"
+        ),
+      },
+      {
+        id: "mobileRightBottom",
+        element: this.createAreaElement(
+          "mobile-right-bottom",
+          "70%",
+          "70%",
+          "30%",
+          "30%",
+          "right: 0;"
+        ),
+      },
+    ];
+
+    // 各エリアに対してIntersectionObserverを設定
+    areas.forEach((area) => {
+      if (!area.element) return;
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && !this.animatedAreas[area.id]) {
+              // このエリアをアニメーション
+              const indices = areaIndices[area.id];
+              if (indices) {
+                this.playAreaAnimation(area.id, indices.start, indices.count);
+                this.animatedAreas[area.id] = true;
+              }
+            }
+          });
+        },
+        {
+          threshold: 0.3,
+          rootMargin: "0px",
+        }
+      );
+
+      observer.observe(area.element);
+      this.areaObservers[area.id] = observer;
+    });
+  }
+
+  // エリア監視用の要素を作成
+  createAreaElement(id, top, left, width, height, extraStyles = "") {
+    const existingElement = document.getElementById(`lottie-observer-${id}`);
+    if (existingElement) {
+      return existingElement;
+    }
+
+    const element = document.createElement("div");
+    element.id = `lottie-observer-${id}`;
+    element.style.cssText = `
+      position: absolute;
+      top: ${top};
+      left: ${left};
+      width: ${width};
+      height: ${height};
+      pointer-events: none;
+      z-index: -1;
+      ${extraStyles}
+    `;
+
+    this.conceptSection.appendChild(element);
+    return element;
+  }
+
+  // 特定エリアのアニメーションを再生
+  playAreaAnimation(areaId, startIndex, count) {
+    const areaShapes = this.shapes.slice(startIndex, startIndex + count);
+
+    if (areaShapes.length === 0) return;
+
+    const timeline = gsap.timeline();
+
+    areaShapes.forEach((shape, index) => {
+      timeline.to(
+        shape,
+        {
+          opacity: 1,
+          transform: "scale(1)",
+          duration: LOTTIE_CONSTANTS.ANIMATION.DURATION,
+          ease: "back.out(1.7)",
+          delay: index * LOTTIE_CONSTANTS.ANIMATION.STAGGER,
+        },
+        0
+      );
+    });
+
+    timeline.play();
+  }
+
   calculateAndSetPositions() {
     const allCalculatedPositions = this.layoutManager.calculateAllPositions();
-
-    // 位置情報を保存
     this.positions = allCalculatedPositions;
 
-    // 各シェイプに位置を設定
     this.shapes.forEach((shape, index) => {
       const position =
         allCalculatedPositions[index] || this._getFallbackPosition();
 
-      // 位置を設定（left/topプロパティを使用）
-      shape.style.left = `${position.x}px`;
-      shape.style.top = `${position.y}px`;
+      const posX = Math.round(position.x);
+      const posY = Math.round(position.y);
 
-      // 非表示状態で初期化
+      shape.style.left = `${posX}px`;
+      shape.style.top = `${posY}px`;
+
       shape.style.opacity = "0";
       shape.style.transform = "scale(0)";
       shape.style.transformOrigin = "center center";
     });
   }
 
-  // アニメーションを再生
   playAnimation() {
     if (this.hasAnimated || this.isAnimating) return;
 
     this.isAnimating = true;
-    console.log("Lottieアニメーションを開始します");
 
-    // シェイプをエリアごとにグループ化
-    const { TOTAL_SHAPES, DISTRIBUTION } = LOTTIE_CONSTANTS;
-    const rightTopCount = Math.ceil(TOTAL_SHAPES * DISTRIBUTION.RIGHT_TOP);
-    const leftTopCount = Math.floor(TOTAL_SHAPES * DISTRIBUTION.LEFT_TOP);
-    const leftBottomCount = Math.ceil(TOTAL_SHAPES * DISTRIBUTION.LEFT_BOTTOM);
+    const { DISTRIBUTION } = LOTTIE_CONSTANTS;
+    const rightTopCount = Math.ceil(this.totalShapes * DISTRIBUTION.RIGHT_TOP);
+    const leftTopCount = Math.floor(this.totalShapes * DISTRIBUTION.LEFT_TOP);
+    const leftBottomCount = Math.ceil(
+      this.totalShapes * DISTRIBUTION.LEFT_BOTTOM
+    );
 
-    // エリアごとのインデックス範囲を計算
     const areas = [
       {
         name: "rightTop",
         start: 0,
         count: rightTopCount,
-        delay: 0, // 最初のエリア
+        delay: 0,
       },
       {
         name: "leftTop",
         start: rightTopCount,
         count: leftTopCount,
-        delay: 0.2, // 少し遅れて
+        delay: 0.2,
       },
       {
         name: "leftBottom",
         start: rightTopCount + leftTopCount,
         count: leftBottomCount,
-        delay: 0.4, // さらに遅れて
+        delay: 0.4,
       },
       {
         name: "rightBottom",
         start: rightTopCount + leftTopCount + leftBottomCount,
-        count: TOTAL_SHAPES - (rightTopCount + leftTopCount + leftBottomCount),
-        delay: 0.6, // 最後に
+        count:
+          this.totalShapes - (rightTopCount + leftTopCount + leftBottomCount),
+        delay: 0.6,
       },
     ];
 
-    // メインのタイムライン作成
     const mainTimeline = gsap.timeline({
       onComplete: () => {
         this.hasAnimated = true;
         this.isAnimating = false;
-        console.log("Lottieアニメーション完了");
       },
     });
 
-    // エリアごとに順番にアニメーション
     areas.forEach((area) => {
       const areaShapes = this.shapes.slice(area.start, area.start + area.count);
 
-      // エリア内の各シェイプをアニメーション
       areaShapes.forEach((shape, index) => {
-        // アニメーション設定 - transformだけを変更し、位置は変えない
         mainTimeline.to(
           shape,
           {
@@ -315,14 +643,13 @@ class LottieAnimationManager {
             transform: "scale(1)",
             duration: LOTTIE_CONSTANTS.ANIMATION.DURATION,
             ease: "back.out(1.7)",
-            delay: index * LOTTIE_CONSTANTS.ANIMATION.STAGGER, // 各シェイプをずらして表示
+            delay: index * LOTTIE_CONSTANTS.ANIMATION.STAGGER,
           },
-          area.delay // エリアごとの開始タイミング
+          area.delay
         );
       });
     });
 
-    // タイムラインを再生
     mainTimeline.play();
   }
 
@@ -330,25 +657,71 @@ class LottieAnimationManager {
     this.hasAnimated = false;
     this.isAnimating = false;
 
-    // 監視を再開
+    // エリア監視をリセット
+    for (const key in this.areaObservers) {
+      if (this.areaObservers[key]) {
+        this.areaObservers[key].disconnect();
+      }
+    }
+    this.areaObservers = {};
+
+    // アニメーション状態をリセット
+    for (const key in this.animatedAreas) {
+      this.animatedAreas[key] = false;
+    }
+
+    // 監視エリア要素を削除
+    const observerElements = document.querySelectorAll(
+      '[id^="lottie-observer-"]'
+    );
+    observerElements.forEach((element) => {
+      if (element.parentNode) {
+        element.parentNode.removeChild(element);
+      }
+    });
+
     this.setupTriggerObserver();
 
-    // すべてのシェイプを非表示に
     this.shapes.forEach((shape) => {
       shape.style.opacity = "0";
       shape.style.transform = "scale(0)";
     });
   }
 
-  // 位置計算用のフォールバックメソッド
   _getFallbackPosition() {
     const conceptHeight = this.conceptSection
       ? this.conceptSection.offsetHeight
       : 0;
     return {
-      x: window.innerWidth * 0.5,
-      y: conceptHeight * 0.5,
+      x: Math.floor(window.innerWidth * 0.5),
+      y: Math.floor(conceptHeight * 0.5),
     };
+  }
+
+  updateGridSize() {
+    const newGridSize = LOTTIE_CONSTANTS.getGridSize();
+
+    if (this.currentGridSize !== newGridSize) {
+      this.currentGridSize = newGridSize;
+
+      this.shapes.forEach((shape) => {
+        shape.style.width = `${newGridSize}px`;
+        shape.style.height = `${newGridSize}px`;
+      });
+
+      if (!this.hasAnimated) {
+        this.calculateAndSetPositions();
+      }
+    }
+
+    return newGridSize;
+  }
+
+  // メディアクエリ変更時に呼ばれる
+  handleMediaQueryChange() {
+    this.totalShapes = LOTTIE_CONSTANTS.getTotalShapes();
+    // リセットして再初期化
+    this.resetAnimation();
   }
 }
 
@@ -362,20 +735,18 @@ class LottieAnimationInitializer {
     this.initAttempts = 0;
     this.maxInitAttempts = 5;
     this.isInitialized = false;
+    // 現在のデバイスに応じたシェイプ数を取得
+    this.totalShapes = LOTTIE_CONSTANTS.getTotalShapes();
   }
 
   init() {
-    // すでに初期化済みであれば処理しない
     if (this.isInitialized) return;
 
-    // ライブラリのロードを確認
     if (typeof gsap === "undefined") {
-      console.warn("GSAPが見つかりません。後で再試行します。");
       this._retryInitAfterDelay();
       return;
     }
 
-    // コンセプトセクションの検索
     const possibleSelectors = [
       LOTTIE_CONSTANTS.SELECTORS.CONCEPT_SECTION,
       ".concept",
@@ -390,26 +761,21 @@ class LottieAnimationInitializer {
     }
 
     if (!conceptSection) {
-      console.warn("コンセプトセクションが見つかりません。後で再試行します。");
       this._retryInitAfterDelay();
       return;
     }
 
-    // コンテナを作成
     this._createContainer(conceptSection);
 
-    // 正常に初期化できた場合
     if (this.container) {
       this._initShapes();
       this._setupResizeHandler();
       this.isInitialized = true;
-      console.log("Lottieアニメーション初期化完了");
     } else {
       this._retryInitAfterDelay();
     }
   }
 
-  // 初期化リトライ処理
   _retryInitAfterDelay() {
     this.initAttempts++;
     if (this.initAttempts <= this.maxInitAttempts) {
@@ -418,14 +784,12 @@ class LottieAnimationInitializer {
     }
   }
 
-  // コンテナ作成メソッド
   _createContainer(conceptSection) {
     try {
       if (!conceptSection) {
         throw new Error("コンセプトセクションが無効です");
       }
 
-      // 既存のコンテナがあれば削除
       const existingContainer = document.getElementById("concept-shapes");
       if (existingContainer) {
         existingContainer.parentNode.removeChild(existingContainer);
@@ -445,51 +809,64 @@ class LottieAnimationInitializer {
         overflow: visible;
       `;
 
-      // 親要素のスタイルを設定
       conceptSection.style.position = "relative";
       conceptSection.style.overflow = "visible";
 
-      // 先頭に追加
       conceptSection.insertBefore(shapesContainer, conceptSection.firstChild);
 
       this.container = shapesContainer;
     } catch (error) {
-      console.error("コンテナ作成エラー:", error);
       this.container = null;
     }
   }
 
   _initShapes() {
-    // ランダムなIDの使用を制限し、連続した値を使う
-    for (let i = 1; i <= LOTTIE_CONSTANTS.TOTAL_SHAPES; i++) {
-      const lottieId = (i % 22) + 1; // 1-22を使用
-      this._loadLottieShape(i, lottieId);
+    // 1から56までの数値の配列を作成
+    const availableLottieIds = Array.from({ length: 56 }, (_, i) => i + 1);
+
+    // Fisherーゲーツのシャッフルアルゴリズムを使用してランダムに並べ替え
+    const shuffledIds = this._shuffleArray(availableLottieIds);
+
+    // 必要な数だけシェイプを生成
+    for (let i = 0; i < this.totalShapes; i++) {
+      // シャッフルされた配列から順番に取得（この順番はランダム）
+      // 必要なシェイプ数がLottieファイル数より多い場合は循環使用
+      const lottieId = shuffledIds[i % shuffledIds.length];
+      this._loadLottieShape(i + 1, lottieId);
     }
+  }
+
+  _shuffleArray(array) {
+    // 配列のコピーを作成して元の配列を変更しないようにする
+    const newArray = [...array];
+
+    // Fisher-Yatesシャッフルアルゴリズム
+    for (let i = newArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [newArray[i], newArray[j]] = [newArray[j], newArray[i]]; // 要素を交換
+    }
+
+    return newArray;
   }
 
   _loadLottieShape(index, lottieId) {
     try {
-      // IDを2桁の文字列に変換
       const paddedId = lottieId.toString().padStart(2, "0");
       const lottiePath = `${LOTTIE_CONSTANTS.PATHS.LOTTIE}shape-${paddedId}.lottie`;
 
-      // dotlottie-playerが定義されていることを確認
       if (!customElements.get("dotlottie-player")) {
-        console.warn(
-          "dotlottie-playerが登録されていません。遅延処理を試みます。"
-        );
         setTimeout(() => this._loadLottieShape(index, lottieId), 1000);
         return;
       }
 
-      // dotlottie-playerエレメントを作成
+      const currentGridSize = LOTTIE_CONSTANTS.getGridSize();
+
       const player = document.createElement("dotlottie-player");
 
-      // 絶対位置指定でスタイルを設定（left/topは後で設定）
       player.style.cssText = `
         position: absolute;
-        width: ${LOTTIE_CONSTANTS.GRID_SIZE}px;
-        height: ${LOTTIE_CONSTANTS.GRID_SIZE}px;
+        width: ${currentGridSize}px;
+        height: ${currentGridSize}px;
         opacity: 0;
         transform: scale(0);
         transform-origin: center center;
@@ -498,22 +875,16 @@ class LottieAnimationInitializer {
         z-index: 10;
       `;
 
-      // ready イベントを先に設定
       player.addEventListener("ready", () => {
-        // 読み込み完了してもアニメーション開始まで非表示
         player.style.opacity = "0";
       });
 
-      // エラーハンドリング
       player.addEventListener("error", (e) => {
-        console.error(`Lottieファイルの読み込みエラー:`, e);
-        // エラー時は再読み込み
         setTimeout(() => {
           player.load(lottiePath);
         }, 5000);
       });
 
-      // 属性を設定
       player.setAttribute("autoplay", "");
       player.setAttribute("loop", "");
       player.setAttribute("src", lottiePath);
@@ -522,22 +893,18 @@ class LottieAnimationInitializer {
       this.shapes.push(player);
       this.loadedShapes++;
 
-      // 最後のシェイプが読み込まれたら処理
-      if (this.loadedShapes === LOTTIE_CONSTANTS.TOTAL_SHAPES) {
-        // アニメーションマネージャーを初期化
+      if (this.loadedShapes === this.totalShapes) {
         setTimeout(() => {
           this.animationManager = new LottieAnimationManager(
             this.shapes,
             this.container
           );
           window.lottieAnimationManager = this.animationManager;
-
-          // 画像の表示を監視
           this.animationManager.setupTriggerObserver();
         }, 1000);
       }
     } catch (error) {
-      console.error(`Lottieシェイプの作成エラー:`, error);
+      // エラー処理
     }
   }
 
@@ -545,15 +912,28 @@ class LottieAnimationInitializer {
     let resizeTimeout;
 
     window.addEventListener("resize", () => {
-      // 連続したリサイズイベントを防ぐためにタイムアウトを使用
       clearTimeout(resizeTimeout);
 
       resizeTimeout = setTimeout(() => {
-        if (this.animationManager && !this.animationManager.hasAnimated) {
-          // アニメーション前であれば位置を再計算
-          this.animationManager.calculateAndSetPositions();
+        if (this.animationManager) {
+          this.animationManager.updateGridSize();
+
+          if (!this.animationManager.hasAnimated) {
+            this.animationManager.calculateAndSetPositions();
+          }
         }
       }, 250);
+    });
+
+    // メディアクエリの変更を監視（SP⇔PC切り替え）
+    const mediaQueryList = window.matchMedia("(max-width: 767px)");
+
+    // MediaQueryListのchangeイベントを監視
+    mediaQueryList.addEventListener("change", () => {
+      if (this.animationManager) {
+        // アニメーション状態をリセットして再構築
+        this.animationManager.handleMediaQueryChange();
+      }
     });
   }
 }
@@ -590,7 +970,6 @@ function reloadAllLottiePlayers() {
 document.addEventListener("DOMContentLoaded", () => {
   // ページ読み込み直後ではなく、少し遅延させて初期化を開始
   setTimeout(() => {
-    console.log("Lottieアニメーション初期化開始");
     initializeLottieAnimation();
 
     // ページ遷移やSPAの場合に備えて、URLの変更を監視
@@ -599,7 +978,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const url = location.href;
       if (url !== lastUrl) {
         lastUrl = url;
-        console.log("URL変更を検知しました。アニメーションを再初期化します。");
         initializeLottieAnimation();
       }
     }).observe(document, { subtree: true, childList: true });
