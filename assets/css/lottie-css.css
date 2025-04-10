@@ -51,4 +51,43 @@ dotlottie-player {
   :root {
     --grid-unit: min(32px, 8.2vw);
   }
+
+  .grid-shapes-bottom3 {
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+  }
+
+  .grid-shapes-bottom2 {
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+  }
 }
+
+@media (max-width: 550px) {
+  .grid-shapes-bottom3 {
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+  }
+}
+
+#point-Aniamtion {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  /* opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease; */
+}
+
+.point__images {
+  z-index: 1;
+}
+
+/* Triggered class */
+/* .show {
+  opacity: 1!important;
+  transform: translateY(0);
+} */
