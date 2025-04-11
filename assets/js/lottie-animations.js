@@ -179,6 +179,7 @@ class AnimationGrid {
   initGrid() {
     for (let i = 0; i < this.config.totalCells; i++) {
       const cell = document.createElement("div");
+
       cell.className = "cell";
       this.grid.appendChild(cell);
       this.cells.push(cell);
@@ -263,20 +264,21 @@ if (window.innerWidth > 768) {
 } else {
   grids.push(new AnimationGrid("mainvisual_shapes_bottom3", CONFIG));
 }
-
-console.log(grids);
-
 // Start all grids
 grids.forEach((grid) => grid.start());
 
 class pointAnimation {
-  
-  constructor(gridId, pointMTotalLottie, pointColLottie) {    
+  constructor(gridId, pointMTotalLottie, pointColLottie, pointMaxLottie) {
     this.animations = [];
+    this.visibleAnimations = [];
     this.pointColLottie = pointColLottie;
     this.numAnimations = pointMTotalLottie;
     this.initLottieFiles();
     this.gridId = gridId;
+    this.animationFiles = CONFIG.animationFiles;
+    this.delayBetweenAnimations = CONFIG.delayBetweenAnimations;
+    this.maxVisible = pointMaxLottie;
+    this.initialize();
   }
 
   initLottieFiles() {
@@ -294,46 +296,99 @@ class pointAnimation {
 
   createAnimations(container) {
     for (let i = 0; i < this.numAnimations; i++) {
-      const canvas = this.createCanvas(i);
-      container.appendChild(canvas);
-      try {
-        const anim = new DotLottie({
-          canvas,
-          src: this.getRandomAnimationUrl(),
-          autoplay: true,
-          loop: true,
-        });
-        
-        this.animations.push({
-          canvas,
-          x: parseFloat(canvas.style.left),
-          y: parseFloat(canvas.style.top),
-          instance: anim,
-        });
-      } catch (error) {
-        console.error("Failed to create animation:", error);
-      }
+      const canvasDiv = this.createDiv(i);
+      canvasDiv.className = "cell";
+      container.appendChild(canvasDiv);
+      this.animations.push(canvasDiv);
     }
   }
 
-  createCanvas(index) {    
-    const canvas = document.createElement("canvas");
-    canvas.width = CONFIG.baseSize;    
-    canvas.height = CONFIG.baseSize;
-    canvas.style.position = "absolute";
-    canvas.style.left = index % this.pointColLottie * CONFIG.baseSize + 'px';
-    canvas.style.top = Math.floor(index / this.pointColLottie) * CONFIG.baseSize + 'px';
-    return canvas;
+  createDiv(index) {
+    const canvasDiv = document.createElement("div");
+    canvasDiv.width = CONFIG.baseSize;
+    canvasDiv.height = CONFIG.baseSize;
+    canvasDiv.style.position = "absolute";
+    canvasDiv.style.left =
+      (index % this.pointColLottie) * CONFIG.baseSize + "px";
+    canvasDiv.style.top =
+      Math.floor(index / this.pointColLottie) * CONFIG.baseSize + "px";
+    canvasDiv.style.opacity = (100 < canvasDiv.style.left < 200)
+    return canvasDiv;
   }
 
-  getRandomAnimationUrl() {
-    return lottieFiles[Math.floor(Math.random() * lottieFiles.length)];
+  async placeRandomAnimation(excludeLottieIndex = null) {
+    const unusedAnimations = this.animationFiles.filter(
+      (src) => !this.visibleAnimations.some((anim) => anim.src === src)
+    );
+    if (unusedAnimations.length === 0) return;
+
+    const freeLotties = this.animations
+      .map((_, idx) => idx)
+      .filter(
+        (idx) =>
+          !this.visibleAnimations.some((anim) => anim.LottieIndex === idx)
+      );
+      
+    if (freeLotties.length === 0) return;
+
+    const validLottes =
+      excludeLottieIndex !== null
+        ? freeLotties.filter((idx) => idx !== excludeLottieIndex)
+        : freeLotties;
+    const newLottieIndex = this.getRandomItem(
+      validLottes.length ? validLottes : freeLotties
+    );
+
+    const animationItem = this.animations[newLottieIndex];
+    const newSrc = this.getRandomItem(unusedAnimations);
+
+    try {
+      const canvas = document.createElement("canvas");
+      animationItem.appendChild(canvas);
+      const anim = new DotLottie({
+        canvas,
+        src: newSrc,
+        autoplay: true,
+        loop: false,
+      });
+
+      anim.addEventListener("complete", () => {
+        animationItem.removeChild(canvas);
+        this.visibleAnimations = this.visibleAnimations.filter(
+          (a) => a.LottieIndex !== newLottieIndex
+        );
+        anim.destroy();
+
+        setTimeout(() => {
+          this.placeRandomAnimation(newLottieIndex);
+        }, this.delayBetweenAnimations);
+      });
+
+      this.visibleAnimations.push({
+        LottieIndex: newLottieIndex,
+        src: newSrc,
+        instance: anim,
+      });
+    } catch (error) {
+      console.error("Failed to create animation:", error);
+    }
+  }
+
+  start() {
+    for (let i = 0; i < this.maxVisible; i++) {
+      this.placeRandomAnimation();
+    }
+  }
+
+  getRandomItem(list) {
+    return list[Math.floor(Math.random() * list.length)];
   }
 }
 
 const elementPoint1 = document.getElementById("point-top");
 // const elementPoint2 = document.getElementById("point__item__02");
 // const elementPoint3 = document.getElementById("point__item__03");
+
 let lastPointTop1 = elementPoint1.getBoundingClientRect().top;
 // let lastPointTop2 = elementPoint2.getBoundingClientRect().top;
 // let lastPointTop3 = elementPoint3.getBoundingClientRect().top;
@@ -341,7 +396,10 @@ lastPointTop1 = Math.floor(lastPointTop1 - window.innerHeight / 2);
 let pointTriggered1 = false;
 // let pointTriggered2 = false;
 // let pointTriggered3 = false;
-let pointColCell = (window.innerWidth > 768 ? Math.floor((window.innerWidth / 2) / lottieSize): Math.floor(window.innerWidth / lottieSize)) + 1;
+let pointColCell =
+  window.innerWidth > 768
+    ? Math.floor(window.innerWidth / 2 / lottieSize)
+    : Math.floor(window.innerWidth / lottieSize);
 
 let pointRowCell = Math.floor(window.innerHeight / lottieSize);
 let pointMTotalCell = pointColCell * pointRowCell;
@@ -350,10 +408,17 @@ let pointMaxCell = pointMTotalCell / 10;
 document.addEventListener("scroll", () => {
   if (window.scrollY > lastPointTop1 && !pointTriggered1) {
     pointTriggered1 = true;
-    new pointAnimation("point-Aniamtion", pointMTotalCell, pointColCell).initialize();
+    new pointAnimation(
+      "point-Aniamtion",
+      pointMTotalCell,
+      pointColCell,
+      pointMaxCell
+    ).start();
     setTimeout(function () {
-      document.getElementById("point-Aniamtion").classList.add('point-shape-cell');
-    }, 100)
+      document
+        .getElementById("point-Aniamtion")
+        .classList.add("point-shape-cell");
+    }, 100);
   }
   if (window.scrollY < lastPointTop1) {
     pointTriggered1 = false;
