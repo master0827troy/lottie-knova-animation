@@ -290,6 +290,7 @@ class pointAnimation {
 
   initialize() {
     const container = document.getElementById(this.gridId);
+    container.innerHTML = '';
     if (!container) return;
     this.createAnimations(container);
   }
@@ -349,20 +350,20 @@ class pointAnimation {
         canvas,
         src: newSrc,
         autoplay: true,
-        loop: false,
+        loop: true,
       });
 
-      anim.addEventListener("complete", () => {
-        animationItem.removeChild(canvas);
-        this.visibleAnimations = this.visibleAnimations.filter(
-          (a) => a.LottieIndex !== newLottieIndex
-        );
-        anim.destroy();
+      // anim.addEventListener("complete", () => {
+      //   animationItem.removeChild(canvas);
+      //   this.visibleAnimations = this.visibleAnimations.filter(
+      //     (a) => a.LottieIndex !== newLottieIndex
+      //   );
+      //   anim.destroy();
 
-        setTimeout(() => {
-          this.placeRandomAnimation(newLottieIndex);
-        }, this.delayBetweenAnimations);
-      });
+      //   setTimeout(() => {
+      //     this.placeRandomAnimation(newLottieIndex);
+      //   }, this.delayBetweenAnimations);
+      // });
 
       this.visibleAnimations.push({
         LottieIndex: newLottieIndex,
