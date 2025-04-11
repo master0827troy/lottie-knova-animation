@@ -93,7 +93,7 @@ class PointAnimationManager {
           end: () => `+=${this.DOM.items.length * window.innerHeight * 1.2}`, // タイムラインの長さもピン止めに合わせて調整
           scrub: 1, // スクロールとのつながりをより滑らかに
         },
-      });
+      });     
 
       // アイテムの数に基づいたアニメーションの設定
       const itemCount = Math.min(this.DOM.items.length, this.DOM.images.length);

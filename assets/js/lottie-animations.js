@@ -4,7 +4,7 @@ let lottieFiles = [];
 let lottieSize = 0;
 if (window.innerWidth <= 768) {
   lottieSize = (innerWidth / 100) * 8.2;
-  lottieSize = lottieSize < 32 ? 32 : lottieSize;
+  lottieSize = lottieSize > 32 ? 32 : lottieSize;
 } else {
   lottieSize = (innerWidth / 100) * 4.23;
   lottieSize = lottieSize > 64 ? 64 : lottieSize;
@@ -268,7 +268,13 @@ if (window.innerWidth > 768) {
 grids.forEach((grid) => grid.start());
 
 class pointAnimation {
-  constructor(gridId, pointMTotalLottie, pointColLottie, pointMaxLottie) {
+  constructor(
+    gridId,
+    pointMTotalLottie,
+    pointColLottie,
+    pointMaxLottie,
+    toggle
+  ) {
     this.animations = [];
     this.visibleAnimations = [];
     this.pointColLottie = pointColLottie;
@@ -278,7 +284,8 @@ class pointAnimation {
     this.animationFiles = CONFIG.animationFiles;
     this.delayBetweenAnimations = CONFIG.delayBetweenAnimations;
     this.maxVisible = pointMaxLottie;
-    this.initialize();
+    document.getElementById(this.gridId).innerHTML = "";
+    toggle ? this.initialize() : this.destroy();
   }
 
   initLottieFiles() {
@@ -290,7 +297,6 @@ class pointAnimation {
 
   initialize() {
     const container = document.getElementById(this.gridId);
-    container.innerHTML = '';
     if (!container) return;
     this.createAnimations(container);
   }
@@ -298,7 +304,7 @@ class pointAnimation {
   createAnimations(container) {
     for (let i = 0; i < this.numAnimations; i++) {
       const canvasDiv = this.createDiv(i);
-      canvasDiv.className = "cell";
+      canvasDiv.className = "cell point-cell";
       container.appendChild(canvasDiv);
       this.animations.push(canvasDiv);
     }
@@ -313,7 +319,7 @@ class pointAnimation {
       (index % this.pointColLottie) * CONFIG.baseSize + "px";
     canvasDiv.style.top =
       Math.floor(index / this.pointColLottie) * CONFIG.baseSize + "px";
-    canvasDiv.style.opacity = (100 < canvasDiv.style.left < 200)
+    canvasDiv.style.opacity = 100 < canvasDiv.style.left < 200;
     return canvasDiv;
   }
 
@@ -329,7 +335,7 @@ class pointAnimation {
         (idx) =>
           !this.visibleAnimations.some((anim) => anim.LottieIndex === idx)
       );
-      
+
     if (freeLotties.length === 0) return;
 
     const validLottes =
@@ -353,18 +359,6 @@ class pointAnimation {
         loop: true,
       });
 
-      // anim.addEventListener("complete", () => {
-      //   animationItem.removeChild(canvas);
-      //   this.visibleAnimations = this.visibleAnimations.filter(
-      //     (a) => a.LottieIndex !== newLottieIndex
-      //   );
-      //   anim.destroy();
-
-      //   setTimeout(() => {
-      //     this.placeRandomAnimation(newLottieIndex);
-      //   }, this.delayBetweenAnimations);
-      // });
-
       this.visibleAnimations.push({
         LottieIndex: newLottieIndex,
         src: newSrc,
@@ -379,6 +373,36 @@ class pointAnimation {
     for (let i = 0; i < this.maxVisible; i++) {
       this.placeRandomAnimation();
     }
+    document.querySelectorAll(".point-cell").forEach((cellItem) => {
+      gsap.registerPlugin(ScrollTrigger);
+      gsap.fromTo(
+        cellItem,
+        {
+          scale: 0.3,
+          opacity: 0,
+          transformOrigin: "top center",
+        },
+        {
+          scale: 1,
+          opacity: 1,
+          duration: 1,
+          ease: "power3.In",
+        }
+      );
+    });
+  }
+
+  destroy() {
+    document.querySelectorAll(".point-cell").forEach((cellItem) => {
+      gsap.registerPlugin(ScrollTrigger);
+      gsap.to(cellItem, {
+        scaleY: 0.5,
+        opacity: 0,
+        transformOrigin: "bottom center", // 👈 key change here
+        ease: "power3.in",
+        duration: 1,
+      });
+    });
   }
 
   getRandomItem(list) {
@@ -387,65 +411,281 @@ class pointAnimation {
 }
 
 const elementPoint1 = document.getElementById("point-top");
-// const elementPoint2 = document.getElementById("point__item__02");
-// const elementPoint3 = document.getElementById("point__item__03");
+const elementPoint2 = document.getElementById("point__item__01");
+const elementPoint3 = document.getElementById("point__item__02");
+const elementPoint4 = document.getElementById("point__item__03");
+const elementPoint5 = document.getElementById("backgroundGrid");
 
 let lastPointTop1 = elementPoint1.getBoundingClientRect().top;
-// let lastPointTop2 = elementPoint2.getBoundingClientRect().top;
+let lastPointBottom1 = elementPoint2.getBoundingClientRect().bottom;
+let lastPointBottom2 = elementPoint3.getBoundingClientRect().bottom;
+let lastPointBottom3 = elementPoint4.getBoundingClientRect().bottom;
+let lastPointTop2 = elementPoint5.getBoundingClientRect().top;
 // let lastPointTop3 = elementPoint3.getBoundingClientRect().top;
 lastPointTop1 = Math.floor(lastPointTop1 - window.innerHeight / 2);
+lastPointBottom1 = Math.floor(lastPointBottom1 - window.innerHeight / 2);
+lastPointBottom2 = Math.floor(lastPointBottom2 - window.innerHeight / 2);
+lastPointBottom3 = Math.floor(lastPointBottom3 - window.innerHeight / 2);
 let pointTriggered1 = false;
-// let pointTriggered2 = false;
-// let pointTriggered3 = false;
+let pointTriggered2 = false;
+let pointTriggered3 = false;
+let pointTriggered4 = false;
 let pointColCell =
   window.innerWidth > 768
-    ? Math.floor(window.innerWidth / 2 / lottieSize)
-    : Math.floor(window.innerWidth / lottieSize);
+    ? Math.floor(
+        document.getElementById("point-Aniamtion").getBoundingClientRect()
+          .width /
+          2 /
+          lottieSize
+      )
+    : Math.floor(
+        document.getElementById("point-Aniamtion").getBoundingClientRect()
+          .width / lottieSize
+      );
 
-let pointRowCell = Math.floor(window.innerHeight / lottieSize);
+let pointRowCell = Math.floor(
+  document.getElementById("point-Aniamtion").getBoundingClientRect().height /
+    lottieSize
+);
 let pointMTotalCell = pointColCell * pointRowCell;
 let pointMaxCell = pointMTotalCell / 10;
 
 document.addEventListener("scroll", () => {
-  if (window.scrollY > lastPointTop1 && !pointTriggered1) {
-    pointTriggered1 = true;
-    new pointAnimation(
-      "point-Aniamtion",
-      pointMTotalCell,
-      pointColCell,
-      pointMaxCell
-    ).start();
-    setTimeout(function () {
-      document
-        .getElementById("point-Aniamtion")
-        .classList.add("point-shape-cell");
-    }, 100);
-  }
-  if (window.scrollY < lastPointTop1) {
-    pointTriggered1 = false;
-  }
+  if (window.innerWidth > 768) {
+    if (window.scrollY > lastPointTop1 && !pointTriggered1) {
+      pointTriggered1 = true;
+      new pointAnimation(
+        "point-Aniamtion",
+        pointMTotalCell,
+        pointColCell,
+        pointMaxCell,
+        true
+      ).start();
+    }
+    if (window.scrollY < lastPointTop1 && pointTriggered1) {
+      pointTriggered1 = false;
+      new pointAnimation(
+        "point-Aniamtion",
+        pointMTotalCell,
+        pointColCell,
+        pointMaxCell,
+        false
+      ).destroy();
+    }
 
-  // if (window.scrollY > lastPointTop2 && !pointTriggered2) {
-  //   pointTriggered2 = true;
-  //   document.getElementById("point-Aniamtion").classList.remove('show')
-  //   setTimeout(function () {
-  //     document.getElementById("point-Aniamtion").classList.add('show');
-  //   }, 100)
-  //   new AnimationGridConcept("point-Aniamtion", CONFIG, pointMaxCell, pointMTotalCell).start();
-  // }
-  // if (window.scrollY < lastPointTop2) {
-  //   pointTriggered2 = false;
-  // }
+    if (window.scrollY > lastPointBottom1 && !pointTriggered2) {
+      pointTriggered2 = true;
+      new pointAnimation(
+        "point-Aniamtion",
+        pointMTotalCell,
+        pointColCell,
+        pointMaxCell,
+        false
+      ).destroy();
+      new pointAnimation(
+        "point-Aniamtion",
+        pointMTotalCell,
+        pointColCell,
+        pointMaxCell,
+        true
+      ).start();
+    }
+    if (window.scrollY < lastPointBottom1 && pointTriggered2) {
+      pointTriggered2 = false;
+      new pointAnimation(
+        "point-Aniamtion",
+        pointMTotalCell,
+        pointColCell,
+        pointMaxCell,
+        false
+      ).destroy();
+      new pointAnimation(
+        "point-Aniamtion",
+        pointMTotalCell,
+        pointColCell,
+        pointMaxCell,
+        true
+      ).start();
+    }
 
-  // if (window.scrollY > lastPointTop3 && !pointTriggered3) {
-  //   document.getElementById("point-Aniamtion").classList.remove('show')
-  //   pointTriggered3 = true;
-  //   setTimeout(function () {
-  //     document.getElementById("point-Aniamtion").classList.add('show');
-  //   }, 100)
-  //   new AnimationGridConcept("point-Aniamtion", CONFIG, pointMaxCell, pointMTotalCell).start();
-  // }
-  // if (window.scrollY < lastPointTop3) {
-  //   pointTriggered3 = false;
-  // }
+    if (window.scrollY > lastPointBottom2 && !pointTriggered3) {
+      pointTriggered3 = true;
+      new pointAnimation(
+        "point-Aniamtion",
+        pointMTotalCell,
+        pointColCell,
+        pointMaxCell,
+        false
+      ).destroy();
+      new pointAnimation(
+        "point-Aniamtion",
+        pointMTotalCell,
+        pointColCell,
+        pointMaxCell,
+        true
+      ).start();
+    }
+    if (window.scrollY < lastPointBottom2 && pointTriggered3) {
+      pointTriggered3 = false;
+      new pointAnimation(
+        "point-Aniamtion",
+        pointMTotalCell,
+        pointColCell,
+        pointMaxCell,
+        false
+      ).destroy();
+      new pointAnimation(
+        "point-Aniamtion",
+        pointMTotalCell,
+        pointColCell,
+        pointMaxCell,
+        true
+      ).start();
+    }
+
+    if (window.scrollY > lastPointBottom3 && !pointTriggered4) {
+      pointTriggered4 = true;
+      new pointAnimation(
+        "point-Aniamtion",
+        pointMTotalCell,
+        pointColCell,
+        pointMaxCell,
+        false
+      ).destroy();
+    }
+    if (window.scrollY < lastPointBottom3 && pointTriggered4) {
+      pointTriggered4 = false;
+      new pointAnimation(
+        "point-Aniamtion",
+        pointMTotalCell,
+        pointColCell,
+        pointMaxCell,
+        true
+      ).start();
+    }
+  } else {
+    if (window.scrollY > lastPointTop1 && !pointTriggered1) {
+      pointTriggered1 = true;
+      new pointAnimation(
+        "point-Aniamtion",
+        pointMTotalCell,
+        pointColCell,
+        pointMaxCell,
+        true
+      ).start();
+    }
+    if (window.scrollY < lastPointTop1 && pointTriggered1) {
+      pointTriggered1 = false;
+      new pointAnimation(
+        "point-Aniamtion",
+        pointMTotalCell,
+        pointColCell,
+        pointMaxCell,
+        false
+      ).destroy();
+    }
+
+    if (
+      document.getElementById("point__item__01").style.opacity < document.getElementById("point__item__02").style.opacity &&
+      !pointTriggered2
+    ) {
+      pointTriggered2 = true;
+      new pointAnimation(
+        "point-Aniamtion",
+        pointMTotalCell,
+        pointColCell,
+        pointMaxCell,
+        false
+      ).destroy();
+      new pointAnimation(
+        "point-Aniamtion",
+        pointMTotalCell,
+        pointColCell,
+        pointMaxCell,
+        true
+      ).start();
+    }
+    if (
+      document.getElementById("point__item__01").style.opacity > document.getElementById("point__item__02").style.opacity &&
+      pointTriggered2
+    ) {
+      pointTriggered2 = false;
+      new pointAnimation(
+        "point-Aniamtion",
+        pointMTotalCell,
+        pointColCell,
+        pointMaxCell,
+        false
+      ).destroy();
+      new pointAnimation(
+        "point-Aniamtion",
+        pointMTotalCell,
+        pointColCell,
+        pointMaxCell,
+        true
+      ).start();
+    }
+
+    if (
+      document.getElementById("point__item__03").style.opacity > document.getElementById("point__item__02").style.opacity &&
+      !pointTriggered3
+    ) {
+      pointTriggered3 = true;
+      new pointAnimation(
+        "point-Aniamtion",
+        pointMTotalCell,
+        pointColCell,
+        pointMaxCell,
+        false
+      ).destroy();
+      new pointAnimation(
+        "point-Aniamtion",
+        pointMTotalCell,
+        pointColCell,
+        pointMaxCell,
+        true
+      ).start();
+    }
+    if (
+      document.getElementById("point__item__03").style.opacity < document.getElementById("point__item__02").style.opacity &&
+      pointTriggered3
+    ) {
+      pointTriggered3 = false;
+      new pointAnimation(
+        "point-Aniamtion",
+        pointMTotalCell,
+        pointColCell,
+        pointMaxCell,
+        false
+      ).destroy();
+      new pointAnimation(
+        "point-Aniamtion",
+        pointMTotalCell,
+        pointColCell,
+        pointMaxCell,
+        true
+      ).start();
+    }
+
+    if (elementPoint1.style.transform != "translate(0px, 0px)" && elementPoint1.style.transform != "" && !pointTriggered4) {   
+      pointTriggered4 = true;
+      new pointAnimation(
+        "point-Aniamtion",
+        pointMTotalCell,
+        pointColCell,
+        pointMaxCell,
+        false
+      ).destroy();
+    }
+    if (elementPoint1.style.transform == "translate(0px, 0px)" && pointTriggered4) {
+      pointTriggered4 = false;
+      new pointAnimation(
+        "point-Aniamtion",
+        pointMTotalCell,
+        pointColCell,
+        pointMaxCell,
+        true
+      ).start();
+    }
+  }
 });
