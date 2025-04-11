@@ -2,7 +2,7 @@ import { DotLottie } from "https://cdn.jsdelivr.net/npm/@lottiefiles/dotlottie-w
 
 let lottieFiles = [];
 let lottieSize = 0;
-if (window.innerWidth < 768) {
+if (window.innerWidth <= 768) {
   lottieSize = (innerWidth / 100) * 8.2;
   lottieSize = lottieSize < 32 ? 32 : lottieSize;
 } else {
@@ -54,10 +54,8 @@ class LottieAnimationManager {
     if (!container || !element) return;
 
     this.widthTop = element.offsetWidth;
-    console.log(CONFIG.baseSize, "[[[[[[[");
 
     this.numAnimations = Math.floor(this.widthTop / CONFIG.baseSize) + 2;
-    console.log(this.numAnimations);
 
     this.createAnimations(container);
     this.startAnimation();
@@ -271,109 +269,79 @@ console.log(grids);
 // Start all grids
 grids.forEach((grid) => grid.start());
 
-class AnimationGridConcept {
-  constructor(gridId, config, maxVisible, totalCells) {
-    this.cells = [];
-    this.visibleAnimations = [];
-    this.grid = document.getElementById(gridId);
-    this.config = {
-      maxVisible: maxVisible + 1,
-      totalCells: totalCells,
-      animationFiles: config.animationFiles || [],
-      delayBetweenAnimations: config.delayBetweenAnimations || 300,
-    };
-    this.grid.innerHTML = '';
-    this.initGrid();
+class pointAnimation {
+  
+  constructor(gridId, pointMTotalLottie, pointColLottie) {    
+    this.animations = [];
+    this.pointColLottie = pointColLottie;
+    this.numAnimations = pointMTotalLottie;
+    this.initLottieFiles();
+    this.gridId = gridId;
   }
 
-  initGrid() {
-    for (let i = 0; i < this.config.totalCells; i++) {
-      const cell = document.createElement("div");
-      cell.className = "cell point-shape-cell";
-      this.grid.appendChild(cell);
-      this.cells.push(cell);
+  initLottieFiles() {
+    for (let i = 1; i < 57; i++) {
+      const fileName = `shape-${i < 10 ? "0" + i : i}.lottie`;
+      lottieFiles.push(`${CONFIG.basePath}${fileName}`);
     }
   }
 
-  async placeRandomAnimation(excludeCellIndex = null) {
-    const unusedAnimations = this.config.animationFiles.filter(
-      (src) => !this.visibleAnimations.some((anim) => anim.src === src)
-    );
-    if (unusedAnimations.length === 0) return;
+  initialize() {
+    const container = document.getElementById(this.gridId);
+    if (!container) return;
+    this.createAnimations(container);
+  }
 
-    const freeCells = this.cells
-      .map((_, idx) => idx)
-      .filter(
-        (idx) => !this.visibleAnimations.some((anim) => anim.cellIndex === idx)
-      );
-    if (freeCells.length === 0) return;
-
-    const validCells =
-      excludeCellIndex !== null
-        ? freeCells.filter((idx) => idx !== excludeCellIndex)
-        : freeCells;
-
-    const newCellIndex = this.getRandomItem(
-      validCells.length ? validCells : freeCells
-    );
-    const cell = this.cells[newCellIndex];
-    const newSrc = this.getRandomItem(unusedAnimations);
-
-    try {
-      const canvas = document.createElement("canvas");
-      cell.appendChild(canvas);
-
-      const anim = new DotLottie({
-        canvas,
-        src: newSrc,
-        autoplay: true,
-        loop: false,
-      });
-
-      anim.addEventListener("complete", () => {
-        cell.removeChild(canvas);
-        this.visibleAnimations = this.visibleAnimations.filter(
-          (a) => a.cellIndex !== newCellIndex
-        );
-        anim.destroy();
-
-        setTimeout(() => {
-          this.placeRandomAnimation(newCellIndex);
-        }, this.config.delayBetweenAnimations);
-      });
-
-      this.visibleAnimations.push({
-        cellIndex: newCellIndex,
-        src: newSrc,
-        instance: anim,
-      });
-    } catch (error) {
-      console.error("Failed to create animation:", error);
+  createAnimations(container) {
+    for (let i = 0; i < this.numAnimations; i++) {
+      const canvas = this.createCanvas(i);
+      container.appendChild(canvas);
+      try {
+        const anim = new DotLottie({
+          canvas,
+          src: this.getRandomAnimationUrl(),
+          autoplay: true,
+          loop: true,
+        });
+        
+        this.animations.push({
+          canvas,
+          x: parseFloat(canvas.style.left),
+          y: parseFloat(canvas.style.top),
+          instance: anim,
+        });
+      } catch (error) {
+        console.error("Failed to create animation:", error);
+      }
     }
   }
 
-  start() {
-    for (let i = 0; i < this.config.maxVisible; i++) {
-      this.placeRandomAnimation();
-    }
+  createCanvas(index) {    
+    const canvas = document.createElement("canvas");
+    canvas.width = CONFIG.baseSize;    
+    canvas.height = CONFIG.baseSize;
+    canvas.style.position = "absolute";
+    canvas.style.left = index % this.pointColLottie * CONFIG.baseSize + 'px';
+    canvas.style.top = Math.floor(index / this.pointColLottie) * CONFIG.baseSize + 'px';
+    return canvas;
   }
 
-  getRandomItem(list) {
-    return list[Math.floor(Math.random() * list.length)];
+  getRandomAnimationUrl() {
+    return lottieFiles[Math.floor(Math.random() * lottieFiles.length)];
   }
 }
 
 const elementPoint1 = document.getElementById("point-top");
-const elementPoint2 = document.getElementById("point__item__02");
-const elementPoint3 = document.getElementById("point__item__03");
+// const elementPoint2 = document.getElementById("point__item__02");
+// const elementPoint3 = document.getElementById("point__item__03");
 let lastPointTop1 = elementPoint1.getBoundingClientRect().top;
-let lastPointTop2 = elementPoint2.getBoundingClientRect().top;
-let lastPointTop3 = elementPoint3.getBoundingClientRect().top;
+// let lastPointTop2 = elementPoint2.getBoundingClientRect().top;
+// let lastPointTop3 = elementPoint3.getBoundingClientRect().top;
 lastPointTop1 = Math.floor(lastPointTop1 - window.innerHeight / 2);
 let pointTriggered1 = false;
-let pointTriggered2 = false;
-let pointTriggered3 = false;
-let pointColCell = window.innerWidth > 768 ? Math.floor((window.innerWidth / 2) / lottieSize): Math.floor(window.innerWidth / lottieSize);
+// let pointTriggered2 = false;
+// let pointTriggered3 = false;
+let pointColCell = (window.innerWidth > 768 ? Math.floor((window.innerWidth / 2) / lottieSize): Math.floor(window.innerWidth / lottieSize)) + 1;
 
 let pointRowCell = Math.floor(window.innerHeight / lottieSize);
 let pointMTotalCell = pointColCell * pointRowCell;
@@ -382,7 +350,7 @@ let pointMaxCell = pointMTotalCell / 10;
 document.addEventListener("scroll", () => {
   if (window.scrollY > lastPointTop1 && !pointTriggered1) {
     pointTriggered1 = true;
-    new AnimationGridConcept("point-Aniamtion", CONFIG, pointMaxCell, pointMTotalCell).start();
+    new pointAnimation("point-Aniamtion", pointMTotalCell, pointColCell).initialize();
     setTimeout(function () {
       document.getElementById("point-Aniamtion").classList.add('point-shape-cell');
     }, 100)
@@ -391,27 +359,27 @@ document.addEventListener("scroll", () => {
     pointTriggered1 = false;
   }
 
-  if (window.scrollY > lastPointTop2 && !pointTriggered2) {
-    pointTriggered2 = true;
-    document.getElementById("point-Aniamtion").classList.remove('show')
-    setTimeout(function () {
-      document.getElementById("point-Aniamtion").classList.add('show');
-    }, 100)
-    new AnimationGridConcept("point-Aniamtion", CONFIG, pointMaxCell, pointMTotalCell).start();
-  }
-  if (window.scrollY < lastPointTop2) {
-    pointTriggered2 = false;
-  }
+  // if (window.scrollY > lastPointTop2 && !pointTriggered2) {
+  //   pointTriggered2 = true;
+  //   document.getElementById("point-Aniamtion").classList.remove('show')
+  //   setTimeout(function () {
+  //     document.getElementById("point-Aniamtion").classList.add('show');
+  //   }, 100)
+  //   new AnimationGridConcept("point-Aniamtion", CONFIG, pointMaxCell, pointMTotalCell).start();
+  // }
+  // if (window.scrollY < lastPointTop2) {
+  //   pointTriggered2 = false;
+  // }
 
-  if (window.scrollY > lastPointTop3 && !pointTriggered3) {
-    document.getElementById("point-Aniamtion").classList.remove('show')
-    pointTriggered3 = true;
-    setTimeout(function () {
-      document.getElementById("point-Aniamtion").classList.add('show');
-    }, 100)
-    new AnimationGridConcept("point-Aniamtion", CONFIG, pointMaxCell, pointMTotalCell).start();
-  }
-  if (window.scrollY < lastPointTop3) {
-    pointTriggered3 = false;
-  }
+  // if (window.scrollY > lastPointTop3 && !pointTriggered3) {
+  //   document.getElementById("point-Aniamtion").classList.remove('show')
+  //   pointTriggered3 = true;
+  //   setTimeout(function () {
+  //     document.getElementById("point-Aniamtion").classList.add('show');
+  //   }, 100)
+  //   new AnimationGridConcept("point-Aniamtion", CONFIG, pointMaxCell, pointMTotalCell).start();
+  // }
+  // if (window.scrollY < lastPointTop3) {
+  //   pointTriggered3 = false;
+  // }
 });

@@ -42,19 +42,24 @@ dotlottie-player {
   height: 100%;
 }
 
-.grid-container-center canvas {
+.grid-container-center canvas, #point-Aniamtion canvas {
   max-width: var(--grid-unit);
   max-height: var(--grid-unit);
 }
 
 @media (max-width: 768px) {
   :root {
-    --grid-unit: min(32px, 8.2vw);
+    --grid-unit: max(32px, 8.2vw);
+  }
+
+  .grid-container-top {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
   }
 
   .grid-shapes-bottom3 {
     grid-template-columns: repeat(8, 1fr);
-    grid-template-rows: repeat(3, 1fr);
+    grid-template-rows: repeat(1, 1fr);
   }
 
   .grid-shapes-bottom2 {
@@ -75,8 +80,6 @@ dotlottie-player {
   top: 0;
   left: 0;
   width: 100%;
-  display: flex;
-  flex-wrap: wrap;
   /* opacity: 0;
   transform: translateY(30px);
   transition: opacity 0.6s ease, transform 0.6s ease; */
@@ -84,6 +87,10 @@ dotlottie-player {
 
 .point__images {
   z-index: 1;
+}
+
+.hidden {
+  opacity: 0;
 }
 
 /* Triggered class */
